@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<robot name="Spot">
+    <webots>
+        <plugin type="webots_spot.spot_driver.SpotDriver" />
+    </webots>
+</robot>
