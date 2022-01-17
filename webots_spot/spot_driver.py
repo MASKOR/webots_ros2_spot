@@ -16,6 +16,7 @@ class SpotDriver:
         print('Hello Init')
         self.__robot = webots_node.robot
         self.__robot.timestep = 32
+        index = 0
 
         ### Init motors        
         self.motor_names = [
@@ -34,6 +35,12 @@ class SpotDriver:
         self.__node = rclpy.create_node('spot_driver')
         
         self.__node.create_subscription(Legs, 'spot/talker', self.__motor_cb, 2)
+
+        n_devices = self.__robot.getNumberOfDevices()
+        self.__node.get_logger().info('Number of Devices'+str(n_devices))
+        while index < n_devices:
+            self.__node.get_logger().info("index: "+ str(index)+" "+ str(self.__robot.getDeviceByIndex(index)))
+            index += 1
 
 
     def __motor_cb(self, msg):
