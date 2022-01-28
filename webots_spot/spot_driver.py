@@ -1,10 +1,13 @@
 import rclpy
-import string
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 from spot_msg_interface.msg import Legs
 
+
+from controller import Supervisor
+
+import sys
 import numpy as np
 import time
 
@@ -25,7 +28,7 @@ class SpotDriver:
             "rear left shoulder abduction motor",   "rear left shoulder rotation motor",   "rear left elbow motor",
             "rear right shoulder abduction motor",  "rear right shoulder rotation motor",  "rear right elbow motor"
         ]
-        
+
         self.motors = []
         for motor_name in self.motor_names:
             self.motors.append(self.__robot.getDevice(motor_name))
@@ -42,6 +45,7 @@ class SpotDriver:
             self.__node.get_logger().info("index: "+ str(index)+" "+ str(self.__robot.getDeviceByIndex(index)))
             index += 1
 
+        self.__node.get_logger().info('bounding'+str(self.__robot.getRoot()))
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")

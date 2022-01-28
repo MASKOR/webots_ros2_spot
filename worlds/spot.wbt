@@ -38,6 +38,7 @@ RectangleArena {
 Spot {
   rotation 0 0 1 1.832596
   controller "<extern>"
+  supervisor TRUE
 }
 StraightStairs {
   translation -1.8 4.36 0
