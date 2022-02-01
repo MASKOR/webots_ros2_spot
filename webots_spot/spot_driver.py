@@ -5,7 +5,7 @@ from std_msgs.msg import Bool
 from spot_msg_interface.msg import Legs
 
 
-from controller import Supervisor
+#from controller import Supervisor
 
 import sys
 import numpy as np
@@ -45,7 +45,13 @@ class SpotDriver:
             self.__node.get_logger().info("index: "+ str(index)+" "+ str(self.__robot.getDeviceByIndex(index)))
             index += 1
 
-        self.__node.get_logger().info('bounding'+str(self.__robot.getRoot()))
+        ### Touch Sensors
+        self.touch_fl = self.__robot.getDevice("touch_fl")
+        self.touch_fr = self.__robot.getDevice("touch_fr")
+        self.touch_fl.enable(self.__robot.timestep)
+        self.touch_fr.enable(self.__robot.timestep)
+        self.__node.get_logger().info("name: "+ str(self.touch_fr.getName()))
+        self.__node.get_logger().info("name: "+ str(self.touch_fl.getName()))
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")
@@ -77,3 +83,4 @@ class SpotDriver:
 
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
+        #self.__node.get_logger().info('Touch FL:'+str(self.touch_fl.getValue()))

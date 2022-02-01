@@ -7,8 +7,8 @@ WorldInfo {
   title "Spot Robot demo"
 }
 Viewpoint {
-  orientation 0.10546854927206291 0.2892797222676174 -0.9514166423808323 0.7318671511343318
-  position -3.2010156855930436 2.959132176255074 1.6412046932616362
+  orientation 0.06531954264076315 0.03231040667782611 -0.9973411627770685 2.22494453094441
+  position 0.31788151035521184 0.9141215115475264 0.11050070642131053
   followType "None"
   followSmoothness 0
 }
@@ -39,6 +39,24 @@ Spot {
   rotation 0 0 1 1.832596
   controller "<extern>"
   supervisor TRUE
+  frontExtension [
+    DEF touch_fr TouchSensor {
+      translation 0.165 -0.7025 -0.15
+      name "touch_fr"
+      boundingObject Box {
+        size 0.02 0.05 0.02
+      }
+      translationStep 0.0025
+    }
+    DEF touch_fl TouchSensor {
+      translation -0.1675 -0.7025 -0.15
+      name "touch_fl"
+      boundingObject Box {
+        size 0.02 0.05 0.02
+      }
+      translationStep 0.0025
+    }
+  ]
 }
 StraightStairs {
   translation -1.8 4.36 0
