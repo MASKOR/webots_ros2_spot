@@ -1,3 +1,5 @@
+from ctypes.wintypes import INT
+from matplotlib.pyplot import step
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
@@ -9,6 +11,7 @@ from spot_msg_interface.msg import Legs
 
 import sys
 import numpy as np
+import math
 import time
 
 
@@ -37,7 +40,15 @@ class SpotDriver:
 
         self.__node = rclpy.create_node('spot_driver')
         
-        self.__node.create_subscription(Legs, 'spot/talker', self.__motor_cb, 2)
+        ### Topics
+        self.__node.create_subscription(Legs, 'Spot/talker', self.__motor_cb, 2)
+        self.__node.create_subscription(Bool, 'Spot/give_paw',self.__give_paw_cb, 1)
+
+        # TouchSensor
+        self.__touch_fl_pub = self.__node.create_publisher(Bool, 'Spot/touch_fl', 1)
+        self.__touch_fr_pub = self.__node.create_publisher(Bool, 'Spot/touch_fr', 1)
+        self.__touch_rl_pub = self.__node.create_publisher(Bool, 'Spot/touch_rl', 1)
+        self.__touch_rr_pub = self.__node.create_publisher(Bool, 'Spot/touch_rr', 1)
 
         n_devices = self.__robot.getNumberOfDevices()
         self.__node.get_logger().info('Number of Devices'+str(n_devices))
@@ -46,16 +57,41 @@ class SpotDriver:
             index += 1
 
         ### Touch Sensors
-        self.touch_fl = self.__robot.getDevice("touch_fl")
-        self.touch_fr = self.__robot.getDevice("touch_fr")
+        self.touch_fl = self.__robot.getDevice("front left touch sensor")
+        self.touch_fr = self.__robot.getDevice("front right touch sensor")
+        self.touch_rl = self.__robot.getDevice("rear left touch sensor")
+        self.touch_rr = self.__robot.getDevice("rear right touch sensor")
+
         self.touch_fl.enable(self.__robot.timestep)
         self.touch_fr.enable(self.__robot.timestep)
+        self.touch_rl.enable(self.__robot.timestep)
+        self.touch_rr.enable(self.__robot.timestep)
+
+        self.__node.get_logger().info("name: "+ str(self.touch_fr.getName()))
+        self.__node.get_logger().info("name: "+ str(self.touch_fl.getName()))
         self.__node.get_logger().info("name: "+ str(self.touch_fr.getName()))
         self.__node.get_logger().info("name: "+ str(self.touch_fl.getName()))
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")
         self.movement_decomposition(msg.leg, 1.0)
+
+    def __give_paw_cb(self, msg):
+
+        pos1 = [-0.20, -0.30, 0.05, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.49, -0.90, 0.80]
+        pos2 = [-0.20, -0.40, -0.19, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.40,  -0.90, 1.18]
+
+        self.movement_decomposition(pos1, 4.0)
+
+        initial_time = self.__robot.getTime()
+
+        while self.__robot.getTime() - initial_time < 8:
+            self.motors[4].setPosition( 0.2 * math.sin(2 * self.__robot.getTime() + 0.6))
+            self.motors[5].setPosition( 0.4 * math.sin(2 * self.__robot.getTime()))
+            self.__robot.step(32)
+            self.step()
+
+        self.movement_decomposition(pos2, 4.0)
 
     def movement_decomposition(self, target, duration):
         """ Send command to actuators of joints
@@ -79,8 +115,21 @@ class SpotDriver:
             for idx, motor in enumerate(self.motors):
                 current_pos[idx] = step_difference[idx] + current_pos[idx]
                 motor.setPosition(current_pos[idx])              
-            self.__robot.step(32)            
+            self.__robot.step(32)
+            self.step()
 
     def step(self):
+        msg_fl = Bool()
+        msg_fr = Bool()
+        msg_rl = Bool()
+        msg_rr = Bool()
+        msg_fl.data = bool(self.touch_fl.getValue())
+        msg_fr.data = bool(self.touch_fr.getValue())
+        msg_rl.data = bool(self.touch_rl.getValue())
+        msg_rr.data = bool(self.touch_rr.getValue())
+        #self.__node.get_logger().info("Touch fr: " + str(self.touch_fr.getValue()))
+        self.__touch_fl_pub.publish(msg_fl)
+        self.__touch_fr_pub.publish(msg_fr)
+        self.__touch_rl_pub.publish(msg_rl)
+        self.__touch_rr_pub.publish(msg_rr)
         rclpy.spin_once(self.__node, timeout_sec=0)
-        #self.__node.get_logger().info('Touch FL:'+str(self.touch_fl.getValue()))

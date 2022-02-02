@@ -111,6 +111,13 @@ PROTO SpotRightLeg [
                     endPoint DEF FOREARM Solid {
                       translation 0.1122 -0.319729 0.182338
                       children [
+                        TouchSensor {
+                          name %<= '"' + legName + ' touch sensor"' >%
+                          translation 0 -0.282 -0.225
+                          boundingObject Box {
+                            size 0.02 0.05 0.02
+                          }
+                        }
                         Transform {
                           translation -0.165 -1.342041 0.640962
                           children [
