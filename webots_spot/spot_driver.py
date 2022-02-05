@@ -73,25 +73,27 @@ class SpotDriver:
         self.rate = self.__node.create_rate(100)
         self.time_step = self.__robot.timestep
 
+        self.__node.get_logger().info('timestep: '+str(self.time_step))
+
         self.spot = SpotModel()
         self.T_bf0 = self.spot.WorldToFoot
         self.T_bf = copy.deepcopy(self.T_bf0)
-        self.bzg = BezierGait(dt=self.time_step)
+        self.bzg = BezierGait(dt=0.032)
 
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
         self.yd = 0.0
-        self.zd = 0.0
+        self.zd = 0.1
         self.rolld = 0.0
         self.pitchd = 0.0
         self.yawd = 0.0
-        self.StepLength = 0.00
+        self.StepLength = 0.1
         self.LateralFraction = 0.0
         self.YawRate = 0.0
-        self.StepVelocity = 0.00
-        self.ClearanceHeight = 0.0
-        self.PenetrationDepth = 0.0
-        self.SwingPeriod = 0.00
+        self.StepVelocity = 0.8
+        self.ClearanceHeight = 0.15
+        self.PenetrationDepth = 0.00003
+        self.SwingPeriod = 0.3
         self.YawControl = 0.0
         self.YawControlOn = True
 
@@ -161,8 +163,8 @@ class SpotDriver:
             joint_angles[2][0], joint_angles[2][1], joint_angles[2][2],
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
-        self.__node.get_logger().info("Joint Angles:" + str(target))
-        self.movement_decomposition(target, .5)
+        self.__node.get_logger().info("Swing:" + str(self.bzg.Tswing))
+        self.movement_decomposition(target, 0.032)
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")
