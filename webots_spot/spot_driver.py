@@ -1,4 +1,5 @@
 from ctypes.wintypes import INT
+import imp
 from matplotlib.pyplot import step
 
 import rclpy
@@ -23,6 +24,7 @@ class SpotDriver:
     def init(self, webots_node, properties):
         print('Hello Init')
         self.__robot = webots_node.robot
+        self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
         index = 0
 
@@ -43,9 +45,9 @@ class SpotDriver:
         self.__node = rclpy.create_node('spot_driver')
         
         ### Topics
-        self.__node.create_subscription(Legs, 'Spot/talker', self.__motor_cb, 2)
+        self.__node.create_subscription(Legs, 'Spot/move_decomp', self.__motor_cb, 2)
         self.__node.create_subscription(Bool, 'Spot/give_paw',self.__give_paw_cb, 1)
-        self.__node.create_subscription(Twist, 'cmd_vel', self.__spot_inverse_control_cb ,1)
+        self.__node.create_subscription(Twist, 'cmd_vel', self.__gait_cb ,1)
         # TouchSensor
         self.__touch_fl_pub = self.__node.create_publisher(Bool, 'Spot/touch_fl', 1)
         self.__touch_fr_pub = self.__node.create_publisher(Bool, 'Spot/touch_fr', 1)
@@ -120,6 +122,11 @@ class SpotDriver:
 
         self.__node.get_logger().info("Spot Model: "+ str(self.spot))
 
+    def __model_cb(self):
+        self.__node.get_logger().info("Spot Pose: "+ str(self.spot_node.getPose()))
+        self.__node.get_logger().info("Spot Position: "+ str(self.spot_node.getPosition()))
+        self.__node.get_logger().info("Spot Orientation: "+ str(self.spot_node.getOrientation()))
+
     def yaw_control(self):
         """ Yaw body controller"""
         yaw_target = self.YawControl
@@ -132,11 +139,23 @@ class SpotDriver:
             yawrate_d = 4.0 * np.sqrt(abs(residual)) * np.sign(residual)
         return yawrate_d
 
-    def __spot_inverse_control_cb(self, msg):
-        pos = [msg.linear.x, msg.linear.y, msg.linear.z]
-        orn = [msg.angular.x, msg.angular.y, msg.angular.z]
+    def __gait_cb(self, msg):
+        self.xd = msg.linear.x
+        self.yd = msg.linear.y
+        self.zd = msg.linear.z
+        self.rolld = msg.angular.x
+        self.pitchd = msg.angular.y
+        self.yawd = msg.angular.z
 
-        self.__node.get_logger().info("pos: "+ str(pos)+ " orn: "+ str(orn))
+    def __talker(self, motors_target_pos):
+        for idx, motor in enumerate(self.motors):
+            motor.setPosition(motors_target_pos[idx])
+
+    def spot_inverse_control(self):
+        pos = np.array([self.xd, self.yd, self.zd])
+        orn = np.array([self.rolld, self.pitchd, self.yawd])
+
+        #self.__node.get_logger().info("pos: "+ str(pos)+ " orn: "+ str(orn))
 
         # yaw controller
         if self.YawControlOn == 1.0:
@@ -163,8 +182,9 @@ class SpotDriver:
             joint_angles[2][0], joint_angles[2][1], joint_angles[2][2],
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
-        self.__node.get_logger().info("Swing:" + str(self.bzg.Tswing))
-        self.movement_decomposition(target, 0.032)
+        #self.__node.get_logger().info("Swing:" + str(self.bzg.Tswing))
+        self.__talker(target)
+        #self.movement_decomposition(target, 0.032)
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")
@@ -269,4 +289,6 @@ class SpotDriver:
         self.__touch_fr_pub.publish(msg_fr)
         self.__touch_rl_pub.publish(msg_rl)
         self.__touch_rr_pub.publish(msg_rr)
+        self.spot_inverse_control()
+        self.__model_cb()
         rclpy.spin_once(self.__node, timeout_sec=0)
