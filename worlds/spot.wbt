@@ -35,7 +35,7 @@ RectangleArena {
     }
   }
 }
-Spot {
+DEF Spot Spot {
   rotation 0 0 1 1.832596
   controller "<extern>"
   supervisor TRUE

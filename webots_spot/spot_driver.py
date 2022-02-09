@@ -123,9 +123,11 @@ class SpotDriver:
         self.__node.get_logger().info("Spot Model: "+ str(self.spot))
 
     def __model_cb(self):
-        self.__node.get_logger().info("Spot Pose: "+ str(self.spot_node.getPose()))
-        self.__node.get_logger().info("Spot Position: "+ str(self.spot_node.getPosition()))
-        self.__node.get_logger().info("Spot Orientation: "+ str(self.spot_node.getOrientation()))
+        #self.__node.get_logger().info("Spot Pose: "+ str(self.spot_node.getPose()))
+        #self.__node.get_logger().info("Spot Position: "+ str(self.spot_node.getField("rotation")))
+        #self.__node.get_logger().info("Spot Orientation: "+ str(self.spot_node.getOrientation()))
+        spot_rot = self.spot_node.getField("rotation")
+        self.__node.get_logger().info("Spot rotation: "+ str(spot_rot.getSFRotation()))
 
     def yaw_control(self):
         """ Yaw body controller"""
