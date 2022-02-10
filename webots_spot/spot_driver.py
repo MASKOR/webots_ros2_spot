@@ -119,15 +119,10 @@ class SpotDriver:
         self.chattering_rear_right_lower_leg_contact = 0
         self.lim_chattering = 4
 
-
-        self.__node.get_logger().info("Spot Model: "+ str(self.spot))
-
     def __model_cb(self):
-        #self.__node.get_logger().info("Spot Pose: "+ str(self.spot_node.getPose()))
-        #self.__node.get_logger().info("Spot Position: "+ str(self.spot_node.getField("rotation")))
-        #self.__node.get_logger().info("Spot Orientation: "+ str(self.spot_node.getOrientation()))
         spot_rot = self.spot_node.getField("rotation")
-        self.__node.get_logger().info("Spot rotation: "+ str(spot_rot.getSFRotation()))
+        spot_rot_val = spot_rot.getSFRotation()
+        self.yaw_inst = spot_rot_val[2]
 
     def yaw_control(self):
         """ Yaw body controller"""
@@ -157,8 +152,6 @@ class SpotDriver:
         pos = np.array([self.xd, self.yd, self.zd])
         orn = np.array([self.rolld, self.pitchd, self.yawd])
 
-        #self.__node.get_logger().info("pos: "+ str(pos)+ " orn: "+ str(orn))
-
         # yaw controller
         if self.YawControlOn == 1.0:
             YawRate_desired = self.yaw_control()
@@ -177,16 +170,14 @@ class SpotDriver:
                                            self.ClearanceHeight, self.PenetrationDepth,
                                            contacts)
         joint_angles = self.spot.IK(orn, pos, T_bf)
-        #self.__node.get_logger().info("Joint Angles:" + str(joint_angles))
+
         target = [
             joint_angles[0][0], joint_angles[0][1], joint_angles[0][2],
             joint_angles[1][0], joint_angles[1][1], joint_angles[1][2],
             joint_angles[2][0], joint_angles[2][1], joint_angles[2][2],
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
-        #self.__node.get_logger().info("Swing:" + str(self.bzg.Tswing))
         self.__talker(target)
-        #self.movement_decomposition(target, 0.032)
 
     def __motor_cb(self, msg):
         self.__node.get_logger().info("Talker")
@@ -204,7 +195,6 @@ class SpotDriver:
         while self.__robot.getTime() - initial_time < 8:
             self.motors[4].setPosition( 0.2 * math.sin(2 * self.__robot.getTime() + 0.6))
             self.motors[5].setPosition( 0.4 * math.sin(2 * self.__robot.getTime()))
-            self.__robot.step(32)
             self.step()
 
         self.movement_decomposition(pos2, 4.0)
@@ -231,7 +221,6 @@ class SpotDriver:
             for idx, motor in enumerate(self.motors):
                 current_pos[idx] = step_difference[idx] + current_pos[idx]
                 motor.setPosition(current_pos[idx])              
-            self.__robot.step(32)
             self.step()
 
     def callback_front_left_lower_leg_contact(self, data):
@@ -272,25 +261,13 @@ class SpotDriver:
             self.chattering_rear_right_lower_leg_contact = 0
 
     def step(self):
-        msg_fl = Bool()
-        msg_fr = Bool()
-        msg_rl = Bool()
-        msg_rr = Bool()
-        msg_fl.data = bool(self.touch_fl.getValue())
-        msg_fr.data = bool(self.touch_fr.getValue())
-        msg_rl.data = bool(self.touch_rl.getValue())
-        msg_rr.data = bool(self.touch_rr.getValue())
+        rclpy.spin_once(self.__node, timeout_sec=0)
 
         self.callback_front_left_lower_leg_contact(bool(self.touch_fl.getValue()))
         self.callback_front_right_lower_leg_contact(bool(self.touch_fr.getValue()))
         self.callback_rear_left_lower_leg_contact(bool(self.touch_rl.getValue()))
         self.callback_rear_right_lower_leg_contact(bool(self.touch_rr.getValue()))
 
-        #self.__node.get_logger().info("front_right_lower_leg_contact: " + str(self.front_right_lower_leg_contact))
-        self.__touch_fl_pub.publish(msg_fl)
-        self.__touch_fr_pub.publish(msg_fr)
-        self.__touch_rl_pub.publish(msg_rl)
-        self.__touch_rr_pub.publish(msg_rr)
         self.spot_inverse_control()
         self.__model_cb()
-        rclpy.spin_once(self.__node, timeout_sec=0)
+        self.__robot.step(32)
