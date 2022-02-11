@@ -14,8 +14,6 @@ def generate_launch_description():
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'spot.wbt')
     )
-    controller_manager_timeout = ['--controller-manager-timeout', '50']
-    controller_manager_prefix = 'python.exe' if os.name == 'nt' else ''
 
     spot_driver = Node(
         package='webots_ros2_driver',
