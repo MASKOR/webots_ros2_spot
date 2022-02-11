@@ -25,7 +25,6 @@ setup(
     entry_points={
         'console_scripts': [
             'spot_driver = webots_spot.spot_driver:main',
-            'env_tester = webots_spot.env_tester:main'
         ],
     },
 )
