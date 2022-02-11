@@ -21,7 +21,6 @@ NUMBER_OF_JOINTS = 12
 
 class SpotDriver:
     def init(self, webots_node, properties):
-        print('Hello Init')
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
@@ -42,22 +41,15 @@ class SpotDriver:
         rclpy.init(args=None)
 
         self.__node = rclpy.create_node('spot_driver')
-        
-        ### Topics
+        self.__node.get_logger().info('Init SpotDriver')
+        ## Topics
         self.__node.create_subscription(Twist, 'cmd_vel', self.__gait_cb ,1)
-        # TouchSensor
+        # TouchSensors
         self.__touch_fl_pub = self.__node.create_publisher(Bool, 'Spot/touch_fl', 1)
         self.__touch_fr_pub = self.__node.create_publisher(Bool, 'Spot/touch_fr', 1)
         self.__touch_rl_pub = self.__node.create_publisher(Bool, 'Spot/touch_rl', 1)
         self.__touch_rr_pub = self.__node.create_publisher(Bool, 'Spot/touch_rr', 1)
-
-        n_devices = self.__robot.getNumberOfDevices()
-        self.__node.get_logger().info('Number of Devices'+str(n_devices))
-        while index < n_devices:
-            self.__node.get_logger().info("index: "+ str(index)+" "+ str(self.__robot.getDeviceByIndex(index)))
-            index += 1
-
-        ### Touch Sensors
+        ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
         self.touch_rl = self.__robot.getDevice("rear left touch sensor")
@@ -71,8 +63,6 @@ class SpotDriver:
         ## Spot Control
         self.rate = self.__node.create_rate(100)
         self.time_step = self.__robot.timestep
-
-        self.__node.get_logger().info('timestep: '+str(self.time_step))
 
         self.spot = SpotModel()
         self.T_bf0 = self.spot.WorldToFoot
@@ -185,7 +175,6 @@ class SpotDriver:
             self.front_left_lower_leg_contact = 1
             self.chattering_front_left_lower_leg_contact = 0
 
-
     def callback_front_right_lower_leg_contact(self, data):
         if data == 0:
             self.chattering_front_right_lower_leg_contact += 1
@@ -222,5 +211,6 @@ class SpotDriver:
         self.callback_rear_right_lower_leg_contact(bool(self.touch_rr.getValue()))
 
         self.spot_inverse_control()
+        #Update Spot state
         self.__model_cb()
         self.__robot.step(32)
