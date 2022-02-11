@@ -9,7 +9,6 @@
 
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
-  <depend>spot_msg_interface</depend>
 
   <exec_depend>builtin_interfaces</exec_depend>
   <exec_depend>rviz2</exec_depend>

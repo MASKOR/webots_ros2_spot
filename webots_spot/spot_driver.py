@@ -7,7 +7,6 @@ from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
-from spot_msg_interface.msg import Legs
 
 import sys
 import numpy as np
@@ -45,8 +44,6 @@ class SpotDriver:
         self.__node = rclpy.create_node('spot_driver')
         
         ### Topics
-        self.__node.create_subscription(Legs, 'Spot/move_decomp', self.__motor_cb, 2)
-        self.__node.create_subscription(Bool, 'Spot/give_paw',self.__give_paw_cb, 1)
         self.__node.create_subscription(Twist, 'cmd_vel', self.__gait_cb ,1)
         # TouchSensor
         self.__touch_fl_pub = self.__node.create_publisher(Bool, 'Spot/touch_fl', 1)
@@ -178,50 +175,6 @@ class SpotDriver:
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
         self.__talker(target)
-
-    def __motor_cb(self, msg):
-        self.__node.get_logger().info("Talker")
-        self.movement_decomposition(msg.leg, 1.0)
-
-    def __give_paw_cb(self, msg):
-
-        pos1 = [-0.20, -0.30, 0.05, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.49, -0.90, 0.80]
-        pos2 = [-0.20, -0.40, -0.19, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.40,  -0.90, 1.18]
-
-        self.movement_decomposition(pos1, 4.0)
-
-        initial_time = self.__robot.getTime()
-
-        while self.__robot.getTime() - initial_time < 8:
-            self.motors[4].setPosition( 0.2 * math.sin(2 * self.__robot.getTime() + 0.6))
-            self.motors[5].setPosition( 0.4 * math.sin(2 * self.__robot.getTime()))
-            self.step()
-
-        self.movement_decomposition(pos2, 4.0)
-
-    def movement_decomposition(self, target, duration):
-        """ Send command to actuators of joints
-
-        """
-        self.__node.get_logger().info("movement decomposition")
-        time_step = self.__robot.getBasicTimeStep()
-
-        self.__node.get_logger().info("timestep: "+ str(time_step))
-        
-        n_steps_to_achieve_target = duration*1000/time_step
-        self.__node.get_logger().info("Steps: "+str(n_steps_to_achieve_target))
-        current_pos = []
-        step_difference = []
-        self.__node.get_logger().info("Target: " + str(target))
-        for idx, motor in enumerate(self.motors):
-            current_pos.append(motor.getTargetPosition())
-            step_difference.append( ((target[idx] - current_pos[idx]) / n_steps_to_achieve_target) )
-
-        for step in range(int(n_steps_to_achieve_target)):
-            for idx, motor in enumerate(self.motors):
-                current_pos[idx] = step_difference[idx] + current_pos[idx]
-                motor.setPosition(current_pos[idx])              
-            self.step()
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
