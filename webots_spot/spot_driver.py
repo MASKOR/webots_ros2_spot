@@ -1,17 +1,9 @@
-from ctypes.wintypes import INT
-import imp
-from matplotlib.pyplot import step
-
 import rclpy
 from rclpy.node import Node
 
-from geometry_msgs.msg import Twist
-from std_msgs.msg import Bool
+from spot_msgs.msg import GaitInput
 
-import sys
 import numpy as np
-import math
-import time
 import copy
 
 from webots_spot.SpotKinematics import SpotModel
@@ -24,7 +16,6 @@ class SpotDriver:
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
-        index = 0
 
         ### Init motors        
         self.motor_names = [
@@ -43,12 +34,7 @@ class SpotDriver:
         self.__node = rclpy.create_node('spot_driver')
         self.__node.get_logger().info('Init SpotDriver')
         ## Topics
-        self.__node.create_subscription(Twist, 'cmd_vel', self.__gait_cb ,1)
-        # TouchSensors
-        self.__touch_fl_pub = self.__node.create_publisher(Bool, 'Spot/touch_fl', 1)
-        self.__touch_fr_pub = self.__node.create_publisher(Bool, 'Spot/touch_fr', 1)
-        self.__touch_rl_pub = self.__node.create_publisher(Bool, 'Spot/touch_rl', 1)
-        self.__touch_rr_pub = self.__node.create_publisher(Bool, 'Spot/touch_rr', 1)
+        self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb ,1)
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -76,15 +62,15 @@ class SpotDriver:
         self.rolld = 0.0
         self.pitchd = 0.0
         self.yawd = 0.0
-        self.StepLength = 0.1
+        self.StepLength = 0.0
         self.LateralFraction = 0.0
         self.YawRate = 0.0
-        self.StepVelocity = 0.8
-        self.ClearanceHeight = 0.15
-        self.PenetrationDepth = 0.00003
-        self.SwingPeriod = 0.3
+        self.StepVelocity = 0.0
+        self.ClearanceHeight = 0.0
+        self.PenetrationDepth = 0.0
+        self.SwingPeriod = 0.0
         self.YawControl = 0.0
-        self.YawControlOn = True
+        self.YawControlOn = False
 
         # ------------------ Spot states ----------------
         self.x_inst = 0.
@@ -106,6 +92,16 @@ class SpotDriver:
         self.chattering_rear_right_lower_leg_contact = 0
         self.lim_chattering = 4
 
+    def stand_up(self):
+        self.__node.get_logger().info('Standup')
+        motor_pos = [0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39 ,0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39]
+        self.__talker(motor_pos)
+
+    def sit_down(self):
+        self.__node.get_logger().info('Sitdown')
+        motor_pos = [0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39 ,0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39]
+        self.__talker(motor_pos)
+
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
         spot_rot_val = spot_rot.getSFRotation()
@@ -124,12 +120,21 @@ class SpotDriver:
         return yawrate_d
 
     def __gait_cb(self, msg):
-        self.xd = msg.linear.x
-        self.yd = msg.linear.y
-        self.zd = msg.linear.z
-        self.rolld = msg.angular.x
-        self.pitchd = msg.angular.y
-        self.yawd = msg.angular.z
+        self.xd = msg.x
+        self.yd = msg.y
+        self.zd = msg.z
+        self.rolld = msg.roll
+        self.pitchd = msg.pitch
+        self.yawd = msg.yaw
+        self.StepLength = msg.step_length
+        self.LateralFraction = msg.lateral_fraction
+        self.YawRate = msg.yaw_rate
+        self.StepVelocity = msg.step_velocity
+        self.ClearanceHeight = msg.clearance_height
+        self.PenetrationDepth = msg.penetration_depth
+        self.SwingPeriod = msg.swing_period
+        self.YawControl = msg.yaw_control
+        self.YawControlOn = msg.yaw_control_on
 
     def __talker(self, motors_target_pos):
         for idx, motor in enumerate(self.motors):
@@ -213,4 +218,3 @@ class SpotDriver:
         self.spot_inverse_control()
         #Update Spot state
         self.__model_cb()
-        self.__robot.step(32)
