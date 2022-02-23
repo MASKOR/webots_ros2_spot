@@ -73,7 +73,7 @@ The reason for this could be mismatched motor limitations or parameters for hip,
 
 Moving forward is not working at all.
 
-<img src="https://fh-aachen.sciebo.de/s/AcGtrbTN9mxG9OY/download" width="600">
+<img src="https://fh-aachen.sciebo.de/s/rHoYvaBXZwU3hlD/download" width="600">
 
 ## Inspiration:
 
