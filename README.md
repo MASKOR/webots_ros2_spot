@@ -71,6 +71,9 @@ Moving in x,y,z and roll, pitch yaw almost works. When moving in z, the spot doe
 Also, the teleop allows the movement to overshoot, so the robot falls.
 The reason for this could be mismatched motor limitations or parameters for hip, shoulder, elbow in the `SpotKinematics.py` and `LegKinematics.py` or `spot.proto`.
 
+Moving forward is not working at all.
+
+<img src="https://fh-aachen.sciebo.de/s/AcGtrbTN9mxG9OY/download" width="1050">
 
 ## Inspiration:
 
