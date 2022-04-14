@@ -54,6 +54,7 @@ class SpotDriver:
         self.T_bf0 = self.spot.WorldToFoot
         self.T_bf = copy.deepcopy(self.T_bf0)
         self.bzg = BezierGait(dt=0.032)
+        self.motors_initial_pos = []
 
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
@@ -138,7 +139,7 @@ class SpotDriver:
 
     def __talker(self, motors_target_pos):
         for idx, motor in enumerate(self.motors):
-            motor.setPosition(motors_target_pos[idx])
+            motor.setPosition(motors_target_pos[idx] - self.motors_initial_pos[idx])
 
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
@@ -169,6 +170,9 @@ class SpotDriver:
             joint_angles[2][0], joint_angles[2][1], joint_angles[2][2],
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
+
+        if not self.motors_initial_pos:
+            self.motors_initial_pos = target
         self.__talker(target)
 
     def callback_front_left_lower_leg_contact(self, data):
