@@ -24,8 +24,8 @@ PROTO SpotRightLeg [
           }
           RotationalMotor {
             name %<= '"' + legName + ' shoulder abduction motor"' >%
-            minPosition -0.78539816339744827899
-            maxPosition 0.78539816339744827899
+            minPosition -0.6
+            maxPosition 0.5
             maxTorque 50
           }
         ]
@@ -42,8 +42,8 @@ PROTO SpotRightLeg [
                 }
                 RotationalMotor {
                   name %<= '"' + legName + ' shoulder rotation motor"' >%
-                  minPosition -0.89884456477707963539
-                  maxPosition 2.2951079663725435509
+                  minPosition -1.7
+                  maxPosition 1.7
                   maxTorque 50
                 }
               ]
@@ -103,8 +103,8 @@ PROTO SpotRightLeg [
                       }
                       RotationalMotor {
                         name %<= '"' + legName + ' elbow motor"' >%
-                        minPosition -2.7929
-                        maxPosition -0.254801
+                        minPosition -0.45
+                        maxPosition 1.6
                         maxTorque 50
                       }
                     ]
