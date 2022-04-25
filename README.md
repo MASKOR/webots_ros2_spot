@@ -52,7 +52,7 @@ Teleop keyboard:
 
 ## Demo
 
-![spot_teleop](https://fh-aachen.sciebo.de/s/oxJrU2LZEb6YFbp/download)
+![spot_teleop](https://fh-aachen.sciebo.de/s/eJ69q6EPqclEHHB/download)
 
 ## Integration notes
 The leg kinematic of the spot is ported from the SoftServeSAG [robotics_spot repo](https://github.com/SoftServeSAG/robotics_spot/tree/temp_robomaker).
