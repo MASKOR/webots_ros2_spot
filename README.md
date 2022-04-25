@@ -50,8 +50,12 @@ Teleop keyboard:
 
     ros2 run spot_teleop spot_teleop_keyboard
 
+## Demo
+
+![spot_teleop](https://fh-aachen.sciebo.de/s/oxJrU2LZEb6YFbp/download)
+
 ## Integration notes
-The leg kinematic of the spot is ported from the SoftServeSAG [robotics_spot repo](https://github.com/SoftServeSAG/robotics_spot/tree/temp_robomaker). 
+The leg kinematic of the spot is ported from the SoftServeSAG [robotics_spot repo](https://github.com/SoftServeSAG/robotics_spot/tree/temp_robomaker).
 
 ## Inspiration:
 
