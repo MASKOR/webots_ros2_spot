@@ -162,7 +162,7 @@ class SpotDriver:
                                            self.StepVelocity, self.T_bf0, self.T_bf,
                                            self.ClearanceHeight, self.PenetrationDepth,
                                            contacts)
-        joint_angles = self.spot.IK(orn, pos, T_bf)
+        joint_angles = -self.spot.IK(orn, pos, T_bf)
 
         target = [
             joint_angles[0][0], joint_angles[0][1], joint_angles[0][2],
