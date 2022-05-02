@@ -9,6 +9,8 @@ import copy
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
 
+from webots_spot.tf2_broadcaster import DynamicBroadcaster
+
 NUMBER_OF_JOINTS = 12
 
 class SpotDriver:
@@ -24,17 +26,44 @@ class SpotDriver:
             "rear left shoulder abduction motor",   "rear left shoulder rotation motor",   "rear left elbow motor",
             "rear right shoulder abduction motor",  "rear right shoulder rotation motor",  "rear right elbow motor"
         ]
-
         self.motors = []
         for motor_name in self.motor_names:
             self.motors.append(self.__robot.getDevice(motor_name))
+        
+        ## Positional Sensors
+        self.motor_sensor_names = [
+            "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
+            "front right shoulder abduction sensor", "front right shoulder rotation sensor", "front right elbow sensor",
+            "rear left shoulder abduction sensor",   "rear left shoulder rotation sensor",   "rear left elbow sensor",
+            "rear right shoulder abduction sensor",  "rear right shoulder rotation sensor",  "rear right elbow sensor"
+        ]
+        self.motor_sensors = []
+        self.motors_pos = []
+        for idx, sensor_name in enumerate(self.motor_sensor_names):
+            self.motor_sensors.append(self.__robot.getDevice(sensor_name))
+            self.motor_sensors[idx].enable(self.__robot.timestep)
+            self.motors_pos.append(0.)
+
+        ## GPS
+        self.gps_sensor = self.__robot.getDevice("gps")
+        self.gps_sensor.enable(self.__robot.timestep)
+        self.gps_values = [0.,0.,0.]
+
+        ## IMU
+        self.inertial_unit = self.__robot.getDevice("inertial unit")
+        self.inertial_unit.enable(self.__robot.timestep)
+        self.inertial_unit_values = [0.,0.,0.]
 
         rclpy.init(args=None)
 
         self.__node = rclpy.create_node('spot_driver')
         self.__node.get_logger().info('Init SpotDriver')
+
+        self.tf2_broadcaster = DynamicBroadcaster()
+
         ## Topics
-        self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb ,1)
+        self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
+        
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -173,7 +202,16 @@ class SpotDriver:
 
         if not self.motors_initial_pos:
             self.motors_initial_pos = target
+
         self.__talker(target)
+
+        for idx, motor_sensor in enumerate(self.motor_sensors):
+            self.motors_pos[idx] = motor_sensor.getValue()
+
+        self.gps_values = self.gps_sensor.getValues()
+        self.inertial_unit_values = self.inertial_unit.getRollPitchYaw()
+
+        self.tf2_broadcaster.handle_pose(self.motors_pos, self.gps_values, self.inertial_unit_values)
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
@@ -222,3 +260,4 @@ class SpotDriver:
         self.spot_inverse_control()
         #Update Spot state
         self.__model_cb()
+        
