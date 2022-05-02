@@ -21,7 +21,8 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'robot_description': robot_description},
-        ]
+            {'set_robot_state_publisher': True},
+        ],
     )
     robot_state_publisher = Node(
         package='robot_state_publisher',
