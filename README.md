@@ -41,6 +41,8 @@ colcon build
 
 source install/local_setup.bash
 ```
+### Python requirements
+scipy
 ## Start
 Starting the simulation:
 
