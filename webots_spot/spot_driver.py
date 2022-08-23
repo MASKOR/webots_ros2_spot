@@ -1,8 +1,11 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.clock import Clock
 
 from spot_msgs.msg import GaitInput
+from nav_msgs.msg import Odometry
 
+from scipy.spatial.transform import Rotation as R
 import numpy as np
 import copy
 
@@ -47,14 +50,15 @@ class SpotDriver:
         ## GPS
         self.gps_sensor = self.__robot.getDevice("gps")
         self.gps_sensor.enable(self.__robot.timestep)
-        self.gps_values = [0.,0.,0.]
+        self.initial_gps_values = None
 
         ## IMU
         self.inertial_unit = self.__robot.getDevice("inertial unit")
         self.inertial_unit.enable(self.__robot.timestep)
-        self.inertial_unit_values = [0.,0.,0.]
+        self.previous_time = None
 
         rclpy.init(args=None)
+        self.ros_clock = Clock()
 
         self.__node = rclpy.create_node('spot_driver')
         self.__node.get_logger().info('Init SpotDriver')
@@ -63,6 +67,7 @@ class SpotDriver:
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
+        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
         
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
@@ -204,14 +209,49 @@ class SpotDriver:
             self.motors_initial_pos = target
 
         self.__talker(target)
+        self.handle_transforms_and_odometry()
 
+    def handle_transforms_and_odometry(self):
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
-        self.gps_values = self.gps_sensor.getValues()
-        self.inertial_unit_values = self.inertial_unit.getRollPitchYaw()
+        gps = self.gps_sensor.getValues()
+        gps_twist = self.gps_sensor.getSpeedVector()
+        imu = self.inertial_unit.getRollPitchYaw()
 
-        self.tf2_broadcaster.handle_pose(self.motors_pos, self.gps_values, self.inertial_unit_values)
+        self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu)
+
+        current_time = self.__robot.getTime()
+
+        if self.previous_time is None:
+            self.previous_time = current_time
+            self.previous_imu = imu
+        else:
+            time_delta = (current_time - self.previous_time)
+            imu_twist = [(new - old) / time_delta for new, old in zip(imu, self.previous_imu)]
+            
+            self.previous_time = current_time
+            self.previous_imu = imu
+
+            odom = Odometry()
+            odom.header.frame_id = 'odom'
+            odom.header.stamp = self.ros_clock.now().to_msg()
+            odom.child_frame_id = 'base_link'
+            odom.pose.pose.position.x = gps[0]
+            odom.pose.pose.position.y = gps[1]
+            odom.pose.pose.position.z = gps[2]
+            r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
+            odom.pose.pose.orientation.x = r.as_quat()[0]
+            odom.pose.pose.orientation.y = r.as_quat()[1]
+            odom.pose.pose.orientation.z = r.as_quat()[2]
+            odom.pose.pose.orientation.w = r.as_quat()[3]
+            odom.twist.twist.linear.x = gps_twist[0]
+            odom.twist.twist.linear.y = gps_twist[1]
+            odom.twist.twist.linear.z = gps_twist[2]
+            odom.twist.twist.angular.x = imu_twist[0]
+            odom.twist.twist.angular.y = imu_twist[1]
+            odom.twist.twist.angular.z = imu_twist[2]
+            self.odom_pub.publish(odom)        
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:

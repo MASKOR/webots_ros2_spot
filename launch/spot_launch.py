@@ -3,6 +3,7 @@ import pathlib
 import launch
 from launch_ros.actions import Node
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 
@@ -10,6 +11,8 @@ from webots_ros2_driver.webots_launcher import WebotsLauncher
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_spot')
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'spot.urdf')).read_text()
+
+    publish_pointcloud = LaunchConfiguration('pointcloud', default=False)
 
     webots = WebotsLauncher(
         world=os.path.join(package_dir, 'worlds', 'spot.wbt')
@@ -23,6 +26,12 @@ def generate_launch_description():
             {'robot_description': robot_description},
             {'set_robot_state_publisher': True},
         ],
+    )
+    spot_pointcloud2 = Node(
+        package='webots_spot',
+        executable='spot_pointcloud2',
+        output='screen',
+        condition=launch.conditions.IfCondition(publish_pointcloud)
     )
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -41,6 +50,7 @@ def generate_launch_description():
         webots,
         spot_driver,
         robot_state_publisher,
+        spot_pointcloud2,
         launch.actions.RegisterEventHandler(
             event_handler=launch.event_handlers.OnProcessExit(
                 target_action=webots,

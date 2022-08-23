@@ -268,12 +268,30 @@ PROTO Spot [
             width 1080
             height 720
           }
+          RangeFinder {
+            translation 0.044898 1.677970 -0.922603
+            rotation 0.492404 -0.738106 -0.461236 -2.507618
+            name "right head depth"
+            width 424
+            height 240
+            maxRange 10.0
+            fieldOfView 1.57
+          }
           Camera {
             translation -0.045109 1.679550 -0.923250
             rotation 0.776783 -0.539742 -0.324480 -2.231426
             name "left head camera"
             width 1080
             height 720
+          }
+          RangeFinder {
+            translation -0.045109 1.679550 -0.923250
+            rotation 0.776783 -0.539742 -0.324480 -2.231426
+            name "left head depth"
+            width 424
+            height 240
+            maxRange 10.0
+            fieldOfView 1.57
           }
           DEF HEAD_CAM_R1 Shape {
             appearance DEF LENS PBRAppearance {
@@ -552,6 +570,15 @@ PROTO Spot [
                 width 1080
                 height 720
               }
+              RangeFinder {
+                translation 0.110163 1.715610 -0.324321
+                rotation -0.958773 0.200939 -0.200942 1.612883
+                name "right flank depth"
+                width 424
+                height 240
+                maxRange 10.0
+                fieldOfView 1.57
+              }
               DEF RIGHT_FLANK_CAM_1 Shape {
                 appearance USE YELLOW_COVER
                 geometry IndexedFaceSet {
@@ -762,6 +789,15 @@ PROTO Spot [
                 width 1080
                 height 720
               }
+              RangeFinder {
+                translation -0.110127 1.715530 -0.324320
+                rotation -0.143022 0.699837 0.699837 -2.857471
+                name "left flank depth"
+                width 424
+                height 240
+                maxRange 10.0
+                fieldOfView 1.57
+              }     
               DEF LEFT_FLANK_CAM_1 Shape {
                 appearance USE YELLOW_COVER
                 geometry IndexedFaceSet {
@@ -1382,6 +1418,15 @@ PROTO Spot [
             name "rear camera"
             width 1080
             height 720
+          }
+          RangeFinder {
+            translation 0.018113 1.662560 -0.011864
+            rotation 0.461984 0.461983 0.757062 -1.845577
+            name "rear depth"
+            width 424
+            height 240
+            maxRange 10.0
+            fieldOfView 1.57
           }
           DEF REAR_CAM_1 Shape {
             appearance USE TWO_LENS_ROTATE

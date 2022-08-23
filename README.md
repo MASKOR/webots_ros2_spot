@@ -42,11 +42,17 @@ colcon build
 source install/local_setup.bash
 ```
 ### Python requirements
-scipy
+```
+pip3 install scipy open3d
+```
 ## Start
 Starting the simulation:
 
     ros2 launch webots_spot spot_launch.py
+
+To get a pointcloud as well, launch with:
+
+    ros2 launch webots_spot spot_launch.py pointcloud:=true
 
 Teleop keyboard:
 

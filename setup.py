@@ -24,7 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'spot_driver = webots_spot.spot_driver:main',
+            'spot_driver = ' + package_name + '.spot_driver:main',
+            'spot_pointcloud2 = ' + package_name + '.spot_pointcloud2:main',
         ],
     },
 )
