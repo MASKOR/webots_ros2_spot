@@ -50,12 +50,14 @@ class SpotDriver:
         ## GPS
         self.gps_sensor = self.__robot.getDevice("gps")
         self.gps_sensor.enable(self.__robot.timestep)
-        self.initial_gps_values = None
 
         ## IMU
         self.inertial_unit = self.__robot.getDevice("inertial unit")
         self.inertial_unit.enable(self.__robot.timestep)
-        self.previous_time = None
+
+        ## Gyro
+        self.gyro = self.__robot.getDevice("gyro")
+        self.gyro.enable(self.__robot.timestep)
 
         rclpy.init(args=None)
         self.ros_clock = Clock()
@@ -216,42 +218,31 @@ class SpotDriver:
             self.motors_pos[idx] = motor_sensor.getValue()
 
         gps = self.gps_sensor.getValues()
-        gps_twist = self.gps_sensor.getSpeedVector()
+        linear_twist = self.gps_sensor.getSpeedVector()
         imu = self.inertial_unit.getRollPitchYaw()
+        gyro = self.gyro.getValues()
 
         self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu)
 
-        current_time = self.__robot.getTime()
-
-        if self.previous_time is None:
-            self.previous_time = current_time
-            self.previous_imu = imu
-        else:
-            time_delta = (current_time - self.previous_time)
-            imu_twist = [(new - old) / time_delta for new, old in zip(imu, self.previous_imu)]
-            
-            self.previous_time = current_time
-            self.previous_imu = imu
-
-            odom = Odometry()
-            odom.header.frame_id = 'odom'
-            odom.header.stamp = self.ros_clock.now().to_msg()
-            odom.child_frame_id = 'base_link'
-            odom.pose.pose.position.x = gps[0]
-            odom.pose.pose.position.y = gps[1]
-            odom.pose.pose.position.z = gps[2]
-            r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
-            odom.pose.pose.orientation.x = r.as_quat()[0]
-            odom.pose.pose.orientation.y = r.as_quat()[1]
-            odom.pose.pose.orientation.z = r.as_quat()[2]
-            odom.pose.pose.orientation.w = r.as_quat()[3]
-            odom.twist.twist.linear.x = gps_twist[0]
-            odom.twist.twist.linear.y = gps_twist[1]
-            odom.twist.twist.linear.z = gps_twist[2]
-            odom.twist.twist.angular.x = imu_twist[0]
-            odom.twist.twist.angular.y = imu_twist[1]
-            odom.twist.twist.angular.z = imu_twist[2]
-            self.odom_pub.publish(odom)        
+        odom = Odometry()
+        odom.header.frame_id = 'odom'
+        odom.header.stamp = self.ros_clock.now().to_msg()
+        odom.child_frame_id = 'base_link'
+        odom.pose.pose.position.x = gps[0]
+        odom.pose.pose.position.y = gps[1]
+        odom.pose.pose.position.z = gps[2]
+        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
+        odom.pose.pose.orientation.x = r.as_quat()[0]
+        odom.pose.pose.orientation.y = r.as_quat()[1]
+        odom.pose.pose.orientation.z = r.as_quat()[2]
+        odom.pose.pose.orientation.w = r.as_quat()[3]
+        odom.twist.twist.linear.x = linear_twist[0]
+        odom.twist.twist.linear.y = linear_twist[1]
+        odom.twist.twist.linear.z = linear_twist[2]
+        odom.twist.twist.angular.x = gyro[0]
+        odom.twist.twist.angular.y = gyro[1]
+        odom.twist.twist.angular.z = gyro[2]
+        self.odom_pub.publish(odom)
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
