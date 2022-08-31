@@ -15,7 +15,7 @@ import webots_spot.point_cloud2 as pc2
 import open3d as o3d
 from scipy.spatial.transform import Rotation as R
 
-intrinsinc = o3d.camera.PinholeCameraIntrinsic(width=424, height=240, fx=212.1688885346757,
+intrinsic = o3d.camera.PinholeCameraIntrinsic(width=424, height=240, fx=212.1688885346757,
                                                       fy=212.1688885346757, cx=212.0,
                                                       cy=120.0)
 def transformation_matrix(tr, rt_quat):
@@ -95,7 +95,7 @@ class DepthToPCD2(Node):
             # Depth image to Open3d pointcloud
             pcds = [self.pcd.create_from_depth_image(
                             o3d.geometry.Image((depth_image).astype(np.float32)),
-                            intrinsinc
+                            intrinsic
                         )
                         for depth_image in
                         [self.frontleft_img, self.frontright_img, self.left_img, self.right_img, self.back_img]
