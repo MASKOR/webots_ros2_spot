@@ -3,6 +3,7 @@ from rclpy.node import Node
 from rclpy.clock import Clock
 
 from spot_msgs.msg import GaitInput
+from spot_msgs.srv import SpotMotion
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 
@@ -16,6 +17,7 @@ from webots_spot.Bezier import BezierGait
 from webots_spot.tf2_broadcaster import DynamicBroadcaster
 
 NUMBER_OF_JOINTS = 12
+
 
 class SpotDriver:
     def init(self, webots_node, properties):
@@ -63,13 +65,14 @@ class SpotDriver:
         rclpy.init(args=None)
         self.ros_clock = Clock()
 
-        self.__node = rclpy.create_node('spot_driver')
+        self.__node = Node('spot_driver')
         self.__node.get_logger().info('Init SpotDriver')
 
         self.tf2_broadcaster = DynamicBroadcaster()
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
+        self.__node.create_service(SpotMotion, '/Spot/command', self.__motion_cb)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 10)
         self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
         
@@ -131,15 +134,15 @@ class SpotDriver:
         self.chattering_rear_right_lower_leg_contact = 0
         self.lim_chattering = 4
 
-    def stand_up(self):
-        self.__node.get_logger().info('Standup')
-        motor_pos = [0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39 ,0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39]
-        self.__talker(motor_pos)
+        # Motion command
+        self.fixed_motion = False
 
-    def sit_down(self):
-        self.__node.get_logger().info('Sitdown')
-        motor_pos = [0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39 ,0.20, 0.7, -1.39 ,-0.20, 0.7, -1.39]
-        self.__talker(motor_pos)
+        self.n_steps_to_achieve_target = 0
+        self.step_difference = [0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.]
+        self.m_target = []
+        self.paw = False
+        self.paw2 = False
+        self.paw_time = 0.
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
@@ -159,6 +162,9 @@ class SpotDriver:
         return yawrate_d
 
     def __cmd_vel(self, msg):
+        # Override motion command
+        self.fixed_motion = False
+        
         if not self.__node.count_publishers('/Spot/inverse_gait_input'):
             StepLength = 0.024
             ClearanceHeight = 0.024
@@ -190,6 +196,9 @@ class SpotDriver:
             self.YawControlOn = YawControlOn
 
     def __gait_cb(self, msg):
+        # Override motion command
+        self.fixed_motion = False
+        
         if self.__node.count_publishers('/Spot/inverse_gait_input') > 0:
             self.xd = msg.x
             self.yd = msg.y
@@ -280,6 +289,72 @@ class SpotDriver:
         odom.twist.twist.angular.z = gyro[2]
         self.odom_pub.publish(odom)
 
+    def movement_decomposition(self, target, duration):
+        """
+        Decompose big motion into smaller motions
+        """        
+        self.n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
+        self.step_difference = [(target[i] - self.motors_pos[i]) / self.n_steps_to_achieve_target
+                                for i in range(NUMBER_OF_JOINTS)]
+        self.m_target = []
+
+    def __motion_cb(self, request, response):
+        command = request.command
+        motions = {
+            'stand': [-0.1, 0.0, 0.0, 0.1, 0.0, 0.0, -0.1, 0.0, 0.0, 0.1, 0.0, 0.0],
+            'sit'  : [-0.20, -0.40, -0.19, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.40, -0.90, 1.18],
+            'lie'  : [-0.40, -0.99, 1.59, 0.40, -0.99, 1.59, -0.40, -0.99, 1.59, 0.40, -0.99, 1.59],
+        }
+        response.answer = 'commands: stand sit lie hand only'
+        if command in motions.keys():
+            self.fixed_motion = True
+            self.movement_decomposition(motions[command], 1)
+            self.paw = False
+            self.paw2 = False
+            response.answer = 'Called'
+
+        if command == 'hand':
+            self.fixed_motion = True
+            # Start handshake motion
+            self.movement_decomposition([-0.20, -0.30, 0.05,
+                                          0.20, -0.40, -0.19,
+                                         -0.40, -0.90, 1.18,
+                                          0.49, -0.90, 0.80], 1)
+            self.paw = True
+            response.answer = 'Called'
+        return response
+
+    def defined_motions(self):
+        self.handle_transforms_and_odometry() # Let the sensor values get updated
+        if self.n_steps_to_achieve_target > 0:
+            if not self.m_target:
+                self.m_target = [self.step_difference[i] + self.motors_pos[i] for i in range(NUMBER_OF_JOINTS)]
+            else: # if compared to current motors_positions, the final motion is smaller
+                self.m_target = [self.step_difference[i] + self.m_target[i] for i in range(NUMBER_OF_JOINTS)]
+
+            # Increment motor positions by step_difference
+            for idx, motor in enumerate(self.motors):
+                motor.setPosition(self.m_target[idx])
+            
+            self.n_steps_to_achieve_target -= 1
+        else:
+            if self.paw:
+                self.paw_time = self.__robot.getTime() + 4
+                self.paw = False
+                self.paw2 = True # Do the shakehands motion
+            self.m_target = []
+
+        if self.paw2:
+            if self.paw_time > self.__robot.getTime():
+                self.motors[4].setPosition(0.2 * np.sin(2 * self.__robot.getTime()) + 0.6)
+                self.motors[5].setPosition(0.4 * np.sin(2 * self.__robot.getTime()))
+            else:
+                self.paw2 = False # Sit back again
+                self.movement_decomposition([-0.20, -0.40, -0.19,
+                                              0.20, -0.40, -0.19,
+                                             -0.40, -0.90, 1.18,
+                                              0.40, -0.90, 1.18], 1)
+
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
             self.chattering_front_left_lower_leg_contact += 1
@@ -324,7 +399,11 @@ class SpotDriver:
         self.callback_rear_left_lower_leg_contact(bool(self.touch_rl.getValue()))
         self.callback_rear_right_lower_leg_contact(bool(self.touch_rr.getValue()))
 
-        self.spot_inverse_control()
+        if self.fixed_motion:
+            self.defined_motions()
+        else:
+            self.spot_inverse_control()
+
         #Update Spot state
         self.__model_cb()
         
