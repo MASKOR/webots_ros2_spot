@@ -4,6 +4,7 @@ from rclpy.clock import Clock
 
 from spot_msgs.msg import GaitInput
 from nav_msgs.msg import Odometry
+from geometry_msgs.msg import Twist
 
 from scipy.spatial.transform import Rotation as R
 import numpy as np
@@ -22,7 +23,7 @@ class SpotDriver:
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
 
-        ### Init motors        
+        ### Init motors
         self.motor_names = [
             "front left shoulder abduction motor",  "front left shoulder rotation motor",  "front left elbow motor",
             "front right shoulder abduction motor", "front right shoulder rotation motor", "front right elbow motor",
@@ -69,6 +70,7 @@ class SpotDriver:
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
+        self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 10)
         self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
         
         ## Webots Touch Sensors
@@ -156,22 +158,54 @@ class SpotDriver:
             yawrate_d = 4.0 * np.sqrt(abs(residual)) * np.sign(residual)
         return yawrate_d
 
+    def __cmd_vel(self, msg):
+        if not self.__node.count_publishers('/Spot/inverse_gait_input'):
+            StepLength = 0.024
+            ClearanceHeight = 0.024
+            PenetrationDepth = 0.003
+            SwingPeriod = 0.2
+            YawControl = 0.0
+            YawControlOn = 0.0
+            
+            self.xd = 0.
+            self.yd = 0.
+            self.zd = 0.1
+            self.rolld = 0.
+            self.pitchd = 0.
+            self.yawd = 0.
+            self.StepLength = StepLength
+            self.LateralFraction = msg.linear.y
+            self.YawRate = msg.angular.z
+            self.StepVelocity = msg.linear.x
+            if not self.StepVelocity :
+                if self.LateralFraction != 0:
+                    self.StepVelocity = 0.2
+                if self.YawRate != 0:
+                    self.StepVelocity = 0.01
+
+            self.ClearanceHeight = ClearanceHeight
+            self.PenetrationDepth = PenetrationDepth
+            self.SwingPeriod = SwingPeriod
+            self.YawControl = YawControl
+            self.YawControlOn = YawControlOn
+
     def __gait_cb(self, msg):
-        self.xd = msg.x
-        self.yd = msg.y
-        self.zd = msg.z
-        self.rolld = msg.roll
-        self.pitchd = msg.pitch
-        self.yawd = msg.yaw
-        self.StepLength = msg.step_length
-        self.LateralFraction = msg.lateral_fraction
-        self.YawRate = msg.yaw_rate
-        self.StepVelocity = msg.step_velocity
-        self.ClearanceHeight = msg.clearance_height
-        self.PenetrationDepth = msg.penetration_depth
-        self.SwingPeriod = msg.swing_period
-        self.YawControl = msg.yaw_control
-        self.YawControlOn = msg.yaw_control_on
+        if self.__node.count_publishers('/Spot/inverse_gait_input') > 0:
+            self.xd = msg.x
+            self.yd = msg.y
+            self.zd = msg.z
+            self.rolld = msg.roll
+            self.pitchd = msg.pitch
+            self.yawd = msg.yaw
+            self.StepLength = msg.step_length
+            self.LateralFraction = msg.lateral_fraction
+            self.YawRate = msg.yaw_rate
+            self.StepVelocity = msg.step_velocity
+            self.ClearanceHeight = msg.clearance_height
+            self.PenetrationDepth = msg.penetration_depth
+            self.SwingPeriod = msg.swing_period
+            self.YawControl = msg.yaw_control
+            self.YawControlOn = msg.yaw_control_on
 
     def __talker(self, motors_target_pos):
         for idx, motor in enumerate(self.motors):
@@ -222,11 +256,13 @@ class SpotDriver:
         imu = self.inertial_unit.getRollPitchYaw()
         gyro = self.gyro.getValues()
 
-        self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu)
+        time_stamp = self.ros_clock.now().to_msg()
+
+        self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu, time_stamp)
 
         odom = Odometry()
         odom.header.frame_id = 'odom'
-        odom.header.stamp = self.ros_clock.now().to_msg()
+        odom.header.stamp = time_stamp
         odom.child_frame_id = 'base_link'
         odom.pose.pose.position.x = gps[0]
         odom.pose.pose.position.y = gps[1]

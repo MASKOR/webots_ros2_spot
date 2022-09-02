@@ -11,13 +11,13 @@ class DynamicBroadcaster(Node):
         super().__init__('dynamic_broadcaster')
         self.tfb_ = TransformBroadcaster(self)
 
-    def handle_pose(self, motor_pos, gps, imu):
+    def handle_pose(self, motor_pos, gps, imu, time_stamp):
         tfs = TransformStamped()
 
         ## Base_Link to Front Left Leg
-        tfs.header.stamp = self.get_clock().now().to_msg()
+        tfs.header.stamp = time_stamp
         tfs.header.frame_id= "base_link"
-        tfs._child_frame_id = "front left leg"
+        tfs._child_frame_id = "solid" # front left leg
         tfs.transform.translation.x = 0.3635
         tfs.transform.translation.y = 0.
         tfs.transform.translation.z = 0.0118
@@ -28,7 +28,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
         
-        tfs.header.frame_id= "front left leg"
+        tfs.header.frame_id= "solid" # front left leg
         tfs._child_frame_id = "front left shoulder"
         tfs.transform.translation.x = -0.0528
         tfs.transform.translation.y = 0.0006
@@ -66,7 +66,7 @@ class DynamicBroadcaster(Node):
 
         ## Base_Link to Front Right Leg
         tfs.header.frame_id= "base_link"
-        tfs._child_frame_id = "front right leg"
+        tfs._child_frame_id = "solid_0" # front right leg
         tfs.transform.translation.x = 0.3635
         tfs.transform.translation.y = 0.
         tfs.transform.translation.z = 0.0118
@@ -77,7 +77,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
         
-        tfs.header.frame_id= "front right leg"
+        tfs.header.frame_id= "solid_0" # front right leg
         tfs._child_frame_id = "front right shoulder"
         tfs.transform.translation.x = 0.0528
         tfs.transform.translation.y = 0.0006
@@ -115,7 +115,7 @@ class DynamicBroadcaster(Node):
 
         ## Base_Link to Rear Left Leg
         tfs.header.frame_id= "base_link"
-        tfs._child_frame_id = "rear left leg"
+        tfs._child_frame_id = "solid_1" # rear left leg
         tfs.transform.translation.x = -0.3084
         tfs.transform.translation.y = 0.
         tfs.transform.translation.z = 0.0117
@@ -126,7 +126,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
         
-        tfs.header.frame_id= "rear left leg"
+        tfs.header.frame_id= "solid_1" # rear left leg
         tfs._child_frame_id = "rear left shoulder"
         tfs.transform.translation.x = -0.0528
         tfs.transform.translation.y = 0.0006
@@ -164,7 +164,7 @@ class DynamicBroadcaster(Node):
 
         ## Base_Link to Rear Right Leg
         tfs.header.frame_id= "base_link"
-        tfs._child_frame_id = "rear right leg"
+        tfs._child_frame_id = "solid_2" # rear right leg
         tfs.transform.translation.x = -0.3084
         tfs.transform.translation.y = 0.
         tfs.transform.translation.z = 0.0117
@@ -175,7 +175,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
         
-        tfs.header.frame_id= "rear right leg"
+        tfs.header.frame_id= "solid_2" # rear right leg
         tfs._child_frame_id = "rear right shoulder"
         tfs.transform.translation.x = 0.0528
         tfs.transform.translation.y = 0.0006

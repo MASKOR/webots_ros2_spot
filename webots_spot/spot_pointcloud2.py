@@ -93,7 +93,7 @@ class DepthToPCD2(Node):
             self.check_b = False
 
             # Depth image to Open3d pointcloud
-            pcds = [self.pcd.create_from_depth_image(
+            open3d_cloud = [self.pcd.create_from_depth_image(
                             o3d.geometry.Image((depth_image).astype(np.float32)),
                             intrinsic
                         )
@@ -102,7 +102,7 @@ class DepthToPCD2(Node):
                     ]
 
             # Voxel downsampling
-            open3d_cloud = [pcd.voxel_down_sample(voxel_size=0.08) for pcd in pcds]
+            open3d_cloud = [pcd.voxel_down_sample(voxel_size=0.2) for pcd in open3d_cloud]
 
             # Combine the pointclouds
             open3d_cloud[0].transform(rectified_tfs[sensor_locations[0]])
