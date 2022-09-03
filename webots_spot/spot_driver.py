@@ -199,22 +199,21 @@ class SpotDriver:
         # Override motion command
         self.fixed_motion = False
         
-        if self.__node.count_publishers('/Spot/inverse_gait_input') > 0:
-            self.xd = msg.x
-            self.yd = msg.y
-            self.zd = msg.z
-            self.rolld = msg.roll
-            self.pitchd = msg.pitch
-            self.yawd = msg.yaw
-            self.StepLength = msg.step_length
-            self.LateralFraction = msg.lateral_fraction
-            self.YawRate = msg.yaw_rate
-            self.StepVelocity = msg.step_velocity
-            self.ClearanceHeight = msg.clearance_height
-            self.PenetrationDepth = msg.penetration_depth
-            self.SwingPeriod = msg.swing_period
-            self.YawControl = msg.yaw_control
-            self.YawControlOn = msg.yaw_control_on
+        self.xd = msg.x
+        self.yd = msg.y
+        self.zd = msg.z
+        self.rolld = msg.roll
+        self.pitchd = msg.pitch
+        self.yawd = msg.yaw
+        self.StepLength = msg.step_length
+        self.LateralFraction = msg.lateral_fraction
+        self.YawRate = msg.yaw_rate
+        self.StepVelocity = msg.step_velocity
+        self.ClearanceHeight = msg.clearance_height
+        self.PenetrationDepth = msg.penetration_depth
+        self.SwingPeriod = msg.swing_period
+        self.YawControl = msg.yaw_control
+        self.YawControlOn = msg.yaw_control_on
 
     def __talker(self, motors_target_pos):
         for idx, motor in enumerate(self.motors):

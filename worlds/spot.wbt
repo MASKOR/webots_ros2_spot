@@ -1,186 +1,1295 @@
 #VRML_SIM R2022a utf8
 WorldInfo {
   info [
-    "Simulation of Boston Dynamics' Spot robot in a simple industrial environment."
-    "The robot is saying hello with its right leg."
+    "Sample of how the indoor objects can be placed"
   ]
-  title "Spot Robot demo"
+  title "This simulation was sponsored by Kamal Othman & Prof. Ahmad Rad from AISL-SFU"
 }
 Viewpoint {
-  orientation -0.10991546020898528 0.2978072671684364 0.9482770814633845 0.7423727075805255
-  position -0.9911002974577738 -1.0155744319653872 0.29144360130744507
-  followType "None"
-  followSmoothness 0
+  orientation -0.00542290856333439 0.9999850199695144 0.0007428992418790068 1.5852468365297798
+  position -5.939147295736925 -6.4786233985419726 22.77681661643301
+  exposure 0.5
+  ambientOcclusionRadius 1
 }
 TexturedBackground {
-  texture "factory"
+  texture "empty_office"
   skybox FALSE
-}
-TexturedBackgroundLight {
-  texture "factory"
-}
-RectangleArena {
-  floorSize 10 10
-  floorAppearance ThreadMetalPlate {
-    textureTransform TextureTransform {
-      scale 0.7 0.7
-    }
-  }
-  wallThickness 0.1
-  wallHeight 3.4
-  wallAppearance Roughcast {
-    colorOverride 0.662745 0.662745 0.662745
-    textureTransform TextureTransform {
-      scale 10 10
-    }
-  }
+  skyColor [
+    0.2 0.2 0.2
+  ]
 }
 DEF Spot Spot {
-  rotation 0 0 1 1.832596
+  translation -11 -11 0.6
   controller "<extern>"
   supervisor TRUE
 }
-StraightStairs {
-  translation -1.8 4.36 0
-  name "straight stairs(2)"
-  stepSize 0.3 1.2 0.03
-  stepRise 0.1667
-  nSteps 14
-  stepAppearance GalvanizedMetal {
-    textureTransform TextureTransform {
-      scale 0.3 1
+DEF ROOF Group {
+  children [
+    Transform {
+      translation -4.83 -6.49 2.4
+      rotation -1 0 0 -3.1415923071795864
+      children [
+        Shape {
+          appearance Roughcast {
+            textureTransform TextureTransform {
+              scale 13 10
+            }
+          }
+          geometry Plane {
+            size 13 10
+          }
+        }
+      ]
     }
+    Transform {
+      translation -11.13 -1.71 2.4
+      rotation -1 0 0 -3.1415923071795864
+      children [
+        Shape {
+          appearance Roughcast {
+            textureTransform TextureTransform {
+              scale 3.4 2.6
+            }
+          }
+          geometry Plane {
+            size 3.4 2.6
+          }
+        }
+      ]
+    }
+  ]
+}
+DEF FLOOR Solid {
+  translation -4.96 -6.5 0
+  children [
+    DEF LIVING_ROOM_1 Transform {
+      translation -1.91 3.2 0
+      children [
+        Shape {
+          appearance Parquetry {
+            textureTransform TextureTransform {
+              scale 6.3 6.26
+            }
+          }
+          geometry Plane {
+            size 6.3 6.26
+          }
+        }
+      ]
+    }
+    DEF LIVING_ROOM_2 Transform {
+      translation -6.24 4.84 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance Parquetry {
+            textureTransform TextureTransform {
+              scale 3.2 2.4
+            }
+          }
+          geometry Plane {
+            size 3.2 2.4
+          }
+        }
+      ]
+    }
+    DEF GARDEN Transform {
+      translation -6.29 -1.87 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance Pavement {
+            type "slate"
+            textureTransform TextureTransform {
+              scale 9.8 2.6
+            }
+          }
+          geometry Plane {
+            size 9.8 2.6
+          }
+        }
+      ]
+    }
+    DEF KITCHEN Transform {
+      translation 3.02 3.2 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance PorcelainChevronTiles {
+            textureTransform TextureTransform {
+              rotation 1.5708
+              scale 3.6 6.3
+            }
+          }
+          geometry Plane {
+            size 6.3 3.6
+          }
+        }
+      ]
+    }
+    DEF CORRIDOR Transform {
+      translation 0.15 -1.014 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance CementTiles {
+            textureTransform TextureTransform {
+              scale 2.135 9.933
+            }
+          }
+          geometry Plane {
+            size 2.135 9.933
+          }
+        }
+      ]
+    }
+    DEF BATHROOM_1 Transform {
+      translation 0.48 -4.391 0
+      children [
+        Shape {
+          appearance CementTiles {
+            textureTransform TextureTransform {
+              scale 2 4.6185
+            }
+          }
+          geometry Plane {
+            size 2 4.6185
+          }
+        }
+      ]
+    }
+    DEF ROOM_1 Transform {
+      translation -2.74 -4.391 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance Parquetry {
+            textureTransform TextureTransform {
+              scale 4.6185 4.3
+            }
+          }
+          geometry Plane {
+            size 4.6185 4.3
+          }
+        }
+      ]
+    }
+    DEF ROOM_2 Transform {
+      translation 3.3 -4.391 0
+      rotation 0 0 1 1.5708
+      children [
+        Shape {
+          appearance Parquetry {
+            textureTransform TextureTransform {
+              scale 4.6185 3.6
+            }
+          }
+          geometry Plane {
+            size 4.6185 3.6
+          }
+        }
+      ]
+    }
+  ]
+  name "floor"
+  model "floor"
+  boundingObject Plane {
+    size 13 10
   }
-  stringerAppearance GalvanizedMetal {
+}
+DEF KITCHEN_BLOCK Transform {
+  translation -2.09 -2.3 0
+  rotation 0 0 -1 -1.5707953071795862
+  children [
+    DEF KITCHEN_TILES_1 Transform {
+      translation 2.147 0.4 0.9
+      rotation 0 -1 0 1.5708
+      children [
+        Shape {
+          appearance PorcelainChevronTiles {
+            textureTransform TextureTransform {
+              rotation 1.5708
+              scale 2.6 1.8
+            }
+          }
+          geometry Plane {
+            size 1.8 2.6
+          }
+        }
+      ]
+    }
+    DEF KITCHEN_TILES_2 Transform {
+      translation 1.19 1.648 0.9
+      rotation -0.5773502691896258 -0.5773502691896258 0.5773502691896258 -2.094395307179586
+      children [
+        Shape {
+          appearance PorcelainChevronTiles {
+            textureTransform TextureTransform {
+              rotation 1.5708
+              scale 2.5 1.8
+            }
+          }
+          geometry Plane {
+            size 1.8 2.5
+          }
+        }
+      ]
+    }
+    Cabinet {
+      translation 2.15 -1 0.83
+      rotation 0 0 1 3.14159
+      name "cabinet(6)"
+      depth 0.7
+      outerThickness 0.02
+      rowsHeights [
+        0.2, 0.2, 0.2, 0.2, 0.2, 0.34
+      ]
+      columnsWidths [
+        0.4
+      ]
+      layout [
+        "LeftSidedDoor (1, 1, 1, 6, 1.5)"
+        "Shelf (1,2, 1, 0)"
+        "Shelf (1,3, 1, 0)"
+        "Shelf (1,4, 1, 0)"
+        "Shelf (1,5, 1, 0)"
+        "Shelf (1,6, 1, 0)"
+      ]
+      handle CabinetHandle {
+        translation 0 -0.3 0
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+    }
+    Cabinet {
+      translation -0.11 1.65 0.15
+      rotation 0 0 1 -1.5707953071795862
+      name "cabinet(2)"
+      depth 0.67
+      outerThickness 0.02
+      rowsHeights [
+        0.68, 0.25, 0.25, 0.25, 0.25, 0.34
+      ]
+      columnsWidths [
+        0.44
+      ]
+      layout [
+        "RightSidedDoor (1, 2, 1, 3, 1.5)"
+        "RightSidedDoor (1, 5, 1, 2, 1.5)"
+        "Shelf (1,2, 1, 0)"
+        "Shelf (1,3, 1, 0)"
+        "Shelf (1,4, 1, 0)"
+        "Shelf (1,5, 1, 0)"
+        "Shelf (1,6, 1, 0)"
+      ]
+      handle CabinetHandle {
+        translation 0 -0.15 0
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.827451 0.843137 0.811765
+      }
+    }
+    Cabinet {
+      translation 2.15 -0.1 1.4
+      rotation 0 0 1 3.14159
+      name "cabinet(3)"
+      outerThickness 0.02
+      rowsHeights [
+        0.21, 0.21, 0.22
+      ]
+      columnsWidths [
+        0.44, 0.44, 0.44
+      ]
+      layout [
+        "RightSidedDoor (1, 1, 1, 3, 1.5)"
+        "LeftSidedDoor (2, 1, 1, 3, 1.5)"
+        "LeftSidedDoor (3, 1, 1, 3, 1.5)"
+        "Shelf (1, 2, 3, 0)"
+        "Shelf (1, 3, 2, 0)"
+        "Shelf (1, 1, 0, 1)"
+        "Shelf (2, 1, 0, 3)"
+      ]
+      handle CabinetHandle {
+        translation 0 -0.2 0
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.827451 0.843137 0.811765
+      }
+    }
+    Cabinet {
+      translation 0.37 1.647 1.4
+      rotation 0 0 1 -1.5707953071795862
+      name "cabinet(4)"
+      outerThickness 0.02
+      rowsHeights [
+        0.21, 0.21, 0.22
+      ]
+      columnsWidths [
+        0.44
+      ]
+      layout [
+        "RightSidedDoor (1, 1, 1, 3, 1.5)"
+        "Shelf (1, 2 ,1 , 0)"
+        "Shelf (1, 3 ,1 , 0)"
+      ]
+      handle CabinetHandle {
+        translation 0 -0.2 0
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.827451 0.843137 0.811765
+      }
+    }
+    Cabinet {
+      translation -0.59 1.647 1.4
+      rotation 0 0 1 -1.5707953071795862
+      name "cabinet(1)"
+      outerThickness 0.02
+      rowsHeights [
+        0.21, 0.21, 0.22
+      ]
+      columnsWidths [
+        0.44
+      ]
+      layout [
+        "RightSidedDoor (1, 1, 1, 3, 1.5)"
+        "Shelf (1, 2 ,1 , 0)"
+        "Shelf (1, 3 ,1 , 0)"
+      ]
+      handle CabinetHandle {
+        translation 0 -0.2 0
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.827451 0.843137 0.811765
+      }
+    }
+    Cabinet {
+      translation 0.79 1.48 0.15
+      rotation 0 0 1 -1.5707953071795862
+      name "cabinet(5)"
+      outerThickness 0.02
+      rowsHeights [
+        0.21, 0.21, 0.22
+      ]
+      columnsWidths [
+        0.34, 0.47, 0.47
+      ]
+      layout [
+        "RightSidedDoor (2, 1, 1, 3, 1.5)"
+        "LeftSidedDoor (3, 1, 1, 3, 1.5)"
+        "RightSidedDoor (1, 1, 1, 3, 1.5)"
+        "Shelf (1, 2, 1, 0)"
+        "Shelf (1, 3, 1, 0)"
+        "Shelf (1, 1, 0, 3)"
+        "Shelf (2, 1, 0, 3)"
+      ]
+      handle CabinetHandle {
+        translation 0 0 0.1
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+    }
+    Cabinet {
+      translation 2.15 -0.12 0.15
+      rotation 0 0 1 3.14159
+      name "cabinet(7)"
+      depth 0.7
+      outerThickness 0.02
+      rowsHeights [
+        0.25, 0.25, 0.14
+      ]
+      columnsWidths [
+        0.76, 0.54, 0.43, 0.43
+      ]
+      layout [
+        "LeftSidedDoor (2, 1, 1, 2, 1.5)"
+        "LeftSidedDoor (4, 1, 1, 3, 1.5)"
+        "RightSidedDoor (3, 1, 1, 3, 1.5)"
+        "Drawer (1, 1, 1, 1, 3.5)"
+        "Drawer (1, 2, 1, 1, 3.5)"
+        "Drawer (1, 3, 1, 1, 3.5)"
+        "Drawer (2, 3, 1, 1, 3.5)"
+        "Shelf (1, 2, 1, 0)"
+        "Shelf (1, 3, 2, 0)"
+        "Shelf (3, 2, 2, 0)"
+        "Shelf (1, 1, 0, 3)"
+        "Shelf (2, 1, 0, 3)"
+        "Shelf (3, 1, 0, 1)"
+      ]
+      handle CabinetHandle {
+        handleLength 0.1
+        handleRadius 0.008
+        handleColor 0.427451 0.513725 0.533333
+      }
+      primaryAppearance PaintedWood {
+        colorOverride 0.2 0.2 0.2
+      }
+      secondaryAppearance PaintedWood {
+        colorOverride 0.827451 0.843137 0.811765
+      }
+    }
+    SolidBox {
+      translation 1.55 -0.12 0.07
+      name "box(1)"
+      size 0.2 2.2 0.16
+      appearance PBRAppearance {
+        baseColor 0.8 0.8 0.8
+        roughness 0.5
+        metalness 0
+        textureTransform TextureTransform {
+          scale 4 4
+        }
+      }
+    }
+    SolidBox {
+      translation 0.65 1.08 0.07
+      rotation 0 0 1 1.5708
+      name "box(2)"
+      size 0.2 2 0.16
+      appearance PBRAppearance {
+        baseColor 0.8 0.8 0.8
+        roughness 0.5
+        metalness 0
+        textureTransform TextureTransform {
+          scale 4 4
+        }
+      }
+    }
+    SolidBox {
+      translation 1.9 -1.12 0.07
+      rotation 0 0 -1 4.71239
+      name "box(3)"
+      size 0.2 0.5 0.16
+      appearance PBRAppearance {
+        roughness 0.5
+        metalness 0
+        textureTransform TextureTransform {
+          scale 4 4
+        }
+      }
+    }
+    SolidBox {
+      translation -0.25 1.415 0.07
+      rotation 0 0 -1 6.28318
+      name "box(4)"
+      size 0.2 0.47 0.16
+      appearance PBRAppearance {
+        baseColor 0.8 0.8 0.8
+        roughness 0.5
+        metalness 0
+        textureTransform TextureTransform {
+          scale 4 4
+        }
+      }
+    }
+    Fridge {
+      translation 1.8 -1.57 0
+      rotation 0 0 -1 3.14159
+      name "fridge(1)"
+      mainColor 0.6666666666666666 0 0
+    }
+    Sink {
+      translation 0.78 1.33 0.87
+      rotation 0 0 1 4.71239
+      name "sink(1)"
+    }
+    Oven {
+      translation -0.11 1.24 0.17
+      rotation 0 0 1 -1.5707953071795862
+      name "oven(1)"
+    }
+    Oven {
+      translation 1.81 -0.46 0.89
+      rotation 0 0 1 -3.14156
+      name "oven(2)"
+      mainColor 0.643137 0 0
+      type "microwave"
+    }
+    HotPlate {
+      translation 1.62912 1.14971 0.86
+      rotation 0 0 -1 5.49779
+      name "hot plate(1)"
+    }
+    Worktop {
+      translation 0.345 1.31 0.86
+      rotation 0 0 1 4.71239
+      name "worktop(1)"
+      size 0.7 0.43 0.06
+    }
+    Worktop {
+      translation 0.78 1.531 0.86
+      rotation 0 0 1 4.71239
+      name "worktop(2)"
+      size 0.237 0.44 0.06
+    }
+    Worktop {
+      translation 0.780001 1.003 0.86
+      rotation 0 0 1 4.71239
+      name "worktop(3)"
+      size 0.085 0.442 0.06
+    }
+    Worktop {
+      translation 1.22 1.306 0.86
+      rotation 0 0 -1 1.5708
+      name "worktop(4)"
+      size 0.69 0.44 0.06
+    }
+    Worktop {
+      translation 1.79 0.435 0.86
+      size 0.7 2.43 0.06
+    }
+  ]
+}
+StraightStairs {
+  translation -4.32594 -5.824913 0
+  stepSize 0.25 1.27 0.19
+  stepRise 0.18
+  nSteps 12
+  stepAppearance CarpetFibers {
+    type "synthetic"
+  }
+  stringerAppearance Roughcast {
     textureTransform TextureTransform {
-      scale 4 8
+      scale 1 2.4
     }
   }
   leftRail [
     StraightStairsRail {
-      run 4.2
-      rise 2.338
-      balusterHeight 0.5
-      balusterRadius 0.019
-      nBalusters 3
-      appearance GalvanizedMetal {
-        textureTransform TextureTransform {
-          scale 4 8
-        }
+      run 3
+      rise 2.16
+      newelHeight 0.94
+      appearance BrushedAluminium {
       }
     }
   ]
-  rightRail [
-    StraightStairsRail {
-      run 4.2
-      rise 2.338
-      balusterHeight 0.5
-      balusterRadius 0.019
-      nBalusters 3
-      appearance GalvanizedMetal {
-        textureTransform TextureTransform {
-          scale 4 8
-        }
-      }
-    }
-  ]
+  rightRail []
 }
-WoodenBox {
-  translation 0.821339 4.12919 0.3
-  rotation 0 0 -1 0.19635
+BiscuitBox {
+  translation -3.6496 -1.06782 0.8899215200000002
+  rotation 6.346474127574871e-17 1.7768136830300978e-16 -1 0.2618053071795865
 }
-WoodenBox {
-  translation 1.70404 3.95367 0.3
-  rotation 0 0 1 0.0654494
-  name "wooden box(1)"
+CerealBox {
+  translation -2.16698 -0.283733 0.8898038000000005
+  rotation 9.397735399089102e-18 -4.9193087731331275e-19 1 -3.1415853071795863
+  name "cereal box(1)"
 }
-WoodenBox {
-  translation 1.16604 4.05875 0.9
-  rotation 0 0 1 0.0654494
-  name "wooden box(2)"
+CerealBox {
+  translation -2.26473 -0.288104 0.8898038000000005
+  rotation -0.02733700868254444 0.057522518806374115 -0.9979698631654469 6.957850687264618e-16
+  name "cereal box(2)"
 }
-PlasticCrate {
-  translation -0.276141 -3.89221 0
-  rotation 0 0 -1 0.916294
-  size 0.3 0.5 0.2
+CerealBox {
+  translation -2.39953 -0.270551 0.8898038000000005
+  rotation -1.9774429537039584e-18 -2.2866641631976218e-18 0.9999999999999999 2.618
+  name "cereal box(3)"
 }
-TrafficCone {
-  translation 4.63526 -3.89768 0.228719
-  rotation 0.0003109999849598856 -0.9999999516395034 0 1.997414
-}
-TrafficCone {
-  translation 3.38354 -3.49778 0
-  rotation 0 0 -1 1.0472
-  name "traffic cone(1)"
-}
-TrafficCone {
-  translation 4.09265 -3.13193 0
-  rotation 0 0 1 -1.047195307179586
-  name "traffic cone(2)"
-}
-TrafficCone {
-  translation 3.98473 -4.41983 0
-  rotation 0 0 1 -1.047195307179586
-  name "traffic cone(3)"
-}
-OilBarrel {
-  translation 4.67 0 0.44
-}
-OilBarrel {
-  translation 4.69 -0.68 0.44
-  name "oil barrel(1)"
-}
-OilBarrel {
-  translation 4.53 -1.34 0.44
-  name "oil barrel(2)"
-}
-OilBarrel {
-  translation 4.05 -0.22 0.44
-  name "oil barrel(3)"
-}
-OilBarrel {
-  translation 3.89 -1.04 0.44
-  name "oil barrel(4)"
-}
-OilBarrel {
-  translation 4.36 -1.04 1.32
-  name "oil barrel(5)"
-}
-OilBarrel {
-  translation 4.25 -0.27 1.32
-  name "oil barrel(6)"
-}
-CardboardBox {
-  translation 1.71781 -4.16794 0.28
-  rotation 0 0 1 -0.785395307179586
-  name "cardboard box(4)"
-  size 0.3 0.3 0.3
-}
-CardboardBox {
-  translation 1.47741 -4.40834 0.28
-  rotation 0 0 1 -0.785395307179586
-  name "cardboard box(5)"
-  size 0.3 0.3 0.3
-}
-PlatformCart {
-  translation 1.64 -4.33 0
-  rotation 0 0 1 -2.3561953071795863
-}
-WoodenPalletStack {
-  translation 4.33683 1.57306 0
-}
-WoodenPalletStack {
-  translation 4.45255 2.90052 0
+WallPlug {
+  translation -9.98 -0.15 0.13
   rotation 0 0 1 -1.5707953071795862
-  name "wooden pallet stack(1)"
 }
-WoodenPalletStack {
-  translation 4.32255 4.33052 0
+WallPlug {
+  translation -7.73 -0.15 0.13
   rotation 0 0 1 -1.5707953071795862
-  name "wooden pallet stack(2)"
+  name "wall plug(1)"
+}
+WallPlug {
+  translation -3.73915 -3.21929 0.13
+  name "wall plug(3)"
+}
+WallPlug {
+  translation -0.149129 -6.88575 0.13
+  rotation 0 0 1 -3.1415853071795863
+  name "wall plug(4)"
+}
+SquareManhole {
+  translation -0.959202 -5.85302 0
+  rotation 0 0 1 3.14159
+}
+PipeSection {
+  translation -3.58714 -12.8957 1.2
+  rotation 0 0 1 1.5708
+  height 2.4
+  radius 0.04
+  appearance Roughcast {
+  }
+}
+Barbecue {
+  translation -11.7017 -5.08633 0
 }
 RubberDuck {
-  translation -0.318088 -1.732082 0.059884
-  rotation 0 0 1 0.785382
-  scale 3
+  translation -5.387440850395009 -11.082700853632925 0.020469009102432913
+  rotation 1.0479068247637393e-17 3.185840909385665e-18 1 0.7853969099545042
+}
+Cabinet {
+  translation -0.180166 -4.63275 0
+  rotation 0 0 1 3.14159
+  name "cabinet 4(2)"
+  depth 0.4
+  outerThickness 0.02
+  rowsHeights [
+    0.4, 0.4, 0.4, 0.4, 0.4
+  ]
+  columnsWidths [
+    0.4
+  ]
+  layout [
+    "Shelf  (1, 2, 1, 0)"
+    "Shelf  (1, 3, 1, 0)"
+    "Shelf  (1, 4, 1, 0)"
+    "Shelf  (1, 5, 1, 0)"
+  ]
+  primaryAppearance PaintedWood {
+    colorOverride 0.827451 0.843137 0.811765
+  }
+  secondaryAppearance PaintedWood {
+    colorOverride 0.827451 0.843137 0.811765
+  }
+}
+Book {
+  translation -5.82219995574668 -2.494350004001125 -0.007529430000000051
+  rotation 0.6947464887870828 0.1861575478889595 -0.6947464887870898 2.7734911017839563
+  name "book(3)"
+}
+Book {
+  translation -9.64659993132042 -6.231480256317236 0.11994113999999997
+  rotation 0.965926099200494 0.25881802658106645 7.747255006087676e-17 3.141592653589793
+  name "book(4)"
+}
+Cabinet {
+  translation -0.16999999999999998 -9.12 0
+  rotation 0 0 1 3.14159
+}
+Cabinet {
+  translation -5.80579 -10.1734 0
+  rotation 0 0 1 3.14159
+  name "cabinet(8)"
+}
+Cookware {
+  translation -1.571158329499633 -0.4585265328355443 1.1597261732787003
+  rotation 0.0006367013501139565 -0.001081125296916127 0.9999992128894317 0.5236051885261772
+}
+Cookware {
+  translation -3.2007815801960704 -0.5894504483016623 0.8900758508037028
+  rotation 0.0003121273823107551 8.958944420875406e-05 0.9999999472751131 3.1415894894220413
+  name "cookware(1)"
+}
+Lid {
+  translation -2.800735563684147 -0.5894049638473035 0.8869918997782105
+  rotation 0.7061131454377476 -0.704162595299088 0.07456048029393954 0.00010916574048918229
+}
+WoodenSpoon {
+  translation -2.970780527546695 -0.7894499999986181 0.8892286340628429
+  rotation 0.0003466878051251504 -4.599835801755042e-10 0.9999999399037812 3.14159000000065
+}
+WoodenChair {
+  translation -6.88 -12.059999999999999 0
+  rotation 0 0 1 -1.5707953071795862
+  name "wooden chair(2)"
+}
+Desk {
+  translation -6.905085 -12.493314 0
+  rotation 0 0 1 -1.5707963071795863
+  name "desk(2)"
+}
+Wall {
+  translation 0 -0.65 0
+  name "wall 1"
+  size 0.3 1 2.4
+}
+Window {
+  translation 0 -1.65 0
+  name "window 1"
+  size 0.3 1 2.4
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation -4.4 -13.12 0
+  rotation 0 0 1 1.570797
+  name "window 1(7)"
+  size 0.3 0.7 2.4
+  bottomWallHeight 1.4
+  windowHeight 0.8
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation -7.95 -13.12 0
+  rotation 0 0 1 -1.5707963071795863
+  name "window 1(1)"
+  size 0.3 1 2.4
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation 0 -10.87 0
+  name "window 1(4)"
+  size 0.3 1 2.4
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation -11.15 -3.48 0
+  rotation 0 0 1 1.570797
+  name "window 1(2)"
+  size 0.3 2.2 2.4
+  bottomWallHeight 0
+  windowHeight 2.2
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation -9.9 -4.73 0
+  name "window 1(6)"
+  size 0.3 2.2 2.4
+  bottomWallHeight 0
+  windowHeight 2.2
+  frameAppearance BrushedAluminium {
+  }
+}
+Window {
+  translation -8.25 0 0
+  rotation 0 0 1 1.570797
+  name "window 1(5)"
+  size 0.3 1 2.4
+  frameAppearance BrushedAluminium {
+  }
+}
+Radiator {
+  translation -0.28465799999999997 -10.58667 0.36
+  rotation 0 0 1 3.14159
+  name "radiator(5)"
+}
+Radiator {
+  translation -3.23759 -6.88139 0.36
+  rotation 0 0 1 -1.5707953071795862
+  name "radiator(4)"
+  numberOfFins 20
+}
+Radiator {
+  translation -7.731897999999999 -12.834878 0.36
+  rotation 0 0 -1 -1.5707953071795862
+  name "radiator(3)"
+}
+Radiator {
+  translation -8.531595 -0.282246 0.36
+  rotation 0 0 1 -1.5707953071795862
+  name "radiator(2)"
+}
+DesktopComputer {
+  translation -7.25806 -12.3974 0
+  rotation 0 0 1 1.5707959999999999
+}
+Keyboard {
+  translation -6.961739 -12.493036 0.71
+  rotation 0 0 -1 -1.3089963071795863
+}
+Monitor {
+  translation -6.9690579999999995 -12.713728999999999 0.71
+  rotation 0 0 1 1.5707959999999999
+}
+ComputerMouse {
+  translation -7.273699952386824 -12.29006865432005 0.7099803800001014
+  rotation -1.5017625240174334e-06 1.8366025516758984e-06 -0.9999999999971858 1.7707288660676983
+}
+Radiator {
+  translation -0.27999999999999997 -1.53 0.36
+  rotation 0 0 1 3.14159
+  name "radiator(1)"
+}
+Wall {
+  translation 0 -4.57 0
+  name "wall 2"
+  size 0.3 4.85 2.4
+}
+Wall {
+  translation 0 -12.32 0
+  name "wall 2(1)"
+  size 0.3 1.9 2.4
+}
+Wall {
+  translation 0 -9.18 0
+  name "wall 2(2)"
+  size 0.3 2.4 2.4
+}
+Wall {
+  translation -9.9 -3.48 0
+  name "wall 3(3)"
+  size 0.3 0.3 2.4
+}
+Wall {
+  translation -3.8 0 0
+  rotation 0 0 1 1.5708
+  name "wall 5"
+  size 0.3 7.9 2.4
+}
+Wall {
+  translation -10.65 0 0
+  rotation 0 0 1 1.5708
+  name "wall 6"
+  size 0.3 3.8 2.4
+}
+Wall {
+  translation -12.399999999999999 -1.88 0
+  name "wall 3(2)"
+  size 0.3 3.5 2.4
+}
+Wall {
+  translation -3.369987 -10.679991 0
+  rotation 0 0 1 -3.1415893071795864
+  name "wall 7(6)"
+  size 0.3 4.6 2.4
+}
+Wall {
+  translation -5.58999 -10.73 0
+  rotation 0 0 1 -3.1415893071795864
+  name "wall 7(9)"
+  size 0.3 4.9 2.4
+}
+Wall {
+  translation -9.89 -10.73 0
+  rotation 0 0 1 -3.1415893071795864
+  name "wall 7(15)"
+  size 0.3 4.9 2.4
+}
+Wall {
+  translation -9.25 -13.12 0
+  rotation 0 0 1 1.5708
+  name "wall 7(7)"
+  size 0.3 1.6 2.4
+}
+Wall {
+  translation -6.1 -13.12 0
+  rotation 0 0 1 1.5708
+  name "wall 7(12)"
+  size 0.3 2.7 2.4
+}
+Wall {
+  translation -2.1 -13.12 0
+  rotation 0 0 1 1.5708
+  name "wall 7(13)"
+  size 0.3 3.9 2.4
+}
+Door {
+  hidden translation_5 0.0010000002479865766 7.831157944337974e-11 0
+  translation -0.91 -6.6 0
+  rotation 0 0 1 1.5708
+  name "door(4)"
+  size 0.3 1 2.4
+  position -2.6103850709619005e-10
+  frameSize 0.001 0.05 0.05
+  frameAppearance BrushedAluminium {
+  }
+}
+Door {
+  hidden translation_5 0.001000000247990851 7.831291171100929e-11 0
+  translation 0 -7.49 0
+  name "door(1)"
+  size 0.3 1 2.4
+  position -2.6104300121836873e-10
+  frameSize 0.001 0.05 0.05
+  frameAppearance BrushedAluminium {
+  }
+}
+Wall {
+  translation -2.93 -6.6 0
+  rotation 0 0 1 1.5708
+  name "wall 7(1)"
+  size 0.3 3.045 2.4
+}
+Wall {
+  translation -0.29 -6.6 0
+  rotation 0 0 1 1.5708
+  name "wall 7(14)"
+  size 0.3 0.3 2.4
+}
+Wall {
+  translation -1.94 -5.02 0
+  rotation 0 0 1 1.5708
+  name "wall 7(8)"
+  size 0.3 3.6 2.4
+}
+Wall {
+  translation -3.837798 -5.2702 0.26217999999999997
+  rotation 0 -1 0 3.77
+  name "wall 7(10)"
+  size 1 0.2 0.4
+}
+Wall {
+  translation -0.8 -8.43 0
+  rotation 0 0 1 1.5708
+  name "wall 7(4)"
+  size 0.3 1.7 2.4
+}
+Wall {
+  translation -9.18 -8.43 0
+  rotation 0 0 1 1.5708
+  name "wall 7(3)"
+  size 0.3 1.7 2.4
+}
+Wall {
+  translation -7.99 -8.43 0
+  rotation 0 0 1 1.5708
+  name "wall 7(5)"
+  size 0.3 1.7 2.4
+}
+Wall {
+  translation -3.89 -1.8 0
+  name "wall 9"
+  size 0.3 3.3 2.4
+}
+Wall {
+  translation -9.9 -6.19 0
+  name "wall 9(2)"
+  size 0.3 0.72 2.4
+}
+CeilingLight {
+  translation -1.3341 -2.47061 2.4
+  name "ceiling light 1"
+  pointLightColor 0.913725 0.72549 0.431373
+  pointLightIntensity 3
+  pointLightRadius 3.9
+}
+CeilingLight {
+  translation -10.1237 -1.47922 2.4
+  name "ceiling light 2"
+  pointLightIntensity 2
+  pointLightRadius 4
+}
+CeilingLight {
+  translation -7.411517 -4.344069 2.4
+  name "ceiling light 2(5)"
+  pointLightIntensity 4
+  pointLightRadius 10
+}
+CeilingLight {
+  translation -1.7941829999999999 -7.551591999999999 2.4
+  name "ceiling light 2(1)"
+  pointLightColor 0.447059 0.623529 0.811765
+  pointLightIntensity 3
+  pointLightRadius 4
+}
+CeilingLight {
+  translation -5.364183 -7.551591999999999 2.4
+  name "ceiling light 2(2)"
+  pointLightColor 0.447059 0.623529 0.811765
+  pointLightIntensity 3
+  pointLightRadius 4
+}
+CeilingLight {
+  translation -7.622198 -10.602905999999999 2.4
+  name "ceiling light 2(3)"
+  pointLightIntensity 3
+  pointLightRadius 5
+}
+CeilingLight {
+  translation -1.945004 -10.56734 2.4
+  name "ceiling light 2(4)"
+  pointLightColor 0.913725 0.72549 0.431373
+  pointLightIntensity 3
+  pointLightRadius 5
+}
+FloorLight {
+  translation -4.7700309999999995 -0.49615699999999996 0
+  pointLightColor 0.913725 0.72549 0.431373
+  pointLightRadius 3
+}
+FloorLight {
+  translation -0.590395 -12.404582999999999 0
+  name "floor light(1)"
+  pointLightRadius 2
+}
+Transform {
+  translation -9.51375 -11.8794 0.4
+  scale 0.4 0.4 0.4
+  children [
+    FloorLight {
+      translation -0.214575 1.45231 0
+      name "floor light(2)"
+      bulbColor 0.937255 0.16078399999999998 0.16078399999999998
+      pointLightColor 1 0.5799949999999999 0.5799949999999999
+      pointLightIntensity 0.7
+      pointLightRadius 3
+    }
+  ]
+}
+Transform {
+  translation -2.73375 -12.6994 0.4
+  scale 0.4 0.4 0.4
+  children [
+    FloorLight {
+      translation 0 -0.2 0
+      name "floor light(4)"
+      pointLightIntensity 0.7
+      pointLightRadius 3
+    }
+  ]
+}
+Transform {
+  translation -9.51375 -9.6494 0.4
+  scale 0.4 0.4 0.4
+  children [
+    FloorLight {
+      translation 0 1.31 0
+      name "floor light(3)"
+      bulbColor 0.937255 0.16078399999999998 0.16078399999999998
+      pointLightColor 1 0.5799949999999999 0.5799949999999999
+      pointLightIntensity 0.7
+      pointLightRadius 3
+    }
+  ]
+}
+Table {
+  translation -9.55609 -9.09224 0
+  name "table(2)"
+  size 0.3 0.3 0.4
+  feetSize 0.04 0.05
+  legAppearance BrushedAluminium {
+  }
+}
+Table {
+  translation -9.56036 -11.3804 0
+  name "table(3)"
+  size 0.3 0.3 0.4
+  feetSize 0.04 0.05
+  legAppearance BrushedAluminium {
+  }
+}
+Table {
+  translation -2.74109 -12.7454 0
+  name "table(4)"
+  size 0.3 0.3 0.4
+  feetSize 0.04 0.05
+  legAppearance BrushedAluminium {
+  }
+}
+Book {
+  translation -2.733749988544214 -12.639393361462348 0.4099371433032504
+  rotation 0.7071067782919124 -9.048342768024116e-05 -0.7071067782919223 3.141409041415539
+}
+Carpet {
+  translation -5.803488 -2.55795 -0.015
+  rotation 0 0 1 -1.5707953071795862
+  color 0.13725490196078433 0.13725490196078433 0.13725490196078433
+}
+Carpet {
+  translation -0.62349 -5.80795 2.385
+  rotation 0 0 1 -1.5707953071795862
+  name "carpet(1)"
+  color 0.13725490196078433 0.13725490196078433 0.13725490196078433
+}
+BunchOfSunFlowers {
+  translation -7.069851 -0.484029 0
+}
+Cabinet {
+  translation -4.073264 -0.6770999999999999 0
+  rotation 0 0 1 3.14159
+  name "cabinet 4"
+  depth 0.4
+  outerThickness 0.02
+  rowsHeights [
+    0.52, 0.44, 0.44, 0.44, 0.44
+  ]
+  columnsWidths [
+    0.96
+  ]
+  layout [
+    "Shelf  (1, 2, 1, 0)"
+    "Shelf  (1, 3, 1, 0)"
+    "Shelf  (1, 4, 1, 0)"
+    "Shelf  (1, 5, 1, 0)"
+  ]
+  primaryAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.13333333333333333 0.13333333333333333
+  }
+  secondaryAppearance PaintedWood {
+    colorOverride 0.13333333333333333 0.13333333333333333 0.13333333333333333
+  }
+}
+PottedTree {
+  translation -11.870923999999999 -0.53674 0
+}
+PottedTree {
+  translation -6.025363 -12.409485 0
+  name "potted tree(1)"
+}
+PortraitPainting {
+  translation -12.209999999999999 -1.7999999999999998 1.5999999999999999
+}
+PortraitPainting {
+  translation -3.28921 -6.76837 1.6
+  rotation 0 0 1 -1.5707953071795862
+  name "portrait painting(1)"
+}
+LandscapePainting {
+  translation -10.3223 -0.178447 1.62868
+  rotation 0 0 1 -1.5707953071795862
+}
+LandscapePainting {
+  translation -2.295442 -4.8501449999999995 1.62868
+  rotation 0 0 1 1.5708
+  name "landscape painting(1)"
+}
+FireExtinguisher {
+  translation -0.4400694079886201 -8.158107563466714 -0.0023544000000024767
+  rotation 0.0011076078749977384 0.00140760168062737 0.9999983959298654 2.094396710969529
+}
+Clock {
+  translation -6.165 -0.155075 1.72
+  rotation 0 0 1 -1.5707953071795862
+}
+OfficeTelephone {
+  translation -4.496782 -6.58 1.0611279999999998
+  rotation -0.2907400269219462 0 0.9568020885979639 3.14159
+  enablePhysics FALSE
+}
+CeilingSpotLight {
+  translation -7.72 -7.51 2.36
+  spotLightIntensity 5
+  spotLightRadius 3
+}
+CeilingSpotLight {
+  translation -4.28 -6.46 0.22999999999999998
+  rotation -1 0 0 -1.5707963071795863
+  name "ceiling light(5)"
+  spotLightIntensity 2
+  spotLightRadius 2
+}
+CeilingSpotLight {
+  translation -3.78 -6.46 0.61
+  rotation -1 0 0 -1.5707963071795863
+  name "ceiling light(6)"
+  spotLightIntensity 2
+  spotLightRadius 2
+}
+CeilingSpotLight {
+  translation -3.02 -6.46 1.14
+  rotation -1 0 0 -1.5707963071795863
+  name "ceiling light(7)"
+  spotLightIntensity 2
+  spotLightRadius 2
+}
+CeilingSpotLight {
+  translation -2.29 -6.46 1.69
+  rotation -1 0 0 -1.5707963071795863
+  name "ceiling light(8)"
+  spotLightIntensity 2
+  spotLightRadius 2
+}
+CeilingSpotLight {
+  translation -4.52 -9.1 2.36
+  name "ceiling light(2)"
+  spotLightIntensity 5
+  spotLightRadius 3
+}
+CeilingSpotLight {
+  translation -4.52 -10.4 2.36
+  name "ceiling light(3)"
+  spotLightIntensity 5
+  spotLightRadius 3
+}
+CeilingSpotLight {
+  translation -4.52 -11.68 2.36
+  name "ceiling light(4)"
+  spotLightIntensity 5
+  spotLightRadius 3
+}
+CeilingSpotLight {
+  translation -8.7 -7.51 2.36
+  name "ceiling light(1)"
+  spotLightIntensity 5
+  spotLightRadius 3
+}
+DEF TREES Transform {
+  scale 1 1 0.6
+  children [
+    Cypress {
+      translation -12.53 -4.26 0
+      rotation 0 0 1 -0.5235983071795864
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -4.76 0
+      name "cypress tree(1)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -5.279999999999999 0
+      rotation 0 0 1 0.7853979999999999
+      name "cypress tree(2)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -5.85 0
+      rotation 0 0 1 -0.26179930717958655
+      name "cypress tree(3)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -6.37 0
+      rotation 0 0 1 -1.0471973071795864
+      name "cypress tree(4)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -6.85 0
+      rotation 0 0 1 1.308997
+      name "cypress tree(5)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -7.319999999999999 0
+      rotation 0 0 1 -0.7853983071795865
+      name "cypress tree(6)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -7.9799999999999995 0
+      rotation 0 0 1 0.5235989999999999
+      name "cypress tree(7)"
+      enableBoundingObject FALSE
+    }
+    Cypress {
+      translation -12.53 -8.5 0
+      name "cypress tree(8)"
+      enableBoundingObject FALSE
+    }
+  ]
 }

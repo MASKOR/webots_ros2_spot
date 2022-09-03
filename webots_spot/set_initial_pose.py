@@ -17,13 +17,13 @@ class InitialPose(Node):
             mymsg = PoseWithCovarianceStamped()
             mymsg.header.stamp = self.get_clock().now().to_msg()
             mymsg.header.frame_id = 'map'
-            mymsg.pose.pose.position.x = 0.
-            mymsg.pose.pose.position.y = -0.002
-            mymsg.pose.pose.position.z = 0.609
-            mymsg.pose.pose.orientation.x = 0.001
-            mymsg.pose.pose.orientation.y = -0.001
-            mymsg.pose.pose.orientation.z = 0.793
-            mymsg.pose.pose.orientation.w = 0.609
+            mymsg.pose.pose.position.x = -11.
+            mymsg.pose.pose.position.y = -11.
+            mymsg.pose.pose.position.z = 0.6
+            mymsg.pose.pose.orientation.x = 0.
+            mymsg.pose.pose.orientation.y = 0.
+            mymsg.pose.pose.orientation.z = 0.
+            mymsg.pose.pose.orientation.w = 1.
             self.mypub.publish(mymsg)
             self.destroy_node()
             exit()

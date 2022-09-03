@@ -5,13 +5,51 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from webots_ros2_driver.webots_launcher import WebotsLauncher
+import random
+
+alphabets = 'ABCDEFGHIJ'
+tag_locations = \
+[
+    ['-12.25 -1.8 0.5', '0 0 1 0'],
+    ['-10.4 -0.15 0.5', '0 0 1 -1.57'],
+    ['-6. -0.15 0.5', '0 0 1 -1.57'],
+    ['-4.05 -2.3 0.5', '0 0 1 0'],
+    ['-0.15 -3.3 0.5', '0 0 1 0'],
+    ['-2. -4.87 0.5', '0 0 1 -1.57'],
+    ['-1.6 -12.97 0.5', '0 0 1 -1.57'],
+    ['-3.22 -11. 0.5', '0 0 1 0'],
+    ['-4.5 -12.97 0.5', '0 0 1 -1.57'],
+    ['-9.74 -10.2 0.5', '0 0 1 0'],
+]
 
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_spot')
     robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'spot.urdf')).read_text()
 
+    world = os.path.join(package_dir, 'worlds', 'spot.wbt')
+    with open(world, 'r') as f:
+        world_txt = f.read()
+
+    modified_world = os.path.join(package_dir, 'worlds', 'modified_spot.wbt')
+    with open(modified_world, 'w') as f:
+        tags = random.sample(range(0, 20), 5)
+        locations = random.sample(range(0, 10), 5)
+        pairs = ''
+        for t, l in zip(tags, locations):
+            apriltag = 'tag36_11_' + str(t).zfill(5) + ' {\n'
+            apriltag = apriltag + '  translation ' + tag_locations[l][0] + '\n'
+            apriltag = apriltag + '  rotation ' + tag_locations[l][1] + '\n}'
+
+            pairs = pairs + alphabets[l] + ':' + str(t) + '\n'
+            
+            world_txt = world_txt + apriltag
+        f.write(world_txt)
+
+    with open('pairs.txt', 'w') as f:
+        f.write(pairs)
+
     webots = WebotsLauncher(
-        world=os.path.join(package_dir, 'worlds', 'spot.wbt')
+        world=modified_world
     )
 
     spot_driver = Node(
