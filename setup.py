@@ -11,6 +11,8 @@ data_files = [
     ('share/' + package_name + '/params', glob('params/*.yaml')),
     ('share/' + package_name + '/protos', glob('protos/*.proto')),
     ('share/' + package_name + '/protos/icons', glob('protos/icons/*.png')),
+    ('share/' + package_name + '/protos/apriltags/protos', glob('apriltags/protos/*.proto')),
+    ('share/' + package_name + '/protos/apriltags/images', glob('apriltags/images/*.png')),
 ]
 setup(
     name=package_name,

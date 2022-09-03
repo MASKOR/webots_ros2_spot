@@ -1,0 +1,33 @@
+#VRML_OBJ R2022a utf8
+PROTO tag36_11_00009 [
+  field SFVec3f    translation 0 0 0.5
+  field SFRotation rotation    0 0 1 0
+  field SFString   name        "tag36_11_00009"
+]
+{
+  Solid {
+    translation IS translation
+    rotation IS rotation
+    children [
+      Shape {
+        appearance PBRAppearance {
+          baseColorMap ImageTexture {
+            url [
+              "../images/tag36_11_00009.png"
+            ]
+          }
+          roughness 1
+          metalness 0
+        }
+        geometry Box {
+          size 0.01 0.16 0.16
+        }
+      }
+    ]
+    name IS name
+    model "tag36_11_00009"
+    boundingObject Box {
+      size 0.01 0.16 0.16
+    }
+  }
+}
