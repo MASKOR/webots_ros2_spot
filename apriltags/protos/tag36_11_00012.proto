@@ -20,14 +20,14 @@ PROTO tag36_11_00012 [
           metalness 0
         }
         geometry Box {
-          size 0.01 0.16 0.16
+          size 0.01 0.3 0.3
         }
       }
     ]
     name IS name
     model "tag36_11_00012"
     boundingObject Box {
-      size 0.01 0.16 0.16
+      size 0.01 0.3 0.3
     }
   }
 }
