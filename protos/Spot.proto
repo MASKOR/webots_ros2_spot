@@ -33,6 +33,11 @@ PROTO Spot [
       }
       InertialUnit {
       }
+      DEF KINECT Kinect {
+        translation 0.266 0 0.1118
+        rotation -1 0 0 0.008761
+        name "kinect"
+      }
       LED {
         translation 0.505323 0.081967 0.050721
         rotation 0.868733 0.480612 0.119642 1.875866

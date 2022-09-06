@@ -4,6 +4,7 @@ import launch
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
 from webots_ros2_driver.webots_launcher import WebotsLauncher
 import random
 
@@ -66,6 +67,15 @@ def generate_launch_description():
         executable='spot_pointcloud2',
         output='screen',
     )
+    
+    apriltag = LaunchConfiguration('detect_tags', default=False)
+    spot_apriltag = Node(
+        package='webots_spot',
+        executable='apriltag_ros',
+        output='screen',
+        condition=launch.conditions.IfCondition(apriltag),        
+    )
+    
     spot_initial_pose = Node(
         package='webots_spot',
         executable='set_initial_pose',
@@ -96,6 +106,7 @@ def generate_launch_description():
         spot_driver,
         robot_state_publisher,
         spot_pointcloud2,
+        spot_apriltag,
         webots_event_handler,
         Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
