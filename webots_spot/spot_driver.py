@@ -18,6 +18,12 @@ from webots_spot.tf2_broadcaster import DynamicBroadcaster
 
 NUMBER_OF_JOINTS = 12
 
+motions = {
+    'stand': [-0.1, 0.0, 0.0, 0.1, 0.0, 0.0, -0.1, 0.0, 0.0, 0.1, 0.0, 0.0],
+    'sit'  : [-0.20, -0.40, -0.19, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.40, -0.90, 1.18],
+    'lie'  : [-0.40, -0.99, 1.59, 0.40, -0.99, 1.59, -0.40, -0.99, 1.59, 0.40, -0.99, 1.59],
+}
+
 
 class SpotDriver:
     def init(self, webots_node, properties):
@@ -72,9 +78,14 @@ class SpotDriver:
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
-        self.__node.create_service(SpotMotion, '/Spot/command', self.__motion_cb)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 10)
         self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
+
+        ## Services
+        self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
+        self.__node.create_service(SpotMotion, '/Spot/sit_down', self.__sit_motion_cb)
+        self.__node.create_service(SpotMotion, '/Spot/lie_down', self.__lie_motion_cb)
+        self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
         
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
@@ -143,6 +154,7 @@ class SpotDriver:
         self.paw = False
         self.paw2 = False
         self.paw_time = 0.
+        self.previous_cmd = False
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
@@ -291,36 +303,63 @@ class SpotDriver:
     def movement_decomposition(self, target, duration):
         """
         Decompose big motion into smaller motions
-        """        
+        """
+        self.previous_cmd = True
+
         self.n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
         self.step_difference = [(target[i] - self.motors_pos[i]) / self.n_steps_to_achieve_target
                                 for i in range(NUMBER_OF_JOINTS)]
         self.m_target = []
 
-    def __motion_cb(self, request, response):
-        command = request.command
-        motions = {
-            'stand': [-0.1, 0.0, 0.0, 0.1, 0.0, 0.0, -0.1, 0.0, 0.0, 0.1, 0.0, 0.0],
-            'sit'  : [-0.20, -0.40, -0.19, 0.20, -0.40, -0.19, -0.40, -0.90, 1.18, 0.40, -0.90, 1.18],
-            'lie'  : [-0.40, -0.99, 1.59, 0.40, -0.99, 1.59, -0.40, -0.99, 1.59, 0.40, -0.99, 1.59],
-        }
-        response.answer = 'commands: stand sit lie hand only'
-        if command in motions.keys():
-            self.fixed_motion = True
-            self.movement_decomposition(motions[command], 1)
-            self.paw = False
-            self.paw2 = False
-            response.answer = 'Called'
+    def __stand_motion_cb(self, request, response):
+        self.fixed_motion = True
+        if self.previous_cmd and not request.override:
+            response.answer = 'performing previous command, override with bool argument'
+            return response
 
-        if command == 'hand':
-            self.fixed_motion = True
-            # Start handshake motion
-            self.movement_decomposition([-0.20, -0.30, 0.05,
-                                          0.20, -0.40, -0.19,
-                                         -0.40, -0.90, 1.18,
-                                          0.49, -0.90, 0.80], 1)
-            self.paw = True
-            response.answer = 'Called'
+        self.paw = False
+        self.paw2 = False
+        self.movement_decomposition(motions['stand'], 1)
+        response.answer = 'standing up'
+        return response
+
+    def __sit_motion_cb(self, request, response):
+        self.fixed_motion = True
+        if self.previous_cmd and not request.override:
+            response.answer = 'performing previous command, override with bool argument'
+            return response
+
+        self.paw = False
+        self.paw2 = False
+        self.movement_decomposition(motions['sit'], 1)
+        response.answer = 'sitting down'
+        return response
+
+    def __lie_motion_cb(self, request, response):
+        self.fixed_motion = True
+        if self.previous_cmd and not request.override:
+            response.answer = 'performing previous command, override with bool argument'
+            return response
+
+        self.paw = False
+        self.paw2 = False
+        self.movement_decomposition(motions['lie'], 1)
+        response.answer = 'lying down'
+        return response
+
+    def __shakehand_motion_cb(self, request, response):
+        self.fixed_motion = True
+        if self.previous_cmd and not request.override:
+            response.answer = 'performing previous command, override with bool argument'
+            return response
+
+        # Start handshake motion
+        self.movement_decomposition([-0.20, -0.30, 0.05,
+                                        0.20, -0.40, -0.19,
+                                        -0.40, -0.90, 1.18,
+                                        0.49, -0.90, 0.80], 1)
+        self.paw = True
+        response.answer = 'shaking hands'
         return response
 
     def defined_motions(self):
@@ -341,9 +380,13 @@ class SpotDriver:
                 self.paw_time = self.__robot.getTime() + 4
                 self.paw = False
                 self.paw2 = True # Do the shakehands motion
+            else:
+                self.previous_cmd = False
+                
             self.m_target = []
 
         if self.paw2:
+            self.previous_cmd = True
             if self.paw_time > self.__robot.getTime():
                 self.motors[4].setPosition(0.2 * np.sin(2 * self.__robot.getTime()) + 0.6)
                 self.motors[5].setPosition(0.4 * np.sin(2 * self.__robot.getTime()))
