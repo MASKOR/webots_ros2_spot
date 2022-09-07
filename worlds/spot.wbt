@@ -6,8 +6,8 @@ WorldInfo {
   title "This simulation was sponsored by Kamal Othman & Prof. Ahmad Rad from AISL-SFU"
 }
 Viewpoint {
-  orientation -0.00542290856333439 0.9999850199695144 0.0007428992418790068 1.5852468365297798
-  position -5.939147295736925 -6.4786233985419726 22.77681661643301
+  orientation -0.0013341 0.999965 -0.008313 0.96404
+  position -11.375 4.07134 24.5093
   exposure 0.5
   ambientOcclusionRadius 1
 }
@@ -19,14 +19,14 @@ TexturedBackground {
   ]
 }
 DEF Spot Spot {
-  translation -11 -11 0.6
+  translation 0.0 0.0 0.6
   controller "<extern>"
   supervisor TRUE
 }
 DEF ROOF Group {
   children [
     Transform {
-      translation -4.83 -6.49 2.4
+      translation 6.17 4.51 2.4
       rotation -1 0 0 -3.1415923071795864
       children [
         Shape {
@@ -42,7 +42,7 @@ DEF ROOF Group {
       ]
     }
     Transform {
-      translation -11.13 -1.71 2.4
+      translation -0.13000000000000078 9.29 2.4
       rotation -1 0 0 -3.1415923071795864
       children [
         Shape {
@@ -63,7 +63,7 @@ DEF FLOOR Solid {
   translation -4.96 -6.5 0
   children [
     DEF LIVING_ROOM_1 Transform {
-      translation -1.91 3.2 0
+      translation 9.09 14.2 0.0
       children [
         Shape {
           appearance Parquetry {
@@ -78,7 +78,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF LIVING_ROOM_2 Transform {
-      translation -6.24 4.84 0
+      translation 4.76 15.84 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -94,7 +94,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF GARDEN Transform {
-      translation -6.29 -1.87 0
+      translation 4.71 9.129999999999999 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -111,7 +111,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF KITCHEN Transform {
-      translation 3.02 3.2 0
+      translation 14.02 14.2 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -128,7 +128,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF CORRIDOR Transform {
-      translation 0.15 -1.014 0
+      translation 11.15 9.986 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -144,7 +144,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF BATHROOM_1 Transform {
-      translation 0.48 -4.391 0
+      translation 11.48 6.609 0.0
       children [
         Shape {
           appearance CementTiles {
@@ -159,7 +159,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF ROOM_1 Transform {
-      translation -2.74 -4.391 0
+      translation 8.26 6.609 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -175,7 +175,7 @@ DEF FLOOR Solid {
       ]
     }
     DEF ROOM_2 Transform {
-      translation 3.3 -4.391 0
+      translation 14.3 6.609 0.0
       rotation 0 0 1 1.5708
       children [
         Shape {
@@ -198,11 +198,11 @@ DEF FLOOR Solid {
   }
 }
 DEF KITCHEN_BLOCK Transform {
-  translation -2.09 -2.3 0
+  translation 19.91 -2.3 0
   rotation 0 0 -1 -1.5707953071795862
   children [
     DEF KITCHEN_TILES_1 Transform {
-      translation 2.147 0.4 0.9
+      translation 13.147 11.4 0.9
       rotation 0 -1 0 1.5708
       children [
         Shape {
@@ -219,7 +219,7 @@ DEF KITCHEN_BLOCK Transform {
       ]
     }
     DEF KITCHEN_TILES_2 Transform {
-      translation 1.19 1.648 0.9
+      translation 12.19 12.648 0.9
       rotation -0.5773502691896258 -0.5773502691896258 0.5773502691896258 -2.094395307179586
       children [
         Shape {
@@ -236,7 +236,7 @@ DEF KITCHEN_BLOCK Transform {
       ]
     }
     Cabinet {
-      translation 2.15 -1 0.83
+      translation 13.15 10.0 0.83
       rotation 0 0 1 3.14159
       name "cabinet(6)"
       depth 0.7
@@ -256,7 +256,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (1,6, 1, 0)"
       ]
       handle CabinetHandle {
-        translation 0 -0.3 0
+        translation 11.0 10.7 0.0
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -269,7 +269,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation -0.11 1.65 0.15
+      translation 10.89 12.65 0.15
       rotation 0 0 1 -1.5707953071795862
       name "cabinet(2)"
       depth 0.67
@@ -290,7 +290,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (1,6, 1, 0)"
       ]
       handle CabinetHandle {
-        translation 0 -0.15 0
+        translation 11.0 10.85 0.0
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -303,7 +303,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation 2.15 -0.1 1.4
+      translation 13.15 10.9 1.4
       rotation 0 0 1 3.14159
       name "cabinet(3)"
       outerThickness 0.02
@@ -323,7 +323,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (2, 1, 0, 3)"
       ]
       handle CabinetHandle {
-        translation 0 -0.2 0
+        translation 11.0 10.8 0.0
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -336,7 +336,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation 0.37 1.647 1.4
+      translation 11.37 12.647 1.4
       rotation 0 0 1 -1.5707953071795862
       name "cabinet(4)"
       outerThickness 0.02
@@ -352,7 +352,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (1, 3 ,1 , 0)"
       ]
       handle CabinetHandle {
-        translation 0 -0.2 0
+        translation 11.0 10.8 0.0
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -365,7 +365,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation -0.59 1.647 1.4
+      translation 10.41 12.647 1.4
       rotation 0 0 1 -1.5707953071795862
       name "cabinet(1)"
       outerThickness 0.02
@@ -381,7 +381,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (1, 3 ,1 , 0)"
       ]
       handle CabinetHandle {
-        translation 0 -0.2 0
+        translation 11.0 10.8 0.0
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -394,7 +394,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation 0.79 1.48 0.15
+      translation 11.79 12.48 0.15
       rotation 0 0 1 -1.5707953071795862
       name "cabinet(5)"
       outerThickness 0.02
@@ -414,7 +414,7 @@ DEF KITCHEN_BLOCK Transform {
         "Shelf (2, 1, 0, 3)"
       ]
       handle CabinetHandle {
-        translation 0 0 0.1
+        translation 11.0 11.0 0.1
         handleLength 0.1
         handleRadius 0.008
         handleColor 0.427451 0.513725 0.533333
@@ -427,7 +427,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Cabinet {
-      translation 2.15 -0.12 0.15
+      translation 13.15 10.88 0.15
       rotation 0 0 1 3.14159
       name "cabinet(7)"
       depth 0.7
@@ -466,7 +466,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     SolidBox {
-      translation 1.55 -0.12 0.07
+      translation 12.55 10.88 0.07
       name "box(1)"
       size 0.2 2.2 0.16
       appearance PBRAppearance {
@@ -479,7 +479,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     SolidBox {
-      translation 0.65 1.08 0.07
+      translation 11.65 12.08 0.07
       rotation 0 0 1 1.5708
       name "box(2)"
       size 0.2 2 0.16
@@ -493,7 +493,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     SolidBox {
-      translation 1.9 -1.12 0.07
+      translation 12.9 9.879999999999999 0.07
       rotation 0 0 -1 4.71239
       name "box(3)"
       size 0.2 0.5 0.16
@@ -506,7 +506,7 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     SolidBox {
-      translation -0.25 1.415 0.07
+      translation 10.75 12.415 0.07
       rotation 0 0 -1 6.28318
       name "box(4)"
       size 0.2 0.47 0.16
@@ -520,65 +520,65 @@ DEF KITCHEN_BLOCK Transform {
       }
     }
     Fridge {
-      translation 1.8 -1.57 0
+      translation 12.8 9.43 0.0
       rotation 0 0 -1 3.14159
       name "fridge(1)"
       mainColor 0.6666666666666666 0 0
     }
     Sink {
-      translation 0.78 1.33 0.87
+      translation 11.78 12.33 0.87
       rotation 0 0 1 4.71239
       name "sink(1)"
     }
     Oven {
-      translation -0.11 1.24 0.17
+      translation 10.89 12.24 0.17
       rotation 0 0 1 -1.5707953071795862
       name "oven(1)"
     }
     Oven {
-      translation 1.81 -0.46 0.89
+      translation 12.81 10.54 0.89
       rotation 0 0 1 -3.14156
       name "oven(2)"
       mainColor 0.643137 0 0
       type "microwave"
     }
     HotPlate {
-      translation 1.62912 1.14971 0.86
+      translation 12.62912 12.14971 0.86
       rotation 0 0 -1 5.49779
       name "hot plate(1)"
     }
     Worktop {
-      translation 0.345 1.31 0.86
+      translation 11.345 12.31 0.86
       rotation 0 0 1 4.71239
       name "worktop(1)"
       size 0.7 0.43 0.06
     }
     Worktop {
-      translation 0.78 1.531 0.86
+      translation 11.78 12.531 0.86
       rotation 0 0 1 4.71239
       name "worktop(2)"
       size 0.237 0.44 0.06
     }
     Worktop {
-      translation 0.780001 1.003 0.86
+      translation 11.780001 12.003 0.86
       rotation 0 0 1 4.71239
       name "worktop(3)"
       size 0.085 0.442 0.06
     }
     Worktop {
-      translation 1.22 1.306 0.86
+      translation 12.22 12.306000000000001 0.86
       rotation 0 0 -1 1.5708
       name "worktop(4)"
       size 0.69 0.44 0.06
     }
     Worktop {
-      translation 1.79 0.435 0.86
+      translation 12.79 11.435 0.86
       size 0.7 2.43 0.06
     }
   ]
 }
 StraightStairs {
-  translation -4.32594 -5.824913 0
+  translation 6.67406 5.175087 0.0
   stepSize 0.25 1.27 0.19
   stepRise 0.18
   nSteps 12
@@ -602,48 +602,48 @@ StraightStairs {
   rightRail []
 }
 BiscuitBox {
-  translation -3.6496 -1.06782 0.8899215200000002
+  translation 7.3504000000000005 9.93218 0.8899215200000002
   rotation 6.346474127574871e-17 1.7768136830300978e-16 -1 0.2618053071795865
 }
 CerealBox {
-  translation -2.16698 -0.283733 0.8898038000000005
+  translation 8.83302 10.716267 0.8898038000000005
   rotation 9.397735399089102e-18 -4.9193087731331275e-19 1 -3.1415853071795863
   name "cereal box(1)"
 }
 CerealBox {
-  translation -2.26473 -0.288104 0.8898038000000005
+  translation 8.73527 10.711896 0.8898038000000005
   rotation -0.02733700868254444 0.057522518806374115 -0.9979698631654469 6.957850687264618e-16
   name "cereal box(2)"
 }
 CerealBox {
-  translation -2.39953 -0.270551 0.8898038000000005
+  translation 8.60047 10.729449 0.8898038000000005
   rotation -1.9774429537039584e-18 -2.2866641631976218e-18 0.9999999999999999 2.618
   name "cereal box(3)"
 }
 WallPlug {
-  translation -9.98 -0.15 0.13
+  translation 1.0199999999999996 10.85 0.13
   rotation 0 0 1 -1.5707953071795862
 }
 WallPlug {
-  translation -7.73 -0.15 0.13
+  translation 3.2699999999999996 10.85 0.13
   rotation 0 0 1 -1.5707953071795862
   name "wall plug(1)"
 }
 WallPlug {
-  translation -3.73915 -3.21929 0.13
+  translation 7.26085 7.78071 0.13
   name "wall plug(3)"
 }
 WallPlug {
-  translation -0.149129 -6.88575 0.13
+  translation 10.850871 4.11425 0.13
   rotation 0 0 1 -3.1415853071795863
   name "wall plug(4)"
 }
 SquareManhole {
-  translation -0.959202 -5.85302 0
+  translation 10.040798 5.14698 0.0
   rotation 0 0 1 3.14159
 }
 PipeSection {
-  translation -3.58714 -12.8957 1.2
+  translation 7.41286 -1.8956999999999997 1.2
   rotation 0 0 1 1.5708
   height 2.4
   radius 0.04
@@ -651,14 +651,14 @@ PipeSection {
   }
 }
 Barbecue {
-  translation -11.7017 -5.08633 0
+  translation -0.7017000000000007 5.91367 0.0
 }
 RubberDuck {
-  translation -5.387440850395009 -11.082700853632925 0.020469009102432913
+  translation 5.612559149604991 -0.08270085363292523 0.020469009102432913
   rotation 1.0479068247637393e-17 3.185840909385665e-18 1 0.7853969099545042
 }
 Cabinet {
-  translation -0.180166 -4.63275 0
+  translation 10.819834 6.36725 0.0
   rotation 0 0 1 3.14159
   name "cabinet 4(2)"
   depth 0.4
@@ -683,65 +683,60 @@ Cabinet {
   }
 }
 Book {
-  translation -5.82219995574668 -2.494350004001125 -0.007529430000000051
+  translation 5.17780004425332 8.505649995998875 -0.007529430000000051
   rotation 0.6947464887870828 0.1861575478889595 -0.6947464887870898 2.7734911017839563
   name "book(3)"
 }
-Book {
-  translation -9.64659993132042 -6.231480256317236 0.11994113999999997
-  rotation 0.965926099200494 0.25881802658106645 7.747255006087676e-17 3.141592653589793
-  name "book(4)"
-}
 Cabinet {
-  translation -0.16999999999999998 -9.12 0
+  translation 10.83 1.8800000000000008 0.0
   rotation 0 0 1 3.14159
 }
 Cabinet {
-  translation -5.80579 -10.1734 0
+  translation 5.19421 0.8265999999999991 0.0
   rotation 0 0 1 3.14159
   name "cabinet(8)"
 }
 Cookware {
-  translation -1.571158329499633 -0.4585265328355443 1.1597261732787003
+  translation 9.428841670500367 10.541473467164456 1.1597261732787003
   rotation 0.0006367013501139565 -0.001081125296916127 0.9999992128894317 0.5236051885261772
 }
 Cookware {
-  translation -3.2007815801960704 -0.5894504483016623 0.8900758508037028
+  translation 7.79921841980393 10.410549551698338 0.8900758508037028
   rotation 0.0003121273823107551 8.958944420875406e-05 0.9999999472751131 3.1415894894220413
   name "cookware(1)"
 }
 Lid {
-  translation -2.800735563684147 -0.5894049638473035 0.8869918997782105
+  translation 8.199264436315854 10.410595036152696 0.8869918997782105
   rotation 0.7061131454377476 -0.704162595299088 0.07456048029393954 0.00010916574048918229
 }
 WoodenSpoon {
-  translation -2.970780527546695 -0.7894499999986181 0.8892286340628429
+  translation 8.029219472453304 10.210550000001382 0.8892286340628429
   rotation 0.0003466878051251504 -4.599835801755042e-10 0.9999999399037812 3.14159000000065
 }
 WoodenChair {
-  translation -6.88 -12.059999999999999 0
+  translation 4.12 -1.0599999999999987 0.0
   rotation 0 0 1 -1.5707953071795862
   name "wooden chair(2)"
 }
 Desk {
-  translation -6.905085 -12.493314 0
+  translation 4.094915 -1.4933139999999998 0.0
   rotation 0 0 1 -1.5707963071795863
   name "desk(2)"
 }
 Wall {
-  translation 0 -0.65 0
+  translation 11.0 10.35 0.0
   name "wall 1"
   size 0.3 1 2.4
 }
 Window {
-  translation 0 -1.65 0
+  translation 11.0 9.35 0.0
   name "window 1"
   size 0.3 1 2.4
   frameAppearance BrushedAluminium {
   }
 }
 Window {
-  translation -4.4 -13.12 0
+  translation 6.6 -2.119999999999999 0.0
   rotation 0 0 1 1.570797
   name "window 1(7)"
   size 0.3 0.7 2.4
@@ -751,7 +746,7 @@ Window {
   }
 }
 Window {
-  translation -7.95 -13.12 0
+  translation 3.05 -2.119999999999999 0.0
   rotation 0 0 1 -1.5707963071795863
   name "window 1(1)"
   size 0.3 1 2.4
@@ -759,14 +754,14 @@ Window {
   }
 }
 Window {
-  translation 0 -10.87 0
+  translation 11.0 0.13000000000000078 0.0
   name "window 1(4)"
   size 0.3 1 2.4
   frameAppearance BrushedAluminium {
   }
 }
 Window {
-  translation -11.15 -3.48 0
+  translation -0.15000000000000036 7.52 0.0
   rotation 0 0 1 1.570797
   name "window 1(2)"
   size 0.3 2.2 2.4
@@ -776,7 +771,7 @@ Window {
   }
 }
 Window {
-  translation -9.9 -4.73 0
+  translation 1.0999999999999996 6.27 0.0
   name "window 1(6)"
   size 0.3 2.2 2.4
   bottomWallHeight 0
@@ -785,7 +780,7 @@ Window {
   }
 }
 Window {
-  translation -8.25 0 0
+  translation 2.75 11.0 0.0
   rotation 0 0 1 1.570797
   name "window 1(5)"
   size 0.3 1 2.4
@@ -793,123 +788,123 @@ Window {
   }
 }
 Radiator {
-  translation -0.28465799999999997 -10.58667 0.36
+  translation 10.715342 0.4133300000000002 0.36
   rotation 0 0 1 3.14159
   name "radiator(5)"
 }
 Radiator {
-  translation -3.23759 -6.88139 0.36
+  translation 7.76241 4.11861 0.36
   rotation 0 0 1 -1.5707953071795862
   name "radiator(4)"
   numberOfFins 20
 }
 Radiator {
-  translation -7.731897999999999 -12.834878 0.36
+  translation 3.2681020000000007 -1.8348779999999998 0.36
   rotation 0 0 -1 -1.5707953071795862
   name "radiator(3)"
 }
 Radiator {
-  translation -8.531595 -0.282246 0.36
+  translation 2.4684050000000006 10.717754 0.36
   rotation 0 0 1 -1.5707953071795862
   name "radiator(2)"
 }
 DesktopComputer {
-  translation -7.25806 -12.3974 0
+  translation 3.7419399999999996 -1.3973999999999993 0.0
   rotation 0 0 1 1.5707959999999999
 }
 Keyboard {
-  translation -6.961739 -12.493036 0.71
+  translation 4.038261 -1.493036 0.71
   rotation 0 0 -1 -1.3089963071795863
 }
 Monitor {
-  translation -6.9690579999999995 -12.713728999999999 0.71
+  translation 4.0309420000000005 -1.713728999999999 0.71
   rotation 0 0 1 1.5707959999999999
 }
 ComputerMouse {
-  translation -7.273699952386824 -12.29006865432005 0.7099803800001014
+  translation 3.726300047613176 -1.2900686543200504 0.7099803800001014
   rotation -1.5017625240174334e-06 1.8366025516758984e-06 -0.9999999999971858 1.7707288660676983
 }
 Radiator {
-  translation -0.27999999999999997 -1.53 0.36
+  translation 10.72 9.47 0.36
   rotation 0 0 1 3.14159
   name "radiator(1)"
 }
 Wall {
-  translation 0 -4.57 0
+  translation 11.0 6.43 0.0
   name "wall 2"
   size 0.3 4.85 2.4
 }
 Wall {
-  translation 0 -12.32 0
+  translation 11.0 -1.3200000000000003 0.0
   name "wall 2(1)"
   size 0.3 1.9 2.4
 }
 Wall {
-  translation 0 -9.18 0
+  translation 11.0 1.8200000000000003 0.0
   name "wall 2(2)"
   size 0.3 2.4 2.4
 }
 Wall {
-  translation -9.9 -3.48 0
+  translation 1.0999999999999996 7.52 0.0
   name "wall 3(3)"
   size 0.3 0.3 2.4
 }
 Wall {
-  translation -3.8 0 0
+  translation 7.2 11.0 0.0
   rotation 0 0 1 1.5708
   name "wall 5"
   size 0.3 7.9 2.4
 }
 Wall {
-  translation -10.65 0 0
+  translation 0.34999999999999964 11.0 0.0
   rotation 0 0 1 1.5708
   name "wall 6"
   size 0.3 3.8 2.4
 }
 Wall {
-  translation -12.399999999999999 -1.88 0
+  translation -1.3999999999999986 9.120000000000001 0.0
   name "wall 3(2)"
   size 0.3 3.5 2.4
 }
 Wall {
-  translation -3.369987 -10.679991 0
+  translation 7.630013 0.32000900000000065 0.0
   rotation 0 0 1 -3.1415893071795864
   name "wall 7(6)"
   size 0.3 4.6 2.4
 }
 Wall {
-  translation -5.58999 -10.73 0
+  translation 5.41001 0.2699999999999996 0.0
   rotation 0 0 1 -3.1415893071795864
   name "wall 7(9)"
   size 0.3 4.9 2.4
 }
 Wall {
-  translation -9.89 -10.73 0
+  translation 1.1099999999999994 0.2699999999999996 0.0
   rotation 0 0 1 -3.1415893071795864
   name "wall 7(15)"
   size 0.3 4.9 2.4
 }
 Wall {
-  translation -9.25 -13.12 0
+  translation 1.75 -2.119999999999999 0.0
   rotation 0 0 1 1.5708
   name "wall 7(7)"
   size 0.3 1.6 2.4
 }
 Wall {
-  translation -6.1 -13.12 0
+  translation 4.9 -2.119999999999999 0.0
   rotation 0 0 1 1.5708
   name "wall 7(12)"
   size 0.3 2.7 2.4
 }
 Wall {
-  translation -2.1 -13.12 0
+  translation 8.9 -2.119999999999999 0.0
   rotation 0 0 1 1.5708
   name "wall 7(13)"
   size 0.3 3.9 2.4
 }
 Door {
   hidden translation_5 0.0010000002479865766 7.831157944337974e-11 0
-  translation -0.91 -6.6 0
+  translation 10.09 4.4 0.0
   rotation 0 0 1 1.5708
   name "door(4)"
   size 0.3 1 2.4
@@ -920,7 +915,7 @@ Door {
 }
 Door {
   hidden translation_5 0.001000000247990851 7.831291171100929e-11 0
-  translation 0 -7.49 0
+  translation 11.0 3.51 0.0
   name "door(1)"
   size 0.3 1 2.4
   position -2.6104300121836873e-10
@@ -929,145 +924,119 @@ Door {
   }
 }
 Wall {
-  translation -2.93 -6.6 0
+  translation 8.07 4.4 0.0
   rotation 0 0 1 1.5708
   name "wall 7(1)"
   size 0.3 3.045 2.4
 }
 Wall {
-  translation -0.29 -6.6 0
+  translation 10.71 4.4 0.0
   rotation 0 0 1 1.5708
   name "wall 7(14)"
   size 0.3 0.3 2.4
 }
 Wall {
-  translation -1.94 -5.02 0
+  translation 9.06 5.98 0.0
   rotation 0 0 1 1.5708
   name "wall 7(8)"
   size 0.3 3.6 2.4
 }
 Wall {
-  translation -3.837798 -5.2702 0.26217999999999997
+  translation 7.162202000000001 5.7298 0.26217999999999997
   rotation 0 -1 0 3.77
   name "wall 7(10)"
   size 1 0.2 0.4
 }
 Wall {
-  translation -0.8 -8.43 0
+  translation 10.2 2.5700000000000003 0.0
   rotation 0 0 1 1.5708
   name "wall 7(4)"
   size 0.3 1.7 2.4
 }
 Wall {
-  translation -9.18 -8.43 0
+  translation 1.8200000000000003 2.5700000000000003 0.0
   rotation 0 0 1 1.5708
   name "wall 7(3)"
   size 0.3 1.7 2.4
 }
 Wall {
-  translation -7.99 -8.43 0
+  translation 3.01 2.5700000000000003 0.0
   rotation 0 0 1 1.5708
   name "wall 7(5)"
   size 0.3 1.7 2.4
 }
 Wall {
-  translation -3.89 -1.8 0
+  translation 7.109999999999999 9.2 0.0
   name "wall 9"
   size 0.3 3.3 2.4
 }
 Wall {
-  translation -9.9 -6.19 0
+  translation 1.0999999999999996 4.81 0.0
   name "wall 9(2)"
   size 0.3 0.72 2.4
 }
 CeilingLight {
-  translation -1.3341 -2.47061 2.4
+  translation 9.6659 8.52939 2.4
   name "ceiling light 1"
   pointLightColor 0.913725 0.72549 0.431373
   pointLightIntensity 3
   pointLightRadius 3.9
 }
 CeilingLight {
-  translation -10.1237 -1.47922 2.4
+  translation 0.8763000000000005 9.52078 2.4
   name "ceiling light 2"
   pointLightIntensity 2
   pointLightRadius 4
 }
 CeilingLight {
-  translation -7.411517 -4.344069 2.4
+  translation 3.588483 6.655931 2.4
   name "ceiling light 2(5)"
   pointLightIntensity 4
   pointLightRadius 10
 }
 CeilingLight {
-  translation -1.7941829999999999 -7.551591999999999 2.4
+  translation 9.205817 3.4484080000000006 2.4
   name "ceiling light 2(1)"
   pointLightColor 0.447059 0.623529 0.811765
   pointLightIntensity 3
   pointLightRadius 4
 }
 CeilingLight {
-  translation -5.364183 -7.551591999999999 2.4
+  translation 5.635817 3.4484080000000006 2.4
   name "ceiling light 2(2)"
   pointLightColor 0.447059 0.623529 0.811765
   pointLightIntensity 3
   pointLightRadius 4
 }
 CeilingLight {
-  translation -7.622198 -10.602905999999999 2.4
+  translation 3.377802 0.39709400000000095 2.4
   name "ceiling light 2(3)"
   pointLightIntensity 3
   pointLightRadius 5
 }
 CeilingLight {
-  translation -1.945004 -10.56734 2.4
+  translation 9.054996 0.43266000000000027 2.4
   name "ceiling light 2(4)"
   pointLightColor 0.913725 0.72549 0.431373
   pointLightIntensity 3
   pointLightRadius 5
 }
 FloorLight {
-  translation -4.7700309999999995 -0.49615699999999996 0
+  translation 6.2299690000000005 10.503843 0.0
   pointLightColor 0.913725 0.72549 0.431373
   pointLightRadius 3
 }
 FloorLight {
-  translation -0.590395 -12.404582999999999 0
+  translation 10.409604999999999 -1.4045829999999988 0.0
   name "floor light(1)"
   pointLightRadius 2
 }
 Transform {
-  translation -9.51375 -11.8794 0.4
+  translation 1.48625 1.3506 0.4
   scale 0.4 0.4 0.4
   children [
     FloorLight {
-      translation -0.214575 1.45231 0
-      name "floor light(2)"
-      bulbColor 0.937255 0.16078399999999998 0.16078399999999998
-      pointLightColor 1 0.5799949999999999 0.5799949999999999
-      pointLightIntensity 0.7
-      pointLightRadius 3
-    }
-  ]
-}
-Transform {
-  translation -2.73375 -12.6994 0.4
-  scale 0.4 0.4 0.4
-  children [
-    FloorLight {
-      translation 0 -0.2 0
-      name "floor light(4)"
-      pointLightIntensity 0.7
-      pointLightRadius 3
-    }
-  ]
-}
-Transform {
-  translation -9.51375 -9.6494 0.4
-  scale 0.4 0.4 0.4
-  children [
-    FloorLight {
-      translation 0 1.31 0
+      translation 0.0 1.31 0.0
       name "floor light(3)"
       bulbColor 0.937255 0.16078399999999998 0.16078399999999998
       pointLightColor 1 0.5799949999999999 0.5799949999999999
@@ -1077,7 +1046,7 @@ Transform {
   ]
 }
 Table {
-  translation -9.55609 -9.09224 0
+  translation 1.4439100000000007 1.9077599999999997 0.0
   name "table(2)"
   size 0.3 0.3 0.4
   feetSize 0.04 0.05
@@ -1085,7 +1054,7 @@ Table {
   }
 }
 Table {
-  translation -9.56036 -11.3804 0
+  translation 1.4396400000000007 -0.38039999999999985 0.0
   name "table(3)"
   size 0.3 0.3 0.4
   feetSize 0.04 0.05
@@ -1093,7 +1062,7 @@ Table {
   }
 }
 Table {
-  translation -2.74109 -12.7454 0
+  translation 8.25891 -1.7454 0.0
   name "table(4)"
   size 0.3 0.3 0.4
   feetSize 0.04 0.05
@@ -1101,25 +1070,25 @@ Table {
   }
 }
 Book {
-  translation -2.733749988544214 -12.639393361462348 0.4099371433032504
+  translation 8.266250011455785 -1.6393933614623482 0.4099371433032504
   rotation 0.7071067782919124 -9.048342768024116e-05 -0.7071067782919223 3.141409041415539
 }
 Carpet {
-  translation -5.803488 -2.55795 -0.015
+  translation 5.196512 8.44205 -0.015
   rotation 0 0 1 -1.5707953071795862
   color 0.13725490196078433 0.13725490196078433 0.13725490196078433
 }
 Carpet {
-  translation -0.62349 -5.80795 2.385
+  translation 10.37651 5.19205 2.385
   rotation 0 0 1 -1.5707953071795862
   name "carpet(1)"
   color 0.13725490196078433 0.13725490196078433 0.13725490196078433
 }
 BunchOfSunFlowers {
-  translation -7.069851 -0.484029 0
+  translation 3.930149 10.515971 0.0
 }
 Cabinet {
-  translation -4.073264 -0.6770999999999999 0
+  translation 6.926736 10.3229 0.0
   rotation 0 0 1 3.14159
   name "cabinet 4"
   depth 0.4
@@ -1144,95 +1113,95 @@ Cabinet {
   }
 }
 PottedTree {
-  translation -11.870923999999999 -0.53674 0
+  translation -0.8709239999999987 10.46326 0.0
 }
 PottedTree {
-  translation -6.025363 -12.409485 0
+  translation 4.974637 -1.409485 0.0
   name "potted tree(1)"
 }
 PortraitPainting {
-  translation -12.209999999999999 -1.7999999999999998 1.5999999999999999
+  translation -1.209999999999999 9.2 1.5999999999999999
 }
 PortraitPainting {
-  translation -3.28921 -6.76837 1.6
+  translation 7.710789999999999 4.23163 1.6
   rotation 0 0 1 -1.5707953071795862
   name "portrait painting(1)"
 }
 LandscapePainting {
-  translation -10.3223 -0.178447 1.62868
+  translation 0.6776999999999997 10.821553 1.62868
   rotation 0 0 1 -1.5707953071795862
 }
 LandscapePainting {
-  translation -2.295442 -4.8501449999999995 1.62868
+  translation 8.704558 6.1498550000000005 1.62868
   rotation 0 0 1 1.5708
   name "landscape painting(1)"
 }
 FireExtinguisher {
-  translation -0.4400694079886201 -8.158107563466714 -0.0023544000000024767
+  translation 10.55993059201138 2.8418924365332856 -0.0023544000000024767
   rotation 0.0011076078749977384 0.00140760168062737 0.9999983959298654 2.094396710969529
 }
 Clock {
-  translation -6.165 -0.155075 1.72
+  translation 4.835 10.844925 1.72
   rotation 0 0 1 -1.5707953071795862
 }
 OfficeTelephone {
-  translation -4.496782 -6.58 1.0611279999999998
+  translation 6.503218 4.42 1.0611279999999998
   rotation -0.2907400269219462 0 0.9568020885979639 3.14159
   enablePhysics FALSE
 }
 CeilingSpotLight {
-  translation -7.72 -7.51 2.36
+  translation 3.2800000000000002 3.49 2.36
   spotLightIntensity 5
   spotLightRadius 3
 }
 CeilingSpotLight {
-  translation -4.28 -6.46 0.22999999999999998
+  translation 6.72 4.54 0.22999999999999998
   rotation -1 0 0 -1.5707963071795863
   name "ceiling light(5)"
   spotLightIntensity 2
   spotLightRadius 2
 }
 CeilingSpotLight {
-  translation -3.78 -6.46 0.61
+  translation 7.220000000000001 4.54 0.61
   rotation -1 0 0 -1.5707963071795863
   name "ceiling light(6)"
   spotLightIntensity 2
   spotLightRadius 2
 }
 CeilingSpotLight {
-  translation -3.02 -6.46 1.14
+  translation 7.98 4.54 1.14
   rotation -1 0 0 -1.5707963071795863
   name "ceiling light(7)"
   spotLightIntensity 2
   spotLightRadius 2
 }
 CeilingSpotLight {
-  translation -2.29 -6.46 1.69
+  translation 8.71 4.54 1.69
   rotation -1 0 0 -1.5707963071795863
   name "ceiling light(8)"
   spotLightIntensity 2
   spotLightRadius 2
 }
 CeilingSpotLight {
-  translation -4.52 -9.1 2.36
+  translation 6.48 1.9000000000000004 2.36
   name "ceiling light(2)"
   spotLightIntensity 5
   spotLightRadius 3
 }
 CeilingSpotLight {
-  translation -4.52 -10.4 2.36
+  translation 6.48 0.5999999999999996 2.36
   name "ceiling light(3)"
   spotLightIntensity 5
   spotLightRadius 3
 }
 CeilingSpotLight {
-  translation -4.52 -11.68 2.36
+  translation 6.48 -0.6799999999999997 2.36
   name "ceiling light(4)"
   spotLightIntensity 5
   spotLightRadius 3
 }
 CeilingSpotLight {
-  translation -8.7 -7.51 2.36
+  translation 2.3000000000000007 3.49 2.36
   name "ceiling light(1)"
   spotLightIntensity 5
   spotLightRadius 3
@@ -1241,53 +1210,53 @@ DEF TREES Transform {
   scale 1 1 0.6
   children [
     Cypress {
-      translation -12.53 -4.26 0
+      translation -1.5299999999999994 6.74 0.0
       rotation 0 0 1 -0.5235983071795864
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -4.76 0
+      translation -1.5299999999999994 6.24 0.0
       name "cypress tree(1)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -5.279999999999999 0
+      translation -1.5299999999999994 5.720000000000001 0.0
       rotation 0 0 1 0.7853979999999999
       name "cypress tree(2)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -5.85 0
+      translation -1.5299999999999994 5.15 0.0
       rotation 0 0 1 -0.26179930717958655
       name "cypress tree(3)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -6.37 0
+      translation -1.5299999999999994 4.63 0.0
       rotation 0 0 1 -1.0471973071795864
       name "cypress tree(4)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -6.85 0
+      translation -1.5299999999999994 4.15 0.0
       rotation 0 0 1 1.308997
       name "cypress tree(5)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -7.319999999999999 0
+      translation -1.5299999999999994 3.6800000000000006 0.0
       rotation 0 0 1 -0.7853983071795865
       name "cypress tree(6)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -7.9799999999999995 0
+      translation -1.5299999999999994 3.0200000000000005 0.0
       rotation 0 0 1 0.5235989999999999
       name "cypress tree(7)"
       enableBoundingObject FALSE
     }
     Cypress {
-      translation -12.53 -8.5 0
+      translation -1.5299999999999994 2.5 0.0
       name "cypress tree(8)"
       enableBoundingObject FALSE
     }
