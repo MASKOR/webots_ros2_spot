@@ -18,7 +18,7 @@ PROTO UR3e_modified [
   field SFBool     staticBase      TRUE     # Defines if the robot base should ba pinned to the static environment.
 ]
 {
-  Robot {
+  Solid {
     name "ur3e_base_link"
     translation IS translation
     rotation IS rotation

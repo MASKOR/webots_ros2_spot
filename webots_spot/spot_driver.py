@@ -16,6 +16,8 @@ from webots_spot.Bezier import BezierGait
 
 from webots_spot.tf2_broadcaster import DynamicBroadcaster
 
+import tkinter as tk
+
 NUMBER_OF_JOINTS = 12
 
 motions = {
@@ -24,9 +26,22 @@ motions = {
     'lie'  : [-0.40, -0.99, 1.59, 0.40, -0.99, 1.59, -0.40, -0.99, 1.59, 0.40, -0.99, 1.59],
 }
 
+def create_sliders(tk_module):
+    my_scale = []
+    for i in range(6):
+        my_scale.append(tk.Scale(tk_module, label=str(i + 1), from_=-np.pi, to=np.pi,
+            resolution=0.001, length=200, orient='horizontal'))
+        my_scale[i].grid(row=i,column=1)
+    return my_scale
+
 
 class SpotDriver:
     def init(self, webots_node, properties):
+        self.tk_sliders = tk.Tk()
+        self.tk_sliders.title('Params')
+        self.sliders = create_sliders(self.tk_sliders)
+        self.params = None
+
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
@@ -42,6 +57,19 @@ class SpotDriver:
         for motor_name in self.motor_names:
             self.motors.append(self.__robot.getDevice(motor_name))
         
+        ### Init ur3e motors
+        self.ur3e_motors=[]
+        self.ur3e_motor_names = [
+            'shoulder_pan_joint',
+            'shoulder_lift_joint',
+            'elbow_joint',
+            'wrist_1_joint',
+            'wrist_2_joint',
+            'wrist_3_joint',
+        ]
+        for motor_name in self.ur3e_motor_names:
+            self.ur3e_motors.append(self.__robot.getDevice(motor_name))
+
         ## Positional Sensors
         self.motor_sensor_names = [
             "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
@@ -230,6 +258,11 @@ class SpotDriver:
     def __talker(self, motors_target_pos):
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motors_target_pos[idx] - self.motors_initial_pos[idx])
+
+        self.tk_sliders.update()
+        self.params = [self.sliders[i].get() for i in range(6)]
+        for idx, motor in enumerate(self.ur3e_motors):
+            motor.setPosition(self.params[idx])
 
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
