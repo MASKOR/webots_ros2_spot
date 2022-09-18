@@ -70,6 +70,16 @@ class SpotDriver:
         for motor_name in self.ur3e_motor_names:
             self.ur3e_motors.append(self.__robot.getDevice(motor_name))
 
+        ### Init gripper motors
+        self.gripper_motors=[]
+        self.gripper_motor_names = [
+            'finger_1_joint_1',
+            'finger_2_joint_1',
+            'finger_middle_joint_1',
+        ]
+        for motor_name in self.gripper_motor_names:
+            self.gripper_motors.append(self.__robot.getDevice(motor_name))
+
         ## Positional Sensors
         self.motor_sensor_names = [
             "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
@@ -114,6 +124,8 @@ class SpotDriver:
         self.__node.create_service(SpotMotion, '/Spot/sit_down', self.__sit_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/lie_down', self.__lie_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
+        self.__node.create_service(SpotMotion, '/Spot/close_gripper', self.__close_gripper_cb)
+        self.__node.create_service(SpotMotion, '/Spot/open_gripper', self.__open_gripper_cb)
         
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
@@ -183,6 +195,9 @@ class SpotDriver:
         self.paw2 = False
         self.paw_time = 0.
         self.previous_cmd = False
+
+        # Gripper
+        self.gripper_close = False
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
@@ -395,6 +410,22 @@ class SpotDriver:
         response.answer = 'shaking hands'
         return response
 
+    def __close_gripper_cb(self, request, response):
+        if self.gripper_close:
+            response.answer = 'gripper already close'
+            return response
+        response.answer = 'closing gripper'
+        self.gripper_close = True
+        return response
+
+    def __open_gripper_cb(self, request, response):
+        if not self.gripper_close:
+            response.answer = 'gripper already open'
+            return response
+        response.answer = 'opening gripper'
+        self.gripper_close = False
+        return response
+
     def defined_motions(self):
         self.handle_transforms_and_odometry() # Let the sensor values get updated
         if self.n_steps_to_achieve_target > 0:
@@ -479,6 +510,12 @@ class SpotDriver:
         else:
             self.spot_inverse_control()
 
+        if self.gripper_close:
+            for idx, motor in enumerate(self.gripper_motors):
+                motor.setPosition([0.85, 0.85, 0.6][idx])
+        else:
+            for idx, motor in enumerate(self.gripper_motors):
+                motor.setPosition([0.0495, 0.0495, 0.0495][idx])
+
         #Update Spot state
         self.__model_cb()
-        
