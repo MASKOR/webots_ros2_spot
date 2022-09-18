@@ -24,7 +24,7 @@ DEF Spot Spot {
   controller "<extern>"
   supervisor TRUE
   frontExtension [
-    UR3e_modified {
+    UR3e {
       translation 0 -0.01 -0.09
       rotation 1 0 0 -1.5707953071795862
       toolSlot [

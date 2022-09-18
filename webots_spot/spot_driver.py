@@ -69,6 +69,14 @@ class SpotDriver:
         ]
         for motor_name in self.ur3e_motor_names:
             self.ur3e_motors.append(self.__robot.getDevice(motor_name))
+        self.ur3e_sensors = []
+        self.ur3e_pos = []
+        for idx, sensor_name in enumerate(self.ur3e_motor_names):
+            self.ur3e_sensors.append(
+                self.__robot.getDevice(sensor_name + '_sensor')
+            )
+            self.ur3e_sensors[idx].enable(self.__robot.timestep)
+            self.ur3e_pos.append(0.)
 
         ### Init gripper motors
         self.gripper_motors=[]
@@ -327,6 +335,12 @@ class SpotDriver:
         time_stamp = self.ros_clock.now().to_msg()
 
         self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu, time_stamp)
+
+        for idx, ur3e_sensor in enumerate(self.ur3e_sensors):
+            self.ur3e_pos[idx] = ur3e_sensor.getValue()
+        self.tf2_broadcaster.ur3e_handle_pose(
+            self.ur3e_pos, time_stamp
+        )
 
         odom = Odometry()
         odom.header.frame_id = 'odom'

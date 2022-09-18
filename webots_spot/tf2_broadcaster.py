@@ -223,3 +223,103 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
+
+    def ur3e_handle_pose(self, ur3e_motor_pos, time_stamp):
+        tfs = TransformStamped()
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "UR3e"
+        tfs._child_frame_id = "shoulder_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.152
+        r = R.from_euler('xyz',[0,0,ur3e_motor_pos[0]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "shoulder_link"
+        tfs._child_frame_id = "solid_3"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.12
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,pi/2,0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "solid_3"
+        tfs._child_frame_id = "upper_arm_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,ur3e_motor_pos[1],0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "upper_arm_link"
+        tfs._child_frame_id = "forearm_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = -0.093
+        tfs.transform.translation.z = 0.244
+        r = R.from_euler('xyz',[0,ur3e_motor_pos[2],0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "forearm_link"
+        tfs._child_frame_id = "solid_4"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.213
+        r = R.from_euler('xyz',[0,pi/2,0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "solid_4"
+        tfs._child_frame_id = "wrist_1_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,ur3e_motor_pos[3],0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "wrist_1_link"
+        tfs._child_frame_id = "wrist_2_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.104
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,ur3e_motor_pos[4]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.frame_id= "wrist_2_link"
+        tfs._child_frame_id = "wrist_3_link"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.085
+        r = R.from_euler('xyz',[0,ur3e_motor_pos[5],0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
