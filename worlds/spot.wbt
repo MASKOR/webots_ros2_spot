@@ -24,10 +24,10 @@ DEF Spot Spot {
   controller "<extern>"
   supervisor TRUE
   frontExtension [
-    UR3e {
+    UR3e_modified {
       translation 0 -0.01 -0.09
       rotation 1 0 0 -1.5707953071795862
-      selfCollision FALSE
+      staticBase FALSE
       toolSlot [
         Robotiq3fGripper {
         }
