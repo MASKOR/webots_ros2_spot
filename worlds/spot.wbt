@@ -38,6 +38,7 @@ DEF Spot Spot {
     HokuyoUrg04lxug01 {
       translation 0.0599997 0.03 0.2
       rotation 0.577349935856137 0.577349935856137 0.5773509358560258 -2.094395307179586
+      name "HokuyoUrg04lxug01"
     }
     DistanceSensor {
       translation -0.04 0.01 0.16
