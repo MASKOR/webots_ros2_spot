@@ -6,8 +6,8 @@ WorldInfo {
   title "This simulation was sponsored by Kamal Othman & Prof. Ahmad Rad from AISL-SFU"
 }
 Viewpoint {
-  orientation -0.0013341 0.999965 -0.008313 0.96404
-  position -11.375 4.07134 24.5093
+  orientation -0.1557866750114625 -0.709027994271978 0.6877570902779039 5.164397946626
+  position -6.2668216279457045 16.10322472162138 15.506341065714272
   exposure 0.5
   ambientOcclusionRadius 1
 }
@@ -1261,4 +1261,66 @@ DEF TREES Transform {
       enableBoundingObject FALSE
     }
   ]
+}
+Solid {
+  translation 0 1.51 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 4
+      }
+    }
+  ]
+  name "Lane"
+}
+Solid {
+  translation 5 5.13 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 3.3
+      }
+    }
+  ]
+  name "Lane(2)"
+}
+Solid {
+  translation 2.46 3.52 0.01
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 5
+      }
+    }
+  ]
+  name "Lane(1)"
+}
+Solid {
+  translation 7.46 6.79 0.01
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 5
+      }
+    }
+  ]
+  name "Lane(3)"
 }
