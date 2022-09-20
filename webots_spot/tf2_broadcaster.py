@@ -323,3 +323,162 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
+
+    def gripper_handle_pose(self, gripper_motor_pos, time_stamp):
+        tfs = TransformStamped()
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "wrist_3_link"
+        tfs._child_frame_id = "ROBOTIQ 3f Gripper"
+        tfs.transform.translation.x = 0.
+        tfs.transform.translation.y = 0.14
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "ROBOTIQ 3f Gripper"
+        tfs._child_frame_id = "finger_1_link_0"
+        tfs.transform.translation.x = -0.045
+        tfs.transform.translation.y = 0.021
+        tfs.transform.translation.z = 0.036
+        r = R.from_euler('xyz',[pi,0,pi/2])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_1_link_0"
+        tfs._child_frame_id = "finger_1_link_1"
+        tfs.transform.translation.x = 0.02
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,gripper_motor_pos[0]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_1_link_1"
+        tfs._child_frame_id = "finger_1_link_2"
+        tfs.transform.translation.x = 0.05
+        tfs.transform.translation.y = -0.028
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,-0.52])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_1_link_2"
+        tfs._child_frame_id = "finger_1_link_3"
+        tfs.transform.translation.x = 0.039
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,0])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "ROBOTIQ 3f Gripper"
+        tfs._child_frame_id = "finger_2_link_0"
+        tfs.transform.translation.x = -0.045
+        tfs.transform.translation.y = 0.021
+        tfs.transform.translation.z = -0.036
+        r = R.from_euler('xyz',[pi,0,pi/2])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_2_link_0"
+        tfs._child_frame_id = "finger_2_link_1"
+        tfs.transform.translation.x = 0.02
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,gripper_motor_pos[1]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_2_link_1"
+        tfs._child_frame_id = "finger_2_link_2"
+        tfs.transform.translation.x = 0.05
+        tfs.transform.translation.y = -0.028
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,-0.520])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_2_link_2"
+        tfs._child_frame_id = "finger_2_link_3"
+        tfs.transform.translation.x = 0.039
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,-0.052])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "ROBOTIQ 3f Gripper"
+        tfs._child_frame_id = "finger_middle_link_1"
+        tfs.transform.translation.x = 0.046
+        tfs.transform.translation.y = 0.041
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,1.619+gripper_motor_pos[2]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_middle_link_1"
+        tfs._child_frame_id = "finger_middle_link_2"
+        tfs.transform.translation.x = 0.05
+        tfs.transform.translation.y = -0.028
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,-0.520])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
+
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "finger_middle_link_2"
+        tfs._child_frame_id = "finger_middle_link_3"
+        tfs.transform.translation.x = 0.039
+        tfs.transform.translation.y = 0.
+        tfs.transform.translation.z = 0.
+        r = R.from_euler('xyz',[0,0,-0.052])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)

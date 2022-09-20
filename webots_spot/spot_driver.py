@@ -80,13 +80,18 @@ class SpotDriver:
 
         ### Init gripper motors
         self.gripper_motors=[]
+        self.gripper_sensors = []
+        self.gripper_pos = []
         self.gripper_motor_names = [
             'finger_1_joint_1',
             'finger_2_joint_1',
             'finger_middle_joint_1',
         ]
-        for motor_name in self.gripper_motor_names:
+        for idx, motor_name in enumerate(self.gripper_motor_names):
             self.gripper_motors.append(self.__robot.getDevice(motor_name))
+            self.gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
+            self.gripper_sensors[idx].enable(self.__robot.timestep)
+            self.gripper_pos.append(0.)
 
         ## Positional Sensors
         self.motor_sensor_names = [
@@ -340,6 +345,11 @@ class SpotDriver:
             self.ur3e_pos[idx] = ur3e_sensor.getValue()
         self.tf2_broadcaster.ur3e_handle_pose(
             self.ur3e_pos, time_stamp
+        )
+        for idx, gripper_sensor in enumerate(self.gripper_sensors):
+            self.gripper_pos[idx] = gripper_sensor.getValue()        
+        self.tf2_broadcaster.gripper_handle_pose(
+            self.gripper_pos, time_stamp
         )
 
         odom = Odometry()
