@@ -22,17 +22,19 @@ source /opt/ros/$ROS_DISTRO/local_setup.bash
 
 cd /path/to/ros2_ws
 git clone https://github.com/MASKOR/webots_ros2_spot src/webots_spot
+```
 
 ### spot_msgs
 ```
 git clone https://github.com/MASKOR/webots_spot_msgs src/spot_msgs
 ```
+
 # Build everything
 ```
 colcon build
-
 source install/local_setup.bash
 ```
+
 ### Install dependencies
 ```
 sudo apt install ros-$ROS_DISTRO-webots* ros-$ROS_DISTRO-nav2* -y
@@ -41,6 +43,7 @@ pip3 install scipy pupil-apriltags
 pip3 install open3d # for Ubuntu 20.04
 sudo apt install python3-open3d # for Ubuntu 22.04
 ```
+
 ## Start
 Starting the simulation:
 
@@ -60,7 +63,7 @@ To launch mapping with RTABMAP: #https://github.com/introlab/rtabmap_ros
 
 Teleop keyboard:
 
-    ros2 run spot_teleop spot_teleop_keyboard
+    ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 ## Demo
 
