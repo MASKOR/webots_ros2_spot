@@ -1,11 +1,17 @@
 import rclpy
 from rclpy.node import Node
-from rclpy.clock import Clock
+from rclpy.action import ActionServer
+from rclpy.executors import MultiThreadedExecutor
 
+from std_msgs.msg import Header
 from spot_msgs.msg import GaitInput
 from spot_msgs.srv import SpotMotion
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, TransformStamped
+from sensor_msgs.msg import JointState
+from control_msgs.action import FollowJointTrajectory
+from rosgraph_msgs.msg import Clock
+from tf2_ros.transform_broadcaster import TransformBroadcaster
 
 from scipy.spatial.transform import Rotation as R
 import numpy as np
@@ -13,10 +19,6 @@ import copy
 
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
-
-from webots_spot.tf2_broadcaster import DynamicBroadcaster
-
-import tkinter as tk
 
 NUMBER_OF_JOINTS = 12
 
@@ -26,22 +28,9 @@ motions = {
     'lie'  : [-0.40, -0.99, 1.59, 0.40, -0.99, 1.59, -0.40, -0.99, 1.59, 0.40, -0.99, 1.59],
 }
 
-def create_sliders(tk_module):
-    my_scale = []
-    for i in range(6):
-        my_scale.append(tk.Scale(tk_module, label=str(i + 1), from_=-np.pi, to=np.pi,
-            resolution=0.001, length=200, orient='horizontal'))
-        my_scale[i].grid(row=i,column=1)
-    return my_scale
-
 
 class SpotDriver:
     def init(self, webots_node, properties):
-        self.tk_sliders = tk.Tk()
-        self.tk_sliders.title('Params')
-        self.sliders = create_sliders(self.tk_sliders)
-        self.params = None
-
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
@@ -93,6 +82,23 @@ class SpotDriver:
             self.gripper_sensors[idx].enable(self.__robot.timestep)
             self.gripper_pos.append(0.)
 
+        self.remaining_gripper_sensors = []
+        self.remaining_gripper_pos = []
+        self.remaining_gripper_motor_names = [
+            'finger_middle_joint_2',
+            'finger_middle_joint_3',
+            'palm_finger_1_joint',
+            'finger_1_joint_2',
+            'finger_1_joint_3',
+            'palm_finger_2_joint',
+            'finger_2_joint_2',
+            'finger_2_joint_3',
+        ]
+        for idx, motor_name in enumerate(self.remaining_gripper_motor_names):
+            self.remaining_gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
+            self.remaining_gripper_sensors[idx].enable(self.__robot.timestep)
+            self.remaining_gripper_pos.append(0.)
+
         ## Positional Sensors
         self.motor_sensor_names = [
             "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
@@ -120,17 +126,25 @@ class SpotDriver:
         self.gyro.enable(self.__robot.timestep)
 
         rclpy.init(args=None)
-        self.ros_clock = Clock()
 
         self.__node = Node('spot_driver')
+        self.__moveit_node = Node('spot_moveit')
+
+        self.tfb_ = TransformBroadcaster(self.__node)        
+
         self.__node.get_logger().info('Init SpotDriver')
 
-        self.tf2_broadcaster = DynamicBroadcaster()
+        header = Header()
+        header.stamp.sec = 0
+        header.stamp.nanosec = 0
+        self.sim_time = header.stamp
 
         ## Topics
+        self.__node.create_subscription(Clock, '/clock', self.__sim_time_cb, 1) # use sim_time
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
-        self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 10)
-        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
+        self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
+        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
+        self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
 
         ## Services
         self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
@@ -139,7 +153,20 @@ class SpotDriver:
         self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/close_gripper', self.__close_gripper_cb)
         self.__node.create_service(SpotMotion, '/Spot/open_gripper', self.__open_gripper_cb)
-        
+
+        ## ActionServer
+        self._action_server = ActionServer(
+            self.__moveit_node,
+            # self.__node,
+            FollowJointTrajectory,
+            'ur_joint_trajectory_controller/follow_joint_trajectory',
+            self.__moveit_cb)
+
+        # # Set up mulithreading
+        self.executor = MultiThreadedExecutor(num_threads=2)
+        self.executor.add_node(self.__node)
+        self.executor.add_node(self.__moveit_node)
+
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -209,13 +236,23 @@ class SpotDriver:
         self.paw_time = 0.
         self.previous_cmd = False
 
-        # Gripper
+        # UR3e and Gripper
+        self.u3re_n_steps_to_achieve_target = 0
+        self.ur3e_targets = []
+        self.ur3e_target = []
+        self.allow_new_target = False
         self.gripper_close = False
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
         spot_rot_val = spot_rot.getSFRotation()
         self.yaw_inst = spot_rot_val[2]
+
+    def __sim_time_cb(self, msg):
+        header = Header()
+        header.stamp.sec = msg.clock.sec
+        header.stamp.nanosec = msg.clock.nanosec
+        self.sim_time = header.stamp
 
     def yaw_control(self):
         """ Yaw body controller"""
@@ -287,10 +324,6 @@ class SpotDriver:
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motors_target_pos[idx] - self.motors_initial_pos[idx])
 
-        self.tk_sliders.update()
-        self.params = [self.sliders[i].get() for i in range(6)]
-        for idx, motor in enumerate(self.ur3e_motors):
-            motor.setPosition(self.params[idx])
 
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
@@ -326,9 +359,9 @@ class SpotDriver:
             self.motors_initial_pos = target
 
         self.__talker(target)
-        self.handle_transforms_and_odometry()
 
     def handle_transforms_and_odometry(self):
+
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
@@ -337,20 +370,32 @@ class SpotDriver:
         imu = self.inertial_unit.getRollPitchYaw()
         gyro = self.gyro.getValues()
 
-        time_stamp = self.ros_clock.now().to_msg()
-
-        self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu, time_stamp)
+        # time_stamp = self.sim_time
+        time_stamp = self.__node.get_clock().now().to_msg()
 
         for idx, ur3e_sensor in enumerate(self.ur3e_sensors):
             self.ur3e_pos[idx] = ur3e_sensor.getValue()
-        self.tf2_broadcaster.ur3e_handle_pose(
-            self.ur3e_pos, time_stamp
-        )
+
         for idx, gripper_sensor in enumerate(self.gripper_sensors):
-            self.gripper_pos[idx] = gripper_sensor.getValue()        
-        self.tf2_broadcaster.gripper_handle_pose(
-            self.gripper_pos, time_stamp
-        )
+            self.gripper_pos[idx] = gripper_sensor.getValue()
+
+        for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
+            self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
+
+        ## Odom To Base_Link
+        tfs = TransformStamped()
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "odom"
+        tfs._child_frame_id = "base_link"
+        tfs.transform.translation.x = gps[0]
+        tfs.transform.translation.y = gps[1]
+        tfs.transform.translation.z = gps[2]
+        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
 
         odom = Odometry()
         odom.header.frame_id = 'odom'
@@ -371,6 +416,28 @@ class SpotDriver:
         odom.twist.twist.angular.y = gyro[1]
         odom.twist.twist.angular.z = gyro[2]
         self.odom_pub.publish(odom)
+
+        joint_state = JointState()
+        joint_state.header.stamp = time_stamp
+        joint_state.name = []
+        joint_state.name.extend(self.ur3e_motor_names)
+        joint_state.name.extend(self.gripper_motor_names)
+        joint_state.name.extend(self.remaining_gripper_motor_names)
+        joint_state.name.extend(self.motor_names)
+        joint_state.position = []
+        joint_state.position.extend(self.ur3e_pos)
+        joint_state.position.extend(self.gripper_pos)
+        joint_state.position.extend(self.remaining_gripper_pos)
+        joint_state.position.extend(self.motors_pos)
+        qty = (
+              len(self.ur3e_motor_names)
+            + len(self.gripper_motor_names)
+            + len(self.remaining_gripper_motor_names)
+            + len(self.motor_names)
+            )
+        joint_state.velocity = [0. for _ in range(qty)]
+        joint_state.effort = [0. for _ in range(qty)]
+        self.joint_state_pub.publish(joint_state)
 
     def movement_decomposition(self, target, duration):
         """
@@ -434,22 +501,6 @@ class SpotDriver:
         response.answer = 'shaking hands'
         return response
 
-    def __close_gripper_cb(self, request, response):
-        if self.gripper_close:
-            response.answer = 'gripper already close'
-            return response
-        response.answer = 'closing gripper'
-        self.gripper_close = True
-        return response
-
-    def __open_gripper_cb(self, request, response):
-        if not self.gripper_close:
-            response.answer = 'gripper already open'
-            return response
-        response.answer = 'opening gripper'
-        self.gripper_close = False
-        return response
-
     def defined_motions(self):
         self.handle_transforms_and_odometry() # Let the sensor values get updated
         if self.n_steps_to_achieve_target > 0:
@@ -484,6 +535,77 @@ class SpotDriver:
                                               0.20, -0.40, -0.19,
                                              -0.40, -0.90, 1.18,
                                               0.40, -0.90, 1.18], 1)
+
+    def __close_gripper_cb(self, request, response):
+        if self.gripper_close:
+            response.answer = 'gripper already close'
+            return response
+        response.answer = 'closing gripper'
+        self.gripper_close = True
+        return response
+
+    def __open_gripper_cb(self, request, response):
+        if not self.gripper_close:
+            response.answer = 'gripper already open'
+            return response
+        response.answer = 'opening gripper'
+        self.gripper_close = False
+        return response
+
+    def __ur3e_defined_motions(self):
+        if self.u3re_n_steps_to_achieve_target > 0:
+            if not self.ur3e_target:
+                self.ur3e_target = [self.ur3e_step_difference[i] + self.ur3e_pos[i] for i in range(len(self.ur3e_motor_names))]
+            else: # if compared to current motors_positions, the final motion is smaller
+                self.ur3e_target = [self.ur3e_step_difference[i] + self.ur3e_target[i] for i in range(len(self.ur3e_motor_names))]
+
+            # Increment motor positions by step_difference
+            for idx, motor in enumerate(self.ur3e_motors):
+                motor.setPosition(self.ur3e_target[idx])
+            
+            self.u3re_n_steps_to_achieve_target -= 1
+        elif len(self.ur3e_targets) > 0:
+            # Forcefully go to target, moveit2 expect a deviation of max 0.01
+            for idx, motor in enumerate(self.ur3e_motors):
+                motor.setPosition(self.ur3e_targets[0][idx])
+            next_target = True
+            for position, target in zip(self.ur3e_pos, self.ur3e_targets[0]):
+                if abs(position - target) > 0.01:
+                    next_target = False
+                    break
+            if next_target:
+                self.ur3e_targets.pop(0)
+        else:
+            self.allow_new_target = True
+
+    def __moveit_movement_decomposition(self, duration):
+        """
+        Decompose big motion into smaller motions
+        """
+        if len(self.ur3e_targets) > 0 and self.allow_new_target:
+            self.allow_new_target = False
+            target = self.ur3e_targets[0]
+            self.u3re_n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
+            self.ur3e_step_difference = [(target[i] - self.ur3e_pos[i]) / self.u3re_n_steps_to_achieve_target
+                                    for i in range(6)]
+
+    def __moveit_cb(self, goal_handle):
+        self.__node.get_logger().info('Executing goal...')
+        
+        self.ur3e_targets = []
+        for p in goal_handle.request.trajectory.points:
+            seq = list(p.positions)
+            seq = [seq[2], seq[1], seq[0], seq[3], seq[4], seq[5]] # ActionServer gets joint angles with alphabetical joint names order
+            self.ur3e_targets.append(seq)
+        
+        while len(self.ur3e_targets) > 0:
+            self.__ur3e_defined_motions()
+            if self.allow_new_target and len(self.ur3e_targets) > 0:
+                self.__moveit_movement_decomposition(0.4)
+
+        goal_handle.succeed()
+        result = FollowJointTrajectory.Result()
+        return result
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
@@ -522,7 +644,7 @@ class SpotDriver:
             self.chattering_rear_right_lower_leg_contact = 0
 
     def step(self):
-        rclpy.spin_once(self.__node, timeout_sec=0)
+        self.executor.spin_once(timeout_sec=0)
 
         self.callback_front_left_lower_leg_contact(bool(self.touch_fl.getValue()))
         self.callback_front_right_lower_leg_contact(bool(self.touch_fr.getValue()))
@@ -533,6 +655,8 @@ class SpotDriver:
             self.defined_motions()
         else:
             self.spot_inverse_control()
+
+        self.handle_transforms_and_odometry()
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):

@@ -1,0 +1,4 @@
+spot_ur3e_arm:
+  kinematics_solver: lma_kinematics_plugin/LMAKinematicsPlugin
+  kinematics_solver_search_resolution: 0.05
+  kinematics_solver_timeout: 0.005
