@@ -6,8 +6,8 @@ WorldInfo {
   title "This simulation was sponsored by Kamal Othman & Prof. Ahmad Rad from AISL-SFU"
 }
 Viewpoint {
-  orientation 0.043033304083876664 0.290860460391818 -0.9557972208163634 1.1890904991196203
-  position -0.2224555255401791 0.9063906532872588 0.9548951977972203
+  orientation 0.0417062249810774 0.27756525132116483 -0.9598010846299594 1.2149837307603104
+  position -0.2592855713490799 1.0385334518905809 0.9904256739917109
   exposure 0.5
   ambientOcclusionRadius 1
 }
@@ -27,6 +27,7 @@ DEF Spot Spot {
     HokuyoUrg04lxug01 {
       translation -0.0599999 0.05 -0.16
       rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "HokuyoUrg04lxug01"
     }
     Solid {
       translation 3.78961e-07 7e-07 -0.16
@@ -42,6 +43,7 @@ DEF Spot Spot {
         }
         DistanceSensor {
           rotation 0 -1 0 -5.307179586466759e-06
+          name "distance_sensor"
           lookupTable [
             0 0 0
             0.1 0.1 0
@@ -932,7 +934,7 @@ Wall {
   size 0.3 3.9 2.4
 }
 Door {
-  hidden translation_5 0.0010000003719798645 1.174673691650696e-10 0
+  hidden translation_5 0.001000000867953016 2.740905280518291e-10 0
   translation 10.09 4.4 0
   rotation 0 0 1 1.5708
   name "door(4)"
@@ -943,7 +945,7 @@ Door {
   }
 }
 Door {
-  hidden translation_5 0.001000000371986276 1.1746936756651394e-10 0
+  hidden translation_5 0.0010000008679679762 2.740951909885325e-10 0
   translation 11 3.51 0
   name "door(1)"
   size 0.3 1 2.4
