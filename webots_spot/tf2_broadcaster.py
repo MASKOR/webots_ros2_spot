@@ -27,7 +27,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
-        
+
         tfs.header.frame_id= "solid" # front left leg
         tfs._child_frame_id = "front left shoulder"
         tfs.transform.translation.x = -0.0528
@@ -76,7 +76,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
-        
+
         tfs.header.frame_id= "solid_0" # front right leg
         tfs._child_frame_id = "front right shoulder"
         tfs.transform.translation.x = 0.0528
@@ -125,7 +125,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
-        
+
         tfs.header.frame_id= "solid_1" # rear left leg
         tfs._child_frame_id = "rear left shoulder"
         tfs.transform.translation.x = -0.0528
@@ -174,7 +174,7 @@ class DynamicBroadcaster(Node):
         tfs.transform.rotation.z = r.as_quat()[2]
         tfs.transform.rotation.w = r.as_quat()[3]
         self.tfb_.sendTransform(tfs)
-        
+
         tfs.header.frame_id= "solid_2" # rear right leg
         tfs._child_frame_id = "rear right shoulder"
         tfs.transform.translation.x = 0.0528

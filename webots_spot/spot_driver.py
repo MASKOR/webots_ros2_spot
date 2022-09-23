@@ -201,7 +201,7 @@ class SpotDriver:
             self.pitchd = 0.
             self.yawd = 0.
             self.StepLength = StepLength * msg.linear.x
-            
+
             # Rotation along vertical axis
             self.YawRate = msg.angular.z
             if self.YawRate != 0 and self.StepLength == 0:
