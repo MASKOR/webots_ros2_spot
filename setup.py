@@ -2,18 +2,14 @@ from glob import glob
 from setuptools import setup
 
 package_name = 'webots_spot'
-data_files = [
-    ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
-    ('share/' + package_name, ['package.xml']),
-    ('share/' + package_name + '/launch', glob('launch/*_launch.py')),
-    ('share/' + package_name + '/worlds', glob('worlds/*.wbt')),
-    ('share/' + package_name + '/resource', glob('resource/*')),
-    ('share/' + package_name + '/params', glob('params/*.yaml')),
-    ('share/' + package_name + '/protos', glob('protos/*.proto')),
-    ('share/' + package_name + '/protos/icons', glob('protos/icons/*.png')),
-    ('share/' + package_name + '/protos/apriltags/protos', glob('apriltags/protos/*.proto')),
-    ('share/' + package_name + '/protos/apriltags/images', glob('apriltags/images/*.png')),
-]
+data_files = []
+data_files.append(('share/ament_index/resource_index/packages', ['resource/' + package_name]))
+data_files.append(('share/' + package_name + '/launch', ['launch/spot_launch.py']))
+data_files.append(('share/' + package_name + '/worlds', ['worlds/spot.wbt']))
+data_files.append(('share/' + package_name + '/resource', ['resource/spot.urdf', 'resource/rd_spot.urdf']))
+data_files.append(('share/' + package_name + '/protos', ['protos/Spot.proto','protos/SpotLeftLeg.proto', 'protos/SpotRightLeg.proto']))
+data_files.append(('share/' + package_name + '/protos/icons', ['protos/icons/Spot.png']))
+data_files.append(('share/' + package_name, ['package.xml']))
 setup(
     name=package_name,
     version='0.0.0',

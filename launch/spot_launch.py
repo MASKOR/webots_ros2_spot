@@ -25,7 +25,9 @@ tag_locations = \
 
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_spot')
-    robot_description = pathlib.Path(os.path.join(package_dir, 'resource', 'spot.urdf')).read_text()
+
+    def load_file(filename):
+        return pathlib.Path(os.path.join(package_dir, 'resource', filename)).read_text()
 
     world = os.path.join(package_dir, 'worlds', 'spot.wbt')
     with open(world, 'r') as f:
@@ -42,7 +44,7 @@ def generate_launch_description():
             apriltag = apriltag + '  rotation ' + tag_locations[l][1] + '\n}'
 
             pairs = pairs + alphabets[l] + ':' + str(t) + '\n'
-            
+
             world_txt = world_txt + apriltag
         f.write(world_txt)
 
@@ -58,37 +60,42 @@ def generate_launch_description():
         executable='driver',
         output='screen',
         parameters=[
-            {'robot_description': robot_description},
-            {'set_robot_state_publisher': True},
+            {'robot_description': load_file('spot.urdf')},
+            {'use_sim_time': False},
+            {'set_robot_state_publisher': False}, # foot positions are wrong with webot's urdf
         ],
     )
+
     spot_pointcloud2 = Node(
         package='webots_spot',
         executable='spot_pointcloud2',
         output='screen',
     )
-    
+
     apriltag = LaunchConfiguration('detect_tags', default=False)
     spot_apriltag = Node(
         package='webots_spot',
         executable='apriltag_ros',
         output='screen',
-        condition=launch.conditions.IfCondition(apriltag),        
+        condition=launch.conditions.IfCondition(apriltag),
     )
-    
+
     spot_initial_pose = Node(
         package='webots_spot',
         executable='set_initial_pose',
         output='screen',
-    )    
+    )
+
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{
-            'robot_description': '<robot name="Spot"><link name=""/></robot>'
-        }],
+        parameters=[
+            {'robot_description': load_file('rd_spot.urdf')},
+            {'use_sim_time': False},
+        ],
     )
+
     env_tester = Node(
         package='webots_spot',
         executable='env_tester',
@@ -99,7 +106,7 @@ def generate_launch_description():
             on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
         )
     )
-    
+
     return LaunchDescription([
         spot_initial_pose,
         webots,

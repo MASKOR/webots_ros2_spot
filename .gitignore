@@ -2,3 +2,4 @@ test*
 *.pyc
 webots_spot/__pycache__*
 worlds/.*.wbproj
+.vscode

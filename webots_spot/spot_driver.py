@@ -4,8 +4,10 @@ from rclpy.clock import Clock
 
 from spot_msgs.msg import GaitInput
 from spot_msgs.srv import SpotMotion
+from geometry_msgs.msg import Twist, TransformStamped
+from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
+from tf2_ros.transform_broadcaster import TransformBroadcaster
 
 from scipy.spatial.transform import Rotation as R
 import numpy as np
@@ -13,8 +15,6 @@ import copy
 
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
-
-from webots_spot.tf2_broadcaster import DynamicBroadcaster
 
 NUMBER_OF_JOINTS = 12
 
@@ -41,7 +41,7 @@ class SpotDriver:
         self.motors = []
         for motor_name in self.motor_names:
             self.motors.append(self.__robot.getDevice(motor_name))
-        
+
         ## Positional Sensors
         self.motor_sensor_names = [
             "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
@@ -74,19 +74,20 @@ class SpotDriver:
         self.__node = Node('spot_driver')
         self.__node.get_logger().info('Init SpotDriver')
 
-        self.tf2_broadcaster = DynamicBroadcaster()
+        self.tfb_ = TransformBroadcaster(self.__node)
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
-        self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 10)
-        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 10)
+        self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
+        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
+        self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
 
         ## Services
         self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/sit_down', self.__sit_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/lie_down', self.__lie_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
-        
+
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -176,7 +177,7 @@ class SpotDriver:
     def __cmd_vel(self, msg):
         # Override motion command
         self.fixed_motion = False
-        
+
         if not self.__node.count_publishers('/Spot/inverse_gait_input'):
             StepLength = 0.024
             ClearanceHeight = 0.024
@@ -184,7 +185,7 @@ class SpotDriver:
             SwingPeriod = 0.2
             YawControl = 0.0
             YawControlOn = 0.0
-            
+
             self.xd = 0.
             self.yd = 0.
             self.zd = 0.1
@@ -210,7 +211,7 @@ class SpotDriver:
     def __gait_cb(self, msg):
         # Override motion command
         self.fixed_motion = False
-        
+
         self.xd = msg.x
         self.yd = msg.y
         self.zd = msg.z
@@ -265,7 +266,6 @@ class SpotDriver:
             self.motors_initial_pos = target
 
         self.__talker(target)
-        self.handle_transforms_and_odometry()
 
     def handle_transforms_and_odometry(self):
         for idx, motor_sensor in enumerate(self.motor_sensors):
@@ -276,9 +276,22 @@ class SpotDriver:
         imu = self.inertial_unit.getRollPitchYaw()
         gyro = self.gyro.getValues()
 
-        time_stamp = self.ros_clock.now().to_msg()
+        time_stamp = self.__node.get_clock().now().to_msg()
 
-        self.tf2_broadcaster.handle_pose(self.motors_pos, gps, imu, time_stamp)
+        ## Odom To Base_Link
+        tfs = TransformStamped()
+        tfs.header.stamp = time_stamp
+        tfs.header.frame_id= "odom"
+        tfs._child_frame_id = "base_link"
+        tfs.transform.translation.x = gps[0]
+        tfs.transform.translation.y = gps[1]
+        tfs.transform.translation.z = gps[2]
+        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
+        tfs.transform.rotation.x = r.as_quat()[0]
+        tfs.transform.rotation.y = r.as_quat()[1]
+        tfs.transform.rotation.z = r.as_quat()[2]
+        tfs.transform.rotation.w = r.as_quat()[3]
+        self.tfb_.sendTransform(tfs)
 
         odom = Odometry()
         odom.header.frame_id = 'odom'
@@ -299,6 +312,17 @@ class SpotDriver:
         odom.twist.twist.angular.y = gyro[1]
         odom.twist.twist.angular.z = gyro[2]
         self.odom_pub.publish(odom)
+
+        joint_state = JointState()
+        joint_state.header.stamp = time_stamp
+        joint_state.name = []
+        joint_state.name.extend(self.motor_names)
+        joint_state.position = []
+        joint_state.position.extend(self.motors_pos)
+        qty = len(self.motor_names)
+        joint_state.velocity = [0. for _ in range(qty)]
+        joint_state.effort = [0. for _ in range(qty)]
+        self.joint_state_pub.publish(joint_state)
 
     def movement_decomposition(self, target, duration):
         """
@@ -363,7 +387,6 @@ class SpotDriver:
         return response
 
     def defined_motions(self):
-        self.handle_transforms_and_odometry() # Let the sensor values get updated
         if self.n_steps_to_achieve_target > 0:
             if not self.m_target:
                 self.m_target = [self.step_difference[i] + self.motors_pos[i] for i in range(NUMBER_OF_JOINTS)]
@@ -373,7 +396,7 @@ class SpotDriver:
             # Increment motor positions by step_difference
             for idx, motor in enumerate(self.motors):
                 motor.setPosition(self.m_target[idx])
-            
+
             self.n_steps_to_achieve_target -= 1
         else:
             if self.paw:
@@ -382,7 +405,7 @@ class SpotDriver:
                 self.paw2 = True # Do the shakehands motion
             else:
                 self.previous_cmd = False
-                
+
             self.m_target = []
 
         if self.paw2:
@@ -446,6 +469,8 @@ class SpotDriver:
         else:
             self.spot_inverse_control()
 
+        self.spot_inverse_control()
+        self.handle_transforms_and_odometry()
+
         #Update Spot state
         self.__model_cb()
-        
