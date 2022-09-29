@@ -56,6 +56,14 @@ class SpotDriver:
             self.motor_sensors[idx].enable(self.__robot.timestep)
             self.motors_pos.append(0.)
 
+        # manually calculated offsets of webots' spot wrt vertical axis
+        self.motors_initial_pos = [
+            0.001, -0.5185, 1.21,
+            0.001, -0.5185, 1.21,
+            0.001, -0.5185, 1.21,
+            0.001, -0.5185, 1.21,
+            ]
+
         ## GPS
         self.gps_sensor = self.__robot.getDevice("gps")
         self.gps_sensor.enable(self.__robot.timestep)
@@ -106,13 +114,12 @@ class SpotDriver:
         self.spot = SpotModel()
         self.T_bf0 = self.spot.WorldToFoot
         self.T_bf = copy.deepcopy(self.T_bf0)
-        self.bzg = BezierGait(dt=0.032)
-        self.motors_initial_pos = []
+        self.bzg = BezierGait(dt=self.__robot.timestep/1000)
 
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
         self.yd = 0.0
-        self.zd = 0.1
+        self.zd = 0.0
         self.rolld = 0.0
         self.pitchd = 0.0
         self.yawd = 0.0
@@ -179,29 +186,45 @@ class SpotDriver:
         self.fixed_motion = False
 
         if not self.__node.count_publishers('/Spot/inverse_gait_input'):
-            StepLength = 0.024
-            ClearanceHeight = 0.024
+            StepLength = 0.08
+            ClearanceHeight = 0.01
             PenetrationDepth = 0.003
-            SwingPeriod = 0.2
+            SwingPeriod = 0.4
             YawControl = 0.0
             YawControlOn = 0.0
+            StepVelocity = 0.2
 
             self.xd = 0.
             self.yd = 0.
-            self.zd = 0.1
+            self.zd = 0.
             self.rolld = 0.
             self.pitchd = 0.
             self.yawd = 0.
-            self.StepLength = StepLength
-            self.LateralFraction = msg.linear.y
+            self.StepLength = StepLength * msg.linear.x
+            
+            # Rotation along vertical axis
             self.YawRate = msg.angular.z
-            self.StepVelocity = msg.linear.x
-            if not self.StepVelocity :
-                if self.LateralFraction != 0:
-                    self.StepVelocity = 0.2
-                if self.YawRate != 0:
-                    self.StepVelocity = 0.01
+            if self.YawRate != 0 and self.StepLength == 0:
+                self.StepLength = StepLength * 0.1
 
+            # Holonomic motions
+            self.LateralFraction = np.arctan2(msg.linear.y, msg.linear.x)
+            # forcefully set 0, as output is never 0 if second term in arctan2 is -ve
+            if msg.linear.y == 0:
+                self.LateralFraction = 0
+            if self.LateralFraction != 0:
+                if msg.linear.x != 0:
+                    # change lateral fraction for 2nd and 4th quadrants
+                    if msg.linear.x > 0 and self.LateralFraction < 0:
+                        self.LateralFraction += np.pi
+                    elif msg.linear.x < 0 and self.LateralFraction > 0:
+                        self.LateralFraction -= np.pi
+                    self.StepLength = StepLength * msg.linear.y * np.sign(msg.linear.x)
+                else:
+                    # for sideway motion
+                    self.StepLength = StepLength * abs(msg.linear.y)
+
+            self.StepVelocity = StepVelocity
             self.ClearanceHeight = ClearanceHeight
             self.PenetrationDepth = PenetrationDepth
             self.SwingPeriod = SwingPeriod
@@ -244,15 +267,19 @@ class SpotDriver:
 
         # Update Swing Period
         self.bzg.Tswing = self.SwingPeriod
-        contacts = [self.front_left_lower_leg_contact, self.front_right_lower_leg_contact,
-                    self.rear_left_lower_leg_contact,
-                    self.rear_right_lower_leg_contact]
+        contacts = [
+            self.front_left_lower_leg_contact,
+            self.front_right_lower_leg_contact,
+            self.rear_left_lower_leg_contact,
+            self.rear_right_lower_leg_contact
+            ]
 
         # Get Desired Foot Poses
         T_bf = self.bzg.GenerateTrajectory(self.StepLength, self.LateralFraction, YawRate_desired,
                                            self.StepVelocity, self.T_bf0, self.T_bf,
                                            self.ClearanceHeight, self.PenetrationDepth,
                                            contacts)
+
         joint_angles = -self.spot.IK(orn, pos, T_bf)
 
         target = [
@@ -261,9 +288,6 @@ class SpotDriver:
             joint_angles[2][0], joint_angles[2][1], joint_angles[2][2],
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
-
-        if not self.motors_initial_pos:
-            self.motors_initial_pos = target
 
         self.__talker(target)
 
