@@ -194,6 +194,81 @@
       </geometry>
     </collision>
   </link>
+  <link name="solid">
+  </link>
+  <joint name="base_link_solid_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="solid"/>
+    <origin xyz="0.416 0 0.111801" rpy="-0.000008 -0.000008 0.000001"/>
+  </joint>
+  <link name="distance_sensor">
+  </link>
+  <joint name="solid_distance_sensor_joint" type="fixed">
+    <parent link="solid"/>
+    <child link="distance_sensor"/>
+    <origin xyz="0 0 0" rpy="0 0.000005 0"/>
+  </joint>
+  <link name="kinect">
+    <visual>
+      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
+      <geometry>
+        <box size="0.084 0.027 0.068"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
+      <geometry>
+        <box size="0.084 0.027 0.068"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_link_kinect_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="kinect"/>
+    <origin xyz="0.334809 -0.000999 0.180133" rpy="-0.000011 0.008756 0.000004"/>
+  </joint>
+  <joint name="tilt motor" type="revolute">
+    <parent link="kinect"/>
+    <child link="solid_0"/>
+    <axis xyz="1 0.000118 0.000055"/>
+    <limit effort="10" lower="-0.47" upper="0.47" velocity="10"/>
+    <origin xyz="0 0 0.05" rpy="1.570741 0.000118 -1.570741"/>
+  </joint>
+  <link name="solid_0">
+  </link>
+  <link name="kinect range">
+  </link>
+  <joint name="solid_0_kinect range_joint" type="fixed">
+    <parent link="solid_0"/>
+    <child link="kinect range"/>
+    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
+  </joint>
+  <link name="kinect color">
+  </link>
+  <joint name="solid_0_kinect color_joint" type="fixed">
+    <parent link="solid_0"/>
+    <child link="kinect color"/>
+    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
+  </joint>
+  <link name="Velodyne_Puck">
+    <visual>
+      <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.052" length="0.0727"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.052" length="0.0727"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_link_Velodyne_Puck_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="Velodyne_Puck"/>
+    <origin xyz="0.336 0.000001 0.1518" rpy="-0.000008 -0.000008 0.000001"/>
+  </joint>
   <joint name="rear right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
     <child link="rear right shoulder"/>
@@ -662,12 +737,12 @@
   </joint>
   <joint name="rear right piston motor" type="continuous">
     <parent link="rear right upperarm"/>
-    <child link="solid"/>
+    <child link="solid_1"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid">
+  <link name="solid_1">
   </link>
   <joint name="rear left shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -1137,12 +1212,12 @@
   </joint>
   <joint name="rear left piston motor" type="continuous">
     <parent link="rear left upperarm"/>
-    <child link="solid_0"/>
+    <child link="solid_2"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_0">
+  <link name="solid_2">
   </link>
   <joint name="front right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -1612,12 +1687,12 @@
   </joint>
   <joint name="front right piston motor" type="continuous">
     <parent link="front right upperarm"/>
-    <child link="solid_1"/>
+    <child link="solid_3"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_1">
+  <link name="solid_3">
   </link>
   <joint name="front left shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -2087,19 +2162,33 @@
   </joint>
   <joint name="front left piston motor" type="continuous">
     <parent link="front left upperarm"/>
-    <child link="solid_2"/>
+    <child link="solid_4"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_2">
+  <link name="solid_4">
   </link>
+  <link name="rear depth">
+  </link>
+  <joint name="base_link_rear depth_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear depth"/>
+    <origin xyz="-0.278136 -1.397633 0.628752" rpy="0.000015 0.474984 -3.141579"/>
+  </joint>
   <link name="rear camera">
   </link>
   <joint name="base_link_rear camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="rear camera"/>
-    <origin xyz="-0.278136 -1.397633 0.628752" rpy="0.000015 0.474984 -3.141579"/>
+    <origin xyz="-0.448136 -0.018115 0.012558" rpy="0.000015 0.474984 -3.141579"/>
+  </joint>
+  <link name="left flank depth">
+  </link>
+  <joint name="base_link_left flank depth_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left flank depth"/>
+    <origin xyz="-0.13568 0.110127 0.065528" rpy="-0.000003 0.403191 1.570802"/>
   </joint>
   <link name="left flank camera">
   </link>
@@ -2108,6 +2197,13 @@
     <child link="left flank camera"/>
     <origin xyz="-0.13568 0.110127 0.065528" rpy="-0.000003 0.403191 1.570802"/>
   </joint>
+  <link name="right flank depth">
+  </link>
+  <joint name="base_link_right flank depth_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right flank depth"/>
+    <origin xyz="-0.135678 -0.110163 0.06561" rpy="0.000005 0.413171 -1.570794"/>
+  </joint>
   <link name="right flank camera">
   </link>
   <joint name="base_link_right flank camera_joint" type="fixed">
@@ -2115,12 +2211,26 @@
     <child link="right flank camera"/>
     <origin xyz="-0.135678 -0.110163 0.06561" rpy="0.000005 0.413171 -1.570794"/>
   </joint>
+  <link name="left head depth">
+  </link>
+  <joint name="base_link_left head depth_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left head depth"/>
+    <origin xyz="0.46325 0.045111 0.029551" rpy="-0.158862 0.433786 -0.408004"/>
+  </joint>
   <link name="left head camera">
   </link>
   <joint name="base_link_left head camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="left head camera"/>
     <origin xyz="0.46325 0.045111 0.029551" rpy="-0.158862 0.433786 -0.408004"/>
+  </joint>
+  <link name="right head depth">
+  </link>
+  <joint name="base_link_right head depth_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right head depth"/>
+    <origin xyz="0.462603 -0.044896 0.027972" rpy="0.193959 0.3931 0.409605"/>
   </joint>
   <link name="right head camera">
   </link>

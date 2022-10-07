@@ -21,13 +21,19 @@ TexturedBackground {
 DEF Spot Spot {
   translation 0 0 0.6
   rotation 0 0 1 1.5708
+  name "Spot"
   controller "<extern>"
   supervisor TRUE
   frontExtension [
-    HokuyoUrg04lxug01 {
-      translation -0.0599999 0.05 -0.16
+    VelodynePuck {
+      translation -4.21115e-08 0.04 -0.08
       rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
-      name "HokuyoUrg04lxug01"
+      name "Velodyne_Puck"
+    }
+    Kinect {
+      translation 0.001 0.0683328 -0.0788089
+      rotation -0.5790286936582918 0.5790286936582918 0.5739786963300503 2.09946
+      name "kinect"
     }
     Solid {
       translation 3.78961e-07 7e-07 -0.16

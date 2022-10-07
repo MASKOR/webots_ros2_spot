@@ -22,7 +22,7 @@ class InitialPose(Node):
             mymsg.pose.pose.position.z = 0.6
             mymsg.pose.pose.orientation.x = 0.
             mymsg.pose.pose.orientation.y = 0.
-            mymsg.pose.pose.orientation.z = 0.
+            mymsg.pose.pose.orientation.z = 1.
             mymsg.pose.pose.orientation.w = 1.
             self.mypub.publish(mymsg)
             self.destroy_node()
