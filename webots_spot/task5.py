@@ -13,6 +13,8 @@ from moveit_msgs.action import MoveGroup
 import numpy as np
 from copy import deepcopy
 
+global_joint_states = None
+
 
 class MoveGroupActionClient(Node):
 
@@ -36,12 +38,12 @@ class MoveGroupActionClient(Node):
         jc.weight = 1.0
 
         joints = {}
-        joints['shoulder_pan_joint'] = np.deg2rad(-151)
-        joints['shoulder_lift_joint'] = np.deg2rad(-86)
-        joints['elbow_joint'] = np.deg2rad(137)
-        joints['wrist_1_joint'] = np.deg2rad(-50)
-        joints['wrist_2_joint'] = np.deg2rad(3)
-        joints['wrist_3_joint'] = np.deg2rad(-1)
+        joints['shoulder_pan_joint'] = -1.6391
+        joints['shoulder_lift_joint'] = -0.1366
+        joints['elbow_joint'] = -2.0147
+        joints['wrist_1_joint'] = -0.7512
+        joints['wrist_2_joint'] = 1.5708
+        joints['wrist_3_joint'] = 0.
 
         constraints = Constraints()
         for (joint, angle) in joints.items():
@@ -72,6 +74,8 @@ class MoveGroupActionClient(Node):
         self._action_client = ActionClient(self, MoveGroup, '/move_action')
 
     def joint_states_cb(self, joint_state):
+        global global_joint_states
+        global_joint_states = joint_state
         self.joint_state = joint_state
 
     def send_goal(self):
@@ -107,7 +111,9 @@ class MoveGroupActionClient(Node):
 def main(args=None):
     rclpy.init(args=args)
     action_client = MoveGroupActionClient()
-    rclpy.spin_once(action_client) # Get info from /joint_states
+    # Get info from /joint_states
+    while global_joint_states is None:
+        rclpy.spin_once(action_client)
     action_client.send_goal()
     rclpy.spin(action_client)
 

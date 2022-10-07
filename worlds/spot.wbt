@@ -21,6 +21,7 @@ TexturedBackground {
 DEF Spot Spot {
   translation 0 0 0.6
   rotation 0 0 1 1.5708
+  name "Spot"
   controller "<extern>"
   supervisor TRUE
   frontExtension [
@@ -33,13 +34,20 @@ DEF Spot Spot {
       ]
       staticBase FALSE
     }
+    Kinect {
+      translation 0.0 -0.007 -0.240831
+      rotation 1.0 0.0 0.0 -0.35
+      foot FALSE
+    }
+  ]
+  middleExtension [
+    VelodynePuck {
+      translation 0.0 0.04 0.09
+      rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "Velodyne_Puck"
+    }
   ]
   rearExtension [
-    HokuyoUrg04lxug01 {
-      translation 0.0599997 0.03 0.2
-      rotation 0.577349935856137 0.577349935856137 0.5773509358560258 -2.094395307179586
-      name "HokuyoUrg04lxug01"
-    }
     DistanceSensor {
       translation -0.04 0.01 0.16
       rotation 0.577349935856137 0.577349935856137 0.5773509358560258 -2.094395307179586
@@ -60,10 +68,6 @@ DEF Spot Spot {
         0 0 0
         10 1000 0
       ]
-    }
-    Kinect {
-      translation -3.478e-08 0.0299999 0.08
-      rotation 0.577349935856137 0.577349935856137 0.5773509358560258 -2.094395307179586
     }
   ]
 }

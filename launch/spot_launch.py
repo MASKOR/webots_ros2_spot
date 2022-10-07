@@ -105,23 +105,22 @@ def generate_launch_description():
         webots,
         spot_driver,
         robot_state_publisher,
-        spot_pointcloud2,
+        # spot_pointcloud2,
         spot_apriltag,
         webots_event_handler,
         Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
-            remappings=[('cloud_in', '/Spot/pointcloud2'), ('scan', '/Spot/scan')],
+            remappings=[('cloud_in', '/Spot/Velodyne_Puck/point_cloud'), ],
             parameters=[{
-                'target_frame': 'base_link',
                 'transform_tolerance': 0.01,
-                'min_height': -0.5,
-                'max_height': 0.5,
-                'angle_min': -3.14,  # -M_PI/2
-                'angle_max': 3.14,  # M_PI/2
-                'angle_increment': 0.0174,  # M_PI/180.0
+                'min_height': 0.0,
+                'max_height': 1.0,
+                'angle_min': -3.14,
+                'angle_max': 3.14,
+                'angle_increment': 0.00872,
                 'scan_time': 0.1,
-                'range_min': 0.45,
-                'range_max': 20.0,
+                'range_min': 0.9,
+                'range_max': 100.0,
                 'use_inf': True,
                 'inf_epsilon': 1.0,
             }],

@@ -17,108 +17,32 @@
         <joint name="wrist_2_joint"/>
         <joint name="wrist_3_joint"/>
     </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="gripper_above" group="spot_ur3e_arm">
+        <joint name="elbow_joint" value="-2.0147"/>
+        <joint name="shoulder_lift_joint" value="-0.1366"/>
+        <joint name="shoulder_pan_joint" value="-1.6391"/>
+        <joint name="wrist_1_joint" value="-0.7512"/>
+        <joint name="wrist_2_joint" value="1.5708"/>
+        <joint name="wrist_3_joint" value="0"/>
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="gripper" parent_link="base_link" group="spot_ur3e_arm"/>
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
-    <passive_joint name="tilt motor"/>
-    <passive_joint name="finger_middle_joint_1"/>
-    <passive_joint name="finger_middle_joint_2"/>
-    <passive_joint name="finger_middle_joint_3"/>
-    <passive_joint name="palm_finger_1_joint"/>
-    <passive_joint name="finger_1_joint_1"/>
-    <passive_joint name="finger_1_joint_2"/>
-    <passive_joint name="finger_1_joint_3"/>
-    <passive_joint name="palm_finger_2_joint"/>
-    <passive_joint name="finger_2_joint_1"/>
-    <passive_joint name="finger_2_joint_2"/>
-    <passive_joint name="finger_2_joint_3"/>
-    <passive_joint name="front left shoulder abduction motor"/>
-    <passive_joint name="front left shoulder rotation motor"/>
-    <passive_joint name="front left elbow motor"/>
-    <passive_joint name="front right shoulder rotation motor"/>
-    <passive_joint name="front right shoulder abduction motor"/>
-    <passive_joint name="front right elbow motor"/>
-    <passive_joint name="rear left shoulder abduction motor"/>
-    <passive_joint name="rear left shoulder rotation motor"/>
-    <passive_joint name="rear left elbow motor"/>
-    <passive_joint name="rear right shoulder abduction motor"/>
-    <passive_joint name="rear right shoulder rotation motor"/>
-    <passive_joint name="rear right elbow motor"/>
     <passive_joint name="front left piston motor"/>
     <passive_joint name="front right piston motor"/>
     <passive_joint name="rear left piston motor"/>
     <passive_joint name="rear right piston motor"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="Kinect" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="ROBOTIQ 3f Gripper" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="UR3e" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="base_link" reason="Adjacent"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_1_link_0" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_1_link_1" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_1_link_2" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_1_link_3" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_2_link_0" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_2_link_1" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_2_link_2" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_2_link_3" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_middle_link_1" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_middle_link_2" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="finger_middle_link_3" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="forearm_link" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="rear right forearm" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="HokuyoUrg04lxug01" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="UR3e" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="base_link" reason="Adjacent"/>
-    <disable_collisions link1="Kinect" link2="finger_2_link_0" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="finger_middle_link_3" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="forearm_link" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear right forearm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="rear right upperarm" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="Kinect" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="finger_1_link_0" reason="Adjacent"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="finger_1_link_1" reason="Default"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="finger_2_link_0" reason="Adjacent"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="finger_2_link_1" reason="Default"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="finger_middle_link_1" reason="Adjacent"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="ROBOTIQ 3f Gripper" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="ROBOTIQ 3f Gripper" link2="wrist_3_link" reason="Adjacent"/>
+    <disable_collisions link1="UR3e" link2="Velodyne_Puck" reason="Never"/>
     <disable_collisions link1="UR3e" link2="base_link" reason="Adjacent"/>
     <disable_collisions link1="UR3e" link2="front left forearm" reason="Never"/>
     <disable_collisions link1="UR3e" link2="front left shoulder" reason="Never"/>
@@ -136,15 +60,23 @@
     <disable_collisions link1="UR3e" link2="upper_arm_link" reason="Never"/>
     <disable_collisions link1="UR3e" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="UR3e" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="base_link" link2="front left forearm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="base_link" reason="Adjacent"/>
+    <disable_collisions link1="Velodyne_Puck" link2="front left shoulder" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="front left upperarm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="front right forearm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="front right shoulder" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="front right upperarm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear left forearm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear left shoulder" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear left upperarm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear right forearm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear right shoulder" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="rear right upperarm" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="shoulder_link" reason="Never"/>
+    <disable_collisions link1="Velodyne_Puck" link2="upper_arm_link" reason="Never"/>
     <disable_collisions link1="base_link" link2="front left shoulder" reason="Adjacent"/>
-    <disable_collisions link1="base_link" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="base_link" link2="front right forearm" reason="Never"/>
     <disable_collisions link1="base_link" link2="front right shoulder" reason="Adjacent"/>
-    <disable_collisions link1="base_link" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="base_link" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="base_link" link2="rear left shoulder" reason="Adjacent"/>
-    <disable_collisions link1="base_link" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="base_link" link2="rear right shoulder" reason="Adjacent"/>
     <disable_collisions link1="base_link" link2="shoulder_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="finger_1_link_1" reason="Adjacent"/>
@@ -156,15 +88,7 @@
     <disable_collisions link1="finger_1_link_0" link2="finger_2_link_3" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="finger_middle_link_1" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="finger_middle_link_2" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_0" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_0" link2="wrist_3_link" reason="Never"/>
@@ -174,44 +98,17 @@
     <disable_collisions link1="finger_1_link_1" link2="finger_2_link_1" reason="Never"/>
     <disable_collisions link1="finger_1_link_1" link2="finger_2_link_2" reason="Never"/>
     <disable_collisions link1="finger_1_link_1" link2="finger_2_link_3" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_1" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_1_link_1" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_1" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_1" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_2" link2="finger_1_link_3" reason="Adjacent"/>
     <disable_collisions link1="finger_1_link_2" link2="finger_2_link_0" reason="Never"/>
     <disable_collisions link1="finger_1_link_2" link2="finger_2_link_1" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_2" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_1_link_2" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_2" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_2" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_3" link2="finger_2_link_0" reason="Never"/>
     <disable_collisions link1="finger_1_link_3" link2="finger_2_link_1" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_1_link_3" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_1_link_3" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_3" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_1_link_3" link2="wrist_3_link" reason="Never"/>
@@ -220,107 +117,39 @@
     <disable_collisions link1="finger_2_link_0" link2="finger_2_link_3" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_1" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="finger_middle_link_2" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_0" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_0" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_1" link2="finger_2_link_2" reason="Adjacent"/>
     <disable_collisions link1="finger_2_link_1" link2="finger_2_link_3" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="finger_2_link_1" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_1" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_2_link_1" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_1" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_1" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_2" link2="finger_2_link_3" reason="Adjacent"/>
-    <disable_collisions link1="finger_2_link_2" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="finger_2_link_2" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_2" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_2_link_2" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_2" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_2" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_2_link_3" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_2_link_3" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_3" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_2_link_3" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_1" link2="finger_middle_link_2" reason="Adjacent"/>
     <disable_collisions link1="finger_middle_link_1" link2="finger_middle_link_3" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_1" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="finger_middle_link_1" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="finger_middle_link_1" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_1" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_1" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_2" link2="finger_middle_link_3" reason="Adjacent"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_2" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="finger_middle_link_2" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_2" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_2" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="rear left forearm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="finger_middle_link_3" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="finger_middle_link_3" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_3" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="finger_middle_link_3" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front left forearm" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front left shoulder" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front left upperarm" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front right shoulder" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="front right upperarm" reason="Never"/>
-    <disable_collisions link1="forearm_link" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="forearm_link" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="forearm_link" link2="rear left upperarm" reason="Never"/>
     <disable_collisions link1="forearm_link" link2="rear right shoulder" reason="Never"/>
@@ -331,17 +160,10 @@
     <disable_collisions link1="front left forearm" link2="front left upperarm" reason="Adjacent"/>
     <disable_collisions link1="front left forearm" link2="front right shoulder" reason="Never"/>
     <disable_collisions link1="front left forearm" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="front left forearm" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front left forearm" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front left forearm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="front left upperarm" reason="Adjacent"/>
     <disable_collisions link1="front left shoulder" link2="front right forearm" reason="Never"/>
-    <disable_collisions link1="front left shoulder" link2="front right shoulder" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="front right upperarm" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="rear left shoulder" reason="Never"/>
@@ -350,33 +172,17 @@
     <disable_collisions link1="front left shoulder" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front left shoulder" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front left shoulder" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front left shoulder" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front left shoulder" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front left shoulder" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="front right shoulder" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front left upperarm" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front left upperarm" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front left upperarm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front left upperarm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front left upperarm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="front right forearm" link2="front right shoulder" reason="Never"/>
     <disable_collisions link1="front right forearm" link2="front right upperarm" reason="Adjacent"/>
-    <disable_collisions link1="front right forearm" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="front right forearm" link2="rear left shoulder" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="front right forearm" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front right forearm" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front right forearm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="front right shoulder" link2="front right upperarm" reason="Adjacent"/>
     <disable_collisions link1="front right shoulder" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="front right shoulder" link2="rear left shoulder" reason="Never"/>
@@ -385,43 +191,23 @@
     <disable_collisions link1="front right shoulder" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="front right shoulder" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front right shoulder" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front right shoulder" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front right shoulder" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front right shoulder" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front right shoulder" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="rear left forearm" reason="Never"/>
     <disable_collisions link1="front right upperarm" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="front right upperarm" link2="rear left upperarm" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="front right upperarm" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="front right upperarm" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="front right upperarm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="rear left forearm" link2="rear left shoulder" reason="Never"/>
     <disable_collisions link1="rear left forearm" link2="rear left upperarm" reason="Adjacent"/>
-    <disable_collisions link1="rear left forearm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="rear left forearm" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="rear left forearm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="rear left forearm" link2="shoulder_link" reason="Never"/>
-    <disable_collisions link1="rear left forearm" link2="upper_arm_link" reason="Never"/>
-    <disable_collisions link1="rear left forearm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="rear left forearm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="rear left forearm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="rear left upperarm" reason="Adjacent"/>
     <disable_collisions link1="rear left shoulder" link2="rear right forearm" reason="Never"/>
-    <disable_collisions link1="rear left shoulder" link2="rear right shoulder" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="shoulder_link" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="upper_arm_link" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="wrist_2_link" reason="Never"/>
     <disable_collisions link1="rear left shoulder" link2="wrist_3_link" reason="Never"/>
-    <disable_collisions link1="rear left upperarm" link2="rear right forearm" reason="Never"/>
     <disable_collisions link1="rear left upperarm" link2="rear right shoulder" reason="Never"/>
-    <disable_collisions link1="rear left upperarm" link2="rear right upperarm" reason="Never"/>
     <disable_collisions link1="rear left upperarm" link2="shoulder_link" reason="Never"/>
     <disable_collisions link1="rear left upperarm" link2="upper_arm_link" reason="Never"/>
     <disable_collisions link1="rear left upperarm" link2="wrist_1_link" reason="Never"/>
@@ -439,8 +225,6 @@
     <disable_collisions link1="rear right upperarm" link2="shoulder_link" reason="Never"/>
     <disable_collisions link1="rear right upperarm" link2="upper_arm_link" reason="Never"/>
     <disable_collisions link1="rear right upperarm" link2="wrist_1_link" reason="Never"/>
-    <disable_collisions link1="rear right upperarm" link2="wrist_2_link" reason="Never"/>
-    <disable_collisions link1="rear right upperarm" link2="wrist_3_link" reason="Never"/>
     <disable_collisions link1="shoulder_link" link2="upper_arm_link" reason="Adjacent"/>
     <disable_collisions link1="shoulder_link" link2="wrist_1_link" reason="Never"/>
     <disable_collisions link1="shoulder_link" link2="wrist_2_link" reason="Never"/>

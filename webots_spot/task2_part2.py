@@ -13,6 +13,8 @@ from moveit_msgs.action import MoveGroup
 import numpy as np
 from copy import deepcopy
 
+global_joint_states = None
+
 
 class MoveGroupActionClient(Node):
 
@@ -72,6 +74,8 @@ class MoveGroupActionClient(Node):
         self._action_client = ActionClient(self, MoveGroup, '/move_action')
 
     def joint_states_cb(self, joint_state):
+        global global_joint_states
+        global_joint_states = joint_state
         self.joint_state = joint_state
 
     def send_goal(self):
@@ -107,7 +111,9 @@ class MoveGroupActionClient(Node):
 def main(args=None):
     rclpy.init(args=args)
     action_client = MoveGroupActionClient()
-    rclpy.spin_once(action_client) # Get info from /joint_states
+    # Get info from /joint_states
+    while global_joint_states is None:
+        rclpy.spin_once(action_client)
     action_client.send_goal()
     rclpy.spin(action_client)
 

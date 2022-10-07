@@ -8,6 +8,7 @@ data_files = [
     ('share/' + package_name + '/launch', glob('launch/*_launch.py')),
     ('share/' + package_name + '/worlds', glob('worlds/*.wbt')),
     ('share/' + package_name + '/resource', glob('resource/*')),
+    ('share/' + package_name + '/map', glob('map/*')),
     ('share/' + package_name + '/params', glob('params/*.yaml')),
     ('share/' + package_name + '/protos', glob('protos/*.proto')),
     ('share/' + package_name + '/protos/icons', glob('protos/icons/*.png')),

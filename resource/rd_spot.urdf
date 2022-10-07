@@ -194,48 +194,6 @@
       </geometry>
     </collision>
   </link>
-  <link name="Kinect">
-    <visual>
-      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
-      <geometry>
-        <box size="0.084 0.027 0.068"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
-      <geometry>
-        <box size="0.084 0.027 0.068"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="base_link_Kinect_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="Kinect"/>
-    <origin xyz="-0.28 0 0.1418" rpy="0.00001 0.000004 -3.14159"/>
-  </joint>
-  <joint name="tilt motor" type="revolute">
-    <parent link="Kinect"/>
-    <child link="solid"/>
-    <axis xyz="1 0.000118 0.000055"/>
-    <limit effort="10" lower="-0.47" upper="0.47" velocity="10"/>
-    <origin xyz="0 0 0.05" rpy="1.570741 0.000118 -1.570741"/>
-  </joint>
-  <link name="solid">
-  </link>
-  <link name="kinect range">
-  </link>
-  <joint name="solid_kinect range_joint" type="fixed">
-    <parent link="solid"/>
-    <child link="kinect range"/>
-    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
-  </joint>
-  <link name="kinect color">
-  </link>
-  <joint name="solid_kinect color_joint" type="fixed">
-    <parent link="solid"/>
-    <child link="kinect color"/>
-    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
-  </joint>
   <link name="distance sensor">
   </link>
   <joint name="base_link_distance sensor_joint" type="fixed">
@@ -243,31 +201,52 @@
     <child link="distance sensor"/>
     <origin xyz="-0.36 0.04 0.121799" rpy="0.00001 0.000004 -3.14159"/>
   </joint>
-  <link name="solid_0">
+  <link name="solid">
   </link>
-  <joint name="distance sensor_solid_0_joint" type="fixed">
+  <joint name="distance sensor_solid_joint" type="fixed">
     <parent link="distance sensor"/>
-    <child link="solid_0"/>
+    <child link="solid"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
-  <link name="HokuyoUrg04lxug01">
+  <link name="Velodyne_Puck">
     <visual>
-      <origin xyz="0 0 -0.018" rpy="1.570741 0.000118 -1.570741"/>
+      <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.05 0.07 0.05"/>
+        <cylinder radius="0.052" length="0.0727"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.018" rpy="1.570741 0.000118 -1.570741"/>
+      <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.05 0.07 0.05"/>
+        <cylinder radius="0.052" length="0.0727"/>
       </geometry>
     </collision>
   </link>
-  <joint name="base_link_HokuyoUrg04lxug01_joint" type="fixed">
+  <joint name="base_link_Velodyne_Puck_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="HokuyoUrg04lxug01"/>
-    <origin xyz="-0.4 -0.06 0.1418" rpy="0.00001 0.000004 -3.14159"/>
+    <child link="Velodyne_Puck"/>
+    <origin xyz="-0.063 0 0.1518" rpy="-0.000008 -0.000008 0.000001"/>
+  </joint>
+  <link name="solid_0">
+  </link>
+  <joint name="base_link_solid_0_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="solid_0"/>
+    <origin xyz="0.496831 0.000001 0.104801" rpy="1.2208 -0.00001 -1.570793"/>
+  </joint>
+  <link name="kinect range">
+  </link>
+  <joint name="solid_0_kinect range_joint" type="fixed">
+    <parent link="solid_0"/>
+    <child link="kinect range"/>
+    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
+  </joint>
+  <link name="kinect color">
+  </link>
+  <joint name="solid_0_kinect color_joint" type="fixed">
+    <parent link="solid_0"/>
+    <child link="kinect color"/>
+    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
   </joint>
   <link name="UR3e">
     <visual>
@@ -832,481 +811,6 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rear left shoulder abduction motor" type="revolute">
-    <parent link="base_link"/>
-    <child link="rear left shoulder"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="50" lower="-0.6" upper="0.5" velocity="10"/>
-    <origin xyz="-0.3084 0.0528 0.012299" rpy="1.5708 -0.00001 -1.570793"/>
-  </joint>
-  <link name="rear left shoulder">
-    <visual>
-      <origin xyz="0.004874 0.000873 -0.000643" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.086792 0.124528 0.120755"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.004874 0.000873 -0.000643" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.086792 0.124528 0.120755"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.006447 0.000873 -0.000643" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.098113 0.098113 0.098113"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.006447 0.000873 -0.000643" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.098113 0.098113 0.098113"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.058145 0.000873 -0.000643" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.047925" length="0.006038"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.058145 0.000873 -0.000643" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.047925" length="0.006038"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="rear left shoulder rotation motor" type="revolute">
-    <parent link="rear left shoulder"/>
-    <child link="rear left upperarm"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="50" lower="-1.7" upper="1.7" velocity="10"/>
-    <origin xyz="0 -0.00053 0" rpy="0 0 0"/>
-  </joint>
-  <link name="rear left upperarm">
-    <visual>
-      <origin xyz="-0.117011 -0.32073 0.1829" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.02717" length="0.060377"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.117011 -0.32073 0.1829" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.02717" length="0.060377"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.117011 -0.25867 0.180358" rpy="0 0.05 1.570795"/>
-      <geometry>
-        <box size="0.09434 0.060377 0.053208"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.117011 -0.25867 0.180358" rpy="0 0.05 1.570795"/>
-      <geometry>
-        <box size="0.09434 0.060377 0.053208"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.149087 -0.023654 0.007772" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.016226 0.177358 0.071698"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.149087 -0.023654 0.007772" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.016226 0.177358 0.071698"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.14944 -0.001095 0.048195" rpy="-0.688653 0.282831 -0.225783"/>
-      <geometry>
-        <box size="0.004528 0.173585 0.015094"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.14944 -0.001095 0.048195" rpy="-0.688653 0.282831 -0.225783"/>
-      <geometry>
-        <box size="0.004528 0.173585 0.015094"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.143963 -0.142325 0.149419" rpy="-0.689784 0.390399 -0.237371"/>
-      <geometry>
-        <box size="0.004528 0.173585 0.015094"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.143963 -0.142325 0.149419" rpy="-0.689784 0.390399 -0.237371"/>
-      <geometry>
-        <box size="0.004528 0.173585 0.015094"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.143376 -0.16295 0.113632" rpy="-0.64577 0.030504 0.039623"/>
-      <geometry>
-        <box size="0.016226 0.173585 0.071698"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.143376 -0.16295 0.113632" rpy="-0.64577 0.030504 0.039623"/>
-      <geometry>
-        <box size="0.016226 0.173585 0.071698"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.113992 -0.21476 0.154045" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.054717 0.098113 0.064151"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.113992 -0.21476 0.154045" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.054717 0.098113 0.064151"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.113238 -0.119427 0.086296" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.028679" length="0.150943"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.113238 -0.119427 0.086296" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.028679" length="0.150943"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.113238 -0.04459 0.028636" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.037736" length="0.041509"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.113238 -0.04459 0.028636" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.037736" length="0.041509"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.113738 -0.02284 -0.046726" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.061509 0.069811 0.011321"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.113738 -0.02284 -0.046726" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.061509 0.069811 0.011321"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.073615 -0.00019 -0.000689" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.04" length="0.037736"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.073615 -0.00019 -0.000689" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.04" length="0.037736"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.115879 0.008331 -0.011344" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.033962" length="0.086792"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.115879 0.008331 -0.011344" rpy="-2.227175 0 0"/>
-      <geometry>
-        <cylinder radius="0.033962" length="0.086792"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.12154 0.053961 -0.047932" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.064151 0.003774 0.071698"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.12154 0.053961 -0.047932" rpy="-0.656375 0 0"/>
-      <geometry>
-        <box size="0.064151 0.003774 0.071698"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.12003 0.073308 -0.006499" rpy="0.013625 0 0"/>
-      <geometry>
-        <box size="0.060377 0.007547 0.022642"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.12003 0.073308 -0.006499" rpy="0.013625 0 0"/>
-      <geometry>
-        <box size="0.060377 0.007547 0.022642"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.117011 -0.13635 0.154336" rpy="0.99 0 0"/>
-      <geometry>
-        <box size="0.049057 0.005283 0.169811"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.117011 -0.13635 0.154336" rpy="0.99 0 0"/>
-      <geometry>
-        <box size="0.049057 0.005283 0.169811"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.083111 -0.31378 0.182934" rpy="0 -0.076371 1.570798"/>
-      <geometry>
-        <box size="0.044 0.008 0.0387"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.083111 -0.31378 0.182934" rpy="0 -0.076371 1.570798"/>
-      <geometry>
-        <box size="0.044 0.008 0.0387"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="rear left elbow motor" type="revolute">
-    <parent link="rear left upperarm"/>
-    <child link="rear left forearm"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="50" lower="-0.45" upper="1.6" velocity="10"/>
-    <origin xyz="-0.1122 -0.319729 0.182338" rpy="0 0 0"/>
-  </joint>
-  <link name="rear left forearm">
-    <visual>
-      <origin xyz="-0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
-      <geometry>
-        <cylinder radius="0.035094" length="0.039623"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
-      <geometry>
-        <cylinder radius="0.035094" length="0.039623"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.227421 -0.230239" rpy="-0.947675 0 0"/>
-      <geometry>
-        <box size="0.037736 0.006038 0.041509"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.227421 -0.230239" rpy="-0.947675 0 0"/>
-      <geometry>
-        <box size="0.037736 0.006038 0.041509"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.232272 -0.198255" rpy="-0.093185 0 0"/>
-      <geometry>
-        <box size="0.037736 0.045283 0.006792"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.232272 -0.198255" rpy="-0.093185 0 0"/>
-      <geometry>
-        <box size="0.037736 0.045283 0.006792"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.205751 -0.206348" rpy="0.616815 0 0"/>
-      <geometry>
-        <box size="0.025283 0.022642 0.020755"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.205751 -0.206348" rpy="0.616815 0 0"/>
-      <geometry>
-        <box size="0.025283 0.022642 0.020755"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.168611 -0.18111" rpy="-2.513185 0 0"/>
-      <geometry>
-        <box size="0.019245 0.071698 0.017358"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.168611 -0.18111" rpy="-2.513185 0 0"/>
-      <geometry>
-        <box size="0.019245 0.071698 0.017358"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.125111 -0.148236" rpy="0.663625 0 0"/>
-      <geometry>
-        <box size="0.021887 0.037736 0.018491"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.125111 -0.148236" rpy="0.663625 0 0"/>
-      <geometry>
-        <box size="0.021887 0.037736 0.018491"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.100861 -0.126163" rpy="0.760415 0 0"/>
-      <geometry>
-        <box size="0.026415 0.030189 0.021132"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.100861 -0.126163" rpy="0.760415 0 0"/>
-      <geometry>
-        <box size="0.026415 0.030189 0.021132"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.084241 -0.106843" rpy="0.867225 0 0"/>
-      <geometry>
-        <box size="0.032453 0.022642 0.024528"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.084241 -0.106843" rpy="0.867225 0 0"/>
-      <geometry>
-        <box size="0.032453 0.022642 0.024528"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.068551 -0.08661" rpy="0.907225 0 0"/>
-      <geometry>
-        <box size="0.037736 0.033962 0.026415"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.068551 -0.08661" rpy="0.907225 0 0"/>
-      <geometry>
-        <box size="0.037736 0.033962 0.026415"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.049721 -0.059227" rpy="0.933245 0 0"/>
-      <geometry>
-        <cylinder radius="0.024528" length="0.030566"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.049721 -0.059227" rpy="0.933245 0 0"/>
-      <geometry>
-        <cylinder radius="0.024528" length="0.030566"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.034991 -0.038166" rpy="0.937225 0 0"/>
-      <geometry>
-        <box size="0.038113 0.022642 0.032075"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.034991 -0.038166" rpy="0.937225 0 0"/>
-      <geometry>
-        <box size="0.038113 0.022642 0.032075"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.022931 -0.021744" rpy="0.937225 0 0"/>
-      <geometry>
-        <box size="0.031321 0.018868 0.03283"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.022931 -0.021744" rpy="0.937225 0 0"/>
-      <geometry>
-        <box size="0.031321 0.018868 0.03283"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 -0.010711 -0.006332" rpy="0.834035 0 0"/>
-      <geometry>
-        <box size="0.027925 0.018868 0.03283"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 -0.010711 -0.006332" rpy="0.834035 0 0"/>
-      <geometry>
-        <box size="0.027925 0.018868 0.03283"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 0.004299 0.006862" rpy="0.680845 0 0"/>
-      <geometry>
-        <box size="0.027547 0.018868 0.034717"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 0.004299 0.006862" rpy="0.680845 0 0"/>
-      <geometry>
-        <box size="0.027547 0.018868 0.034717"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 0.021259 0.019851" rpy="0.604465 0 0"/>
-      <geometry>
-        <box size="0.020377 0.026415 0.03434"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 0.021259 0.019851" rpy="0.604465 0 0"/>
-      <geometry>
-        <box size="0.020377 0.026415 0.03434"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 0.019179 -0.009531" rpy="0.494895 0 0"/>
-      <geometry>
-        <box size="0.010189 0.05283 0.00717"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 0.019179 -0.009531" rpy="0.494895 0 0"/>
-      <geometry>
-        <box size="0.010189 0.05283 0.00717"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="-0.001038 0.037459 0.024742" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.021887" length="0.019736"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="-0.001038 0.037459 0.024742" rpy="-1.5708 0 1.5708"/>
-      <geometry>
-        <cylinder radius="0.021887" length="0.019736"/>
-      </geometry>
-    </collision>
-  </link>
-  <link name="rear left touch sensor">
-  </link>
-  <joint name="rear left forearm_rear left touch sensor_joint" type="fixed">
-    <parent link="rear left forearm"/>
-    <child link="rear left touch sensor"/>
-    <origin xyz="0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
-  </joint>
-  <joint name="rear left piston motor" type="continuous">
-    <parent link="rear left upperarm"/>
-    <child link="solid_1"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="10" velocity="10"/>
-    <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
-  </joint>
-  <link name="solid_1">
-  </link>
   <joint name="rear right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
     <child link="rear right shoulder"/>
@@ -1775,10 +1279,485 @@
   </joint>
   <joint name="rear right piston motor" type="continuous">
     <parent link="rear right upperarm"/>
-    <child link="solid_2"/>
+    <child link="solid_1"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
+  </joint>
+  <link name="solid_1">
+  </link>
+  <joint name="rear left shoulder abduction motor" type="revolute">
+    <parent link="base_link"/>
+    <child link="rear left shoulder"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="50" lower="-0.6" upper="0.5" velocity="10"/>
+    <origin xyz="-0.3084 0.0528 0.012299" rpy="1.5708 -0.00001 -1.570793"/>
+  </joint>
+  <link name="rear left shoulder">
+    <visual>
+      <origin xyz="0.004874 0.000873 -0.000643" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.086792 0.124528 0.120755"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.004874 0.000873 -0.000643" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.086792 0.124528 0.120755"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.006447 0.000873 -0.000643" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.098113 0.098113 0.098113"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.006447 0.000873 -0.000643" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.098113 0.098113 0.098113"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.058145 0.000873 -0.000643" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.047925" length="0.006038"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.058145 0.000873 -0.000643" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.047925" length="0.006038"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rear left shoulder rotation motor" type="revolute">
+    <parent link="rear left shoulder"/>
+    <child link="rear left upperarm"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="50" lower="-1.7" upper="1.7" velocity="10"/>
+    <origin xyz="0 -0.00053 0" rpy="0 0 0"/>
+  </joint>
+  <link name="rear left upperarm">
+    <visual>
+      <origin xyz="-0.117011 -0.32073 0.1829" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.02717" length="0.060377"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.117011 -0.32073 0.1829" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.02717" length="0.060377"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.117011 -0.25867 0.180358" rpy="0 0.05 1.570795"/>
+      <geometry>
+        <box size="0.09434 0.060377 0.053208"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.117011 -0.25867 0.180358" rpy="0 0.05 1.570795"/>
+      <geometry>
+        <box size="0.09434 0.060377 0.053208"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.149087 -0.023654 0.007772" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.016226 0.177358 0.071698"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.149087 -0.023654 0.007772" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.016226 0.177358 0.071698"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.14944 -0.001095 0.048195" rpy="-0.688653 0.282831 -0.225783"/>
+      <geometry>
+        <box size="0.004528 0.173585 0.015094"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.14944 -0.001095 0.048195" rpy="-0.688653 0.282831 -0.225783"/>
+      <geometry>
+        <box size="0.004528 0.173585 0.015094"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.143963 -0.142325 0.149419" rpy="-0.689784 0.390399 -0.237371"/>
+      <geometry>
+        <box size="0.004528 0.173585 0.015094"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.143963 -0.142325 0.149419" rpy="-0.689784 0.390399 -0.237371"/>
+      <geometry>
+        <box size="0.004528 0.173585 0.015094"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.143376 -0.16295 0.113632" rpy="-0.64577 0.030504 0.039623"/>
+      <geometry>
+        <box size="0.016226 0.173585 0.071698"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.143376 -0.16295 0.113632" rpy="-0.64577 0.030504 0.039623"/>
+      <geometry>
+        <box size="0.016226 0.173585 0.071698"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.113992 -0.21476 0.154045" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.054717 0.098113 0.064151"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.113992 -0.21476 0.154045" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.054717 0.098113 0.064151"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.113238 -0.119427 0.086296" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.028679" length="0.150943"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.113238 -0.119427 0.086296" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.028679" length="0.150943"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.113238 -0.04459 0.028636" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.037736" length="0.041509"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.113238 -0.04459 0.028636" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.037736" length="0.041509"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.113738 -0.02284 -0.046726" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.061509 0.069811 0.011321"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.113738 -0.02284 -0.046726" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.061509 0.069811 0.011321"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.073615 -0.00019 -0.000689" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.037736"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.073615 -0.00019 -0.000689" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.037736"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.115879 0.008331 -0.011344" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.033962" length="0.086792"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.115879 0.008331 -0.011344" rpy="-2.227175 0 0"/>
+      <geometry>
+        <cylinder radius="0.033962" length="0.086792"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.12154 0.053961 -0.047932" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.064151 0.003774 0.071698"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.12154 0.053961 -0.047932" rpy="-0.656375 0 0"/>
+      <geometry>
+        <box size="0.064151 0.003774 0.071698"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.12003 0.073308 -0.006499" rpy="0.013625 0 0"/>
+      <geometry>
+        <box size="0.060377 0.007547 0.022642"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.12003 0.073308 -0.006499" rpy="0.013625 0 0"/>
+      <geometry>
+        <box size="0.060377 0.007547 0.022642"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.117011 -0.13635 0.154336" rpy="0.99 0 0"/>
+      <geometry>
+        <box size="0.049057 0.005283 0.169811"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.117011 -0.13635 0.154336" rpy="0.99 0 0"/>
+      <geometry>
+        <box size="0.049057 0.005283 0.169811"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.083111 -0.31378 0.182934" rpy="0 -0.076371 1.570798"/>
+      <geometry>
+        <box size="0.044 0.008 0.0387"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.083111 -0.31378 0.182934" rpy="0 -0.076371 1.570798"/>
+      <geometry>
+        <box size="0.044 0.008 0.0387"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rear left elbow motor" type="revolute">
+    <parent link="rear left upperarm"/>
+    <child link="rear left forearm"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="50" lower="-0.45" upper="1.6" velocity="10"/>
+    <origin xyz="-0.1122 -0.319729 0.182338" rpy="0 0 0"/>
+  </joint>
+  <link name="rear left forearm">
+    <visual>
+      <origin xyz="-0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
+      <geometry>
+        <cylinder radius="0.035094" length="0.039623"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
+      <geometry>
+        <cylinder radius="0.035094" length="0.039623"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.227421 -0.230239" rpy="-0.947675 0 0"/>
+      <geometry>
+        <box size="0.037736 0.006038 0.041509"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.227421 -0.230239" rpy="-0.947675 0 0"/>
+      <geometry>
+        <box size="0.037736 0.006038 0.041509"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.232272 -0.198255" rpy="-0.093185 0 0"/>
+      <geometry>
+        <box size="0.037736 0.045283 0.006792"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.232272 -0.198255" rpy="-0.093185 0 0"/>
+      <geometry>
+        <box size="0.037736 0.045283 0.006792"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.205751 -0.206348" rpy="0.616815 0 0"/>
+      <geometry>
+        <box size="0.025283 0.022642 0.020755"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.205751 -0.206348" rpy="0.616815 0 0"/>
+      <geometry>
+        <box size="0.025283 0.022642 0.020755"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.168611 -0.18111" rpy="-2.513185 0 0"/>
+      <geometry>
+        <box size="0.019245 0.071698 0.017358"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.168611 -0.18111" rpy="-2.513185 0 0"/>
+      <geometry>
+        <box size="0.019245 0.071698 0.017358"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.125111 -0.148236" rpy="0.663625 0 0"/>
+      <geometry>
+        <box size="0.021887 0.037736 0.018491"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.125111 -0.148236" rpy="0.663625 0 0"/>
+      <geometry>
+        <box size="0.021887 0.037736 0.018491"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.100861 -0.126163" rpy="0.760415 0 0"/>
+      <geometry>
+        <box size="0.026415 0.030189 0.021132"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.100861 -0.126163" rpy="0.760415 0 0"/>
+      <geometry>
+        <box size="0.026415 0.030189 0.021132"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.084241 -0.106843" rpy="0.867225 0 0"/>
+      <geometry>
+        <box size="0.032453 0.022642 0.024528"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.084241 -0.106843" rpy="0.867225 0 0"/>
+      <geometry>
+        <box size="0.032453 0.022642 0.024528"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.068551 -0.08661" rpy="0.907225 0 0"/>
+      <geometry>
+        <box size="0.037736 0.033962 0.026415"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.068551 -0.08661" rpy="0.907225 0 0"/>
+      <geometry>
+        <box size="0.037736 0.033962 0.026415"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.049721 -0.059227" rpy="0.933245 0 0"/>
+      <geometry>
+        <cylinder radius="0.024528" length="0.030566"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.049721 -0.059227" rpy="0.933245 0 0"/>
+      <geometry>
+        <cylinder radius="0.024528" length="0.030566"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.034991 -0.038166" rpy="0.937225 0 0"/>
+      <geometry>
+        <box size="0.038113 0.022642 0.032075"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.034991 -0.038166" rpy="0.937225 0 0"/>
+      <geometry>
+        <box size="0.038113 0.022642 0.032075"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.022931 -0.021744" rpy="0.937225 0 0"/>
+      <geometry>
+        <box size="0.031321 0.018868 0.03283"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.022931 -0.021744" rpy="0.937225 0 0"/>
+      <geometry>
+        <box size="0.031321 0.018868 0.03283"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 -0.010711 -0.006332" rpy="0.834035 0 0"/>
+      <geometry>
+        <box size="0.027925 0.018868 0.03283"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 -0.010711 -0.006332" rpy="0.834035 0 0"/>
+      <geometry>
+        <box size="0.027925 0.018868 0.03283"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 0.004299 0.006862" rpy="0.680845 0 0"/>
+      <geometry>
+        <box size="0.027547 0.018868 0.034717"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 0.004299 0.006862" rpy="0.680845 0 0"/>
+      <geometry>
+        <box size="0.027547 0.018868 0.034717"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 0.021259 0.019851" rpy="0.604465 0 0"/>
+      <geometry>
+        <box size="0.020377 0.026415 0.03434"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 0.021259 0.019851" rpy="0.604465 0 0"/>
+      <geometry>
+        <box size="0.020377 0.026415 0.03434"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 0.019179 -0.009531" rpy="0.494895 0 0"/>
+      <geometry>
+        <box size="0.010189 0.05283 0.00717"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 0.019179 -0.009531" rpy="0.494895 0 0"/>
+      <geometry>
+        <box size="0.010189 0.05283 0.00717"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.001038 0.037459 0.024742" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.021887" length="0.019736"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.001038 0.037459 0.024742" rpy="-1.5708 0 1.5708"/>
+      <geometry>
+        <cylinder radius="0.021887" length="0.019736"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="rear left touch sensor">
+  </link>
+  <joint name="rear left forearm_rear left touch sensor_joint" type="fixed">
+    <parent link="rear left forearm"/>
+    <child link="rear left touch sensor"/>
+    <origin xyz="0.001038 -0.271321 -0.225038" rpy="-1.5708 0 1.570801"/>
+  </joint>
+  <joint name="rear left piston motor" type="continuous">
+    <parent link="rear left upperarm"/>
+    <child link="solid_2"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="10" velocity="10"/>
+    <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
   <link name="solid_2">
   </link>
