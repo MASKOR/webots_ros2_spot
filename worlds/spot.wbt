@@ -1373,6 +1373,6 @@ Solid {
   name "Lane(3)"
 }
 Can {
-  translation -0.45 0.8 0.609627
+  translation -0.361862 0.8 0.0609626
   rotation 0 0 -2 0
 }

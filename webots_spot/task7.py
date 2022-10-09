@@ -37,12 +37,12 @@ class MoveGroupActionClient(Node):
         jc.weight = 1.0
 
         joints = {}
-        joints['shoulder_pan_joint'] = np.deg2rad(-36)
-        joints['shoulder_lift_joint'] = np.deg2rad(-141)
-        joints['elbow_joint'] = np.deg2rad(-102)
-        joints['wrist_1_joint'] = np.deg2rad(-123)
-        joints['wrist_2_joint'] = np.deg2rad(-86)
-        joints['wrist_3_joint'] = np.deg2rad(-3)
+        joints['shoulder_pan_joint'] = np.deg2rad(84)
+        joints['shoulder_lift_joint'] = np.deg2rad(0)
+        joints['elbow_joint'] = np.deg2rad(-10)
+        joints['wrist_1_joint'] = np.deg2rad(-169)
+        joints['wrist_2_joint'] = np.deg2rad(-83)
+        joints['wrist_3_joint'] = np.deg2rad(-179)
 
         constraints = Constraints()
         for (joint, angle) in joints.items():

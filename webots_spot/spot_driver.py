@@ -590,7 +590,7 @@ class SpotDriver:
                                     for i in range(6)]
 
     def __moveit_cb(self, goal_handle):
-        self.__node.get_logger().info('Executing goal...')
+        self.__moveit_node.get_logger().info('Executing goal...')
         
         self.ur3e_targets = []
         for p in goal_handle.request.trajectory.points:
@@ -599,9 +599,9 @@ class SpotDriver:
             self.ur3e_targets.append(seq)
         
         while len(self.ur3e_targets) > 0:
-            self.__ur3e_defined_motions()
             if self.allow_new_target and len(self.ur3e_targets) > 0:
                 self.__moveit_movement_decomposition(0.4)
+            self.__ur3e_defined_motions()
 
         goal_handle.succeed()
         result = FollowJointTrajectory.Result()

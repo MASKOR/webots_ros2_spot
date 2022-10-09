@@ -1,7 +1,6 @@
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
-from rclpy.clock import Clock
 
 from sensor_msgs.msg import JointState
 from moveit_msgs.msg import MotionPlanRequest
@@ -22,7 +21,7 @@ class MoveGroupActionClient(Node):
         super().__init__('moveit_plan_execute_python')
 
         self.motion_plan_request = MotionPlanRequest()
-        self.motion_plan_request.workspace_parameters.header.stamp = Clock().now().to_msg()
+        self.motion_plan_request.workspace_parameters.header.stamp = self.get_clock().now().to_msg()
         self.motion_plan_request.workspace_parameters.header.frame_id = 'base_link'
         self.motion_plan_request.workspace_parameters.min_corner.x = -1.0
         self.motion_plan_request.workspace_parameters.min_corner.y = -1.0
@@ -38,12 +37,12 @@ class MoveGroupActionClient(Node):
         jc.weight = 1.0
 
         joints = {}
-        joints['shoulder_pan_joint'] = np.deg2rad(1)
-        joints['shoulder_lift_joint'] = np.deg2rad(-224)
-        joints['elbow_joint'] = np.deg2rad(42)
-        joints['wrist_1_joint'] = np.deg2rad(-164)
-        joints['wrist_2_joint'] = np.deg2rad(4)
-        joints['wrist_3_joint'] = np.deg2rad(-196)
+        joints['shoulder_pan_joint'] = np.deg2rad(-37)
+        joints['shoulder_lift_joint'] = np.deg2rad(-168)
+        joints['elbow_joint'] = np.deg2rad(-91)
+        joints['wrist_1_joint'] = np.deg2rad(-106)
+        joints['wrist_2_joint'] = np.deg2rad(-87)
+        joints['wrist_3_joint'] = np.deg2rad(-3)
 
         constraints = Constraints()
         for (joint, angle) in joints.items():
@@ -86,7 +85,9 @@ class MoveGroupActionClient(Node):
         goal_msg.planning_options = self.planning_options
 
         self._action_client.wait_for_server()
+
         self._send_goal_future = self._action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
+
         self._send_goal_future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):

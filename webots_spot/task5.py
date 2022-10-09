@@ -1,7 +1,6 @@
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
-from rclpy.clock import Clock
 
 from sensor_msgs.msg import JointState
 from moveit_msgs.msg import MotionPlanRequest
@@ -22,7 +21,7 @@ class MoveGroupActionClient(Node):
         super().__init__('moveit_plan_execute_python')
 
         self.motion_plan_request = MotionPlanRequest()
-        self.motion_plan_request.workspace_parameters.header.stamp = Clock().now().to_msg()
+        self.motion_plan_request.workspace_parameters.header.stamp = self.get_clock().now().to_msg()
         self.motion_plan_request.workspace_parameters.header.frame_id = 'base_link'
         self.motion_plan_request.workspace_parameters.min_corner.x = -1.0
         self.motion_plan_request.workspace_parameters.min_corner.y = -1.0

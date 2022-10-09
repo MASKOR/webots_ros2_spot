@@ -6,15 +6,15 @@ from collections import OrderedDict
 
 class SpotModel:
     def __init__(self,
-                 shoulder_length=0.110945,
-                 elbow_length=0.3205,
-                 wrist_length=0.37,
-                 hip_x=2*0.29785,
-                 hip_y=2*0.055,
-                 foot_x=2*0.29785,
-                 foot_y=2*0.2,
+                 shoulder_length=0.113,
+                 elbow_length=0.368,
+                 wrist_length=0.352+0.035094,
+                 hip_x=(0.364+0.308),
+                 hip_y=2*0.053,
+                 foot_x=(0.364+0.308),
+                 foot_y=2*0.166,
                  height=0.52,
-                 com_offset=0.016,
+                 com_offset=-0.023,
                  shoulder_lim=[-0.6, 0.5],
                  elbow_lim=[-1.7, 1.7],
                  wrist_lim=[-0.45, 1.6]):
