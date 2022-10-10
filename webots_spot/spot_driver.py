@@ -191,7 +191,7 @@ class SpotDriver:
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
         self.yd = 0.0
-        self.zd = 0.1
+        self.zd = 0.0
         self.rolld = 0.0
         self.pitchd = 0.0
         self.yawd = 0.0
@@ -269,31 +269,47 @@ class SpotDriver:
     def __cmd_vel(self, msg):
         # Override motion command
         self.fixed_motion = False
-        
+
         if not self.__node.count_publishers('/Spot/inverse_gait_input'):
-            StepLength = 0.024
-            ClearanceHeight = 0.024
+            StepLength = 0.08
+            ClearanceHeight = 0.01
             PenetrationDepth = 0.003
-            SwingPeriod = 0.2
+            SwingPeriod = 0.4
             YawControl = 0.0
             YawControlOn = 0.0
-            
+            StepVelocity = 0.2
+
             self.xd = 0.
             self.yd = 0.
-            self.zd = 0.1
+            self.zd = 0.
             self.rolld = 0.
             self.pitchd = 0.
             self.yawd = 0.
-            self.StepLength = StepLength
-            self.LateralFraction = msg.linear.y
+            self.StepLength = StepLength * msg.linear.x
+            
+            # Rotation along vertical axis
             self.YawRate = msg.angular.z
-            self.StepVelocity = msg.linear.x
-            if not self.StepVelocity :
-                if self.LateralFraction != 0:
-                    self.StepVelocity = 0.2
-                if self.YawRate != 0:
-                    self.StepVelocity = 0.01
+            if self.YawRate != 0 and self.StepLength == 0:
+                self.StepLength = StepLength * 0.1
 
+            # Holonomic motions
+            self.LateralFraction = np.arctan2(msg.linear.y, msg.linear.x)
+            # forcefully set 0, as output is never 0 if second term in arctan2 is -ve
+            if msg.linear.y == 0:
+                self.LateralFraction = 0
+            if self.LateralFraction != 0:
+                if msg.linear.x != 0:
+                    # change lateral fraction for 2nd and 4th quadrants
+                    if msg.linear.x > 0 and self.LateralFraction < 0:
+                        self.LateralFraction += np.pi
+                    elif msg.linear.x < 0 and self.LateralFraction > 0:
+                        self.LateralFraction -= np.pi
+                    self.StepLength = StepLength * msg.linear.y * np.sign(msg.linear.x)
+                else:
+                    # for sideway motion
+                    self.StepLength = StepLength * abs(msg.linear.y)
+
+            self.StepVelocity = StepVelocity
             self.ClearanceHeight = ClearanceHeight
             self.PenetrationDepth = PenetrationDepth
             self.SwingPeriod = SwingPeriod
