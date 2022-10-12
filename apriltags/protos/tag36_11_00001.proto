@@ -1,4 +1,5 @@
-#VRML_OBJ R2022a utf8
+#VRML_SIM R2022b utf8
+
 PROTO tag36_11_00001 [
   field SFVec3f    translation 0 0 0.5
   field SFRotation rotation    0 0 1 0
