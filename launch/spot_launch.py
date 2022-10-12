@@ -1,6 +1,8 @@
 import os
 import pathlib
 import launch
+from launch import LaunchDescription
+from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -37,28 +39,39 @@ def generate_launch_description():
     with open(modified_world, 'w') as f:
         tags = random.sample(range(0, 20), 5)
         locations = random.sample(range(0, 10), 5)
+        externproto_txt = ''
         pairs = ''
         for t, l in zip(tags, locations):
-            apriltag = 'tag36_11_' + str(t).zfill(5) + ' {\n'
+            tag_id = 'tag36_11_' + str(t).zfill(5)
+
+            externproto_txt = externproto_txt + 'EXTERNPROTO "../protos/apriltags/protos/' + tag_id + '.proto"\n'
+
+            apriltag = tag_id + ' {\n'
             apriltag = apriltag + '  translation ' + tag_locations[l][0] + '\n'
-            apriltag = apriltag + '  rotation ' + tag_locations[l][1] + '\n}'
+            apriltag = apriltag + '  rotation ' + tag_locations[l][1] + '\n}\n'
 
             pairs = pairs + alphabets[l] + ':' + str(t) + '\n'
 
             world_txt = world_txt + apriltag
+
+        world_txt = world_txt.split('\n')
+        world_txt[1] = externproto_txt
+        world_txt = '\n'.join(world_txt)
+
         f.write(world_txt)
 
     with open('pairs.txt', 'w') as f:
         f.write(pairs)
 
     webots = WebotsLauncher(
-        world=modified_world
+        world=PathJoinSubstitution([package_dir, 'worlds', 'modified_spot.wbt'])
     )
 
     spot_driver = Node(
         package='webots_ros2_driver',
         executable='driver',
         output='screen',
+        additional_env={'WEBOTS_CONTROLLER_URL': 'Spot'},
         parameters=[
             {'robot_description': load_file('spot.urdf')},
             {'use_sim_time': False},
