@@ -37,7 +37,7 @@ def generate_launch_description():
 
     modified_world = os.path.join(package_dir, 'worlds', 'modified_spot.wbt')
     with open(modified_world, 'w') as f:
-        tags = random.sample(range(0, 20), 5)
+        tags = random.sample(range(1, 20), 5)
         locations = random.sample(range(0, 10), 5)
         externproto_txt = ''
         pairs = ''

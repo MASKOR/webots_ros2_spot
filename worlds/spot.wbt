@@ -61,6 +61,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Table.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Desk.proto"
 EXTERNPROTO "../protos/Spot.proto"
+EXTERNPROTO "../protos/apriltags/protos/tag36_11_00000.proto"
 
 WorldInfo {
   info [
@@ -1423,4 +1424,8 @@ Solid {
     }
   ]
   name "Lane(3)"
+}
+tag36_11_00000 {
+  translation 0 7.5 0.5
+  rotation 0 0 1 -1.5708
 }
