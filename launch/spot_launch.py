@@ -79,24 +79,12 @@ def generate_launch_description():
         ],
     )
 
-    spot_pointcloud2 = Node(
-        package='webots_spot',
-        executable='spot_pointcloud2',
-        output='screen',
-    )
-
     apriltag = LaunchConfiguration('detect_tags', default=False)
     spot_apriltag = Node(
         package='webots_spot',
         executable='apriltag_ros',
         output='screen',
         condition=launch.conditions.IfCondition(apriltag),
-    )
-
-    spot_initial_pose = Node(
-        package='webots_spot',
-        executable='set_initial_pose',
-        output='screen',
     )
 
     robot_state_publisher = Node(
@@ -121,11 +109,9 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        spot_initial_pose,
         webots,
         spot_driver,
         robot_state_publisher,
-        # spot_pointcloud2,
         spot_apriltag,
         webots_event_handler,
         Node(
