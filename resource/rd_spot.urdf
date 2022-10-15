@@ -549,7 +549,7 @@
       </geometry>
     </collision>
   </link>
-  <link name="ROBOTIQ 3f Gripper">
+  <link name="Robotiq3fGripper">
     <visual>
       <origin xyz="0 -0.029 0" rpy="0 0 0"/>
       <geometry>
@@ -575,13 +575,13 @@
       </geometry>
     </collision>
   </link>
-  <joint name="wrist_3_link_ROBOTIQ 3f Gripper_joint" type="fixed">
+  <joint name="wrist_3_link_Robotiq3fGripper_joint" type="fixed">
     <parent link="wrist_3_link"/>
-    <child link="ROBOTIQ 3f Gripper"/>
+    <child link="Robotiq3fGripper"/>
     <origin xyz="0 0.13 0" rpy="0 0 0"/>
   </joint>
   <joint name="finger_middle_joint_1" type="revolute">
-    <parent link="ROBOTIQ 3f Gripper"/>
+    <parent link="Robotiq3fGripper"/>
     <child link="finger_middle_link_1"/>
     <axis xyz="0 0 1"/>
     <limit effort="100" lower="0.0495" upper="1.2218" velocity="100"/>
@@ -644,7 +644,7 @@
     </collision>
   </link>
   <joint name="palm_finger_2_joint" type="revolute">
-    <parent link="ROBOTIQ 3f Gripper"/>
+    <parent link="Robotiq3fGripper"/>
     <child link="finger_2_link_0"/>
     <axis xyz="0 1 -0.000007"/>
     <limit effort="100" lower="-0.192" upper="0.1784" velocity="100"/>
@@ -728,7 +728,7 @@
     </collision>
   </link>
   <joint name="palm_finger_1_joint" type="revolute">
-    <parent link="ROBOTIQ 3f Gripper"/>
+    <parent link="Robotiq3fGripper"/>
     <child link="finger_1_link_0"/>
     <axis xyz="0 1 -0.000007"/>
     <limit effort="100" lower="-0.1784" upper="0.192" velocity="100"/>

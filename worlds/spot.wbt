@@ -96,6 +96,7 @@ DEF Spot Spot {
       rotation 1 0 0 -1.5707953071795862
       toolSlot [
         Robotiq3fGripper {
+          name "Robotiq3fGripper"
         }
       ]
       staticBase FALSE
@@ -111,29 +112,6 @@ DEF Spot Spot {
       translation 0.0 0.04 0.09
       rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
       name "Velodyne_Puck"
-    }
-  ]
-  rearExtension [
-    DistanceSensor {
-      translation -0.04 0.01 0.16
-      rotation 0.577349935856137 0.577349935856137 0.5773509358560258 -2.094395307179586
-      children [
-        Solid {
-          children [
-            Shape {
-              appearance PBRAppearance {
-              }
-              geometry Box {
-                size 0.05 0.05 0.02
-              }
-            }
-          ]
-        }
-      ]
-      lookupTable [
-        0 0 0
-        10 1000 0
-      ]
     }
   ]
 }
@@ -1168,6 +1146,14 @@ Table {
   }
 }
 Table {
+  translation 1.4396400000000007 -0.38039999999999985 0.4
+  name "table(3a)"
+  size 0.3 0.3 0.4
+  feetSize 0.04 0.05
+  legAppearance BrushedAluminium {
+  }
+}
+Table {
   translation 1.4396400000000007 -0.38039999999999985 0
   name "table(3)"
   size 0.3 0.3 0.4
@@ -1439,6 +1425,6 @@ Solid {
   name "Lane(3)"
 }
 Can {
-  translation -0.361862 0.8 0.0609626
+  translation 1.55808 -0.392802 0.943061
   rotation 0 0 -2 0
 }

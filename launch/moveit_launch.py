@@ -32,6 +32,14 @@ def generate_launch_description():
     launch_description_nodes = []
     package_dir = get_package_share_directory(PACKAGE_NAME)
 
+    can_tf_publisher = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        output='screen',
+        arguments=['1.55808', '-0.392802', '0.943061', '0.461069', '0', '0', '0', 'odom', 'can'],
+    )
+    launch_description_nodes.append(can_tf_publisher)
+
     def load_file(filename):
         return pathlib.Path(os.path.join(package_dir, 'resource', filename)).read_text()
 

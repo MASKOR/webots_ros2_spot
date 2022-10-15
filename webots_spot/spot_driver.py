@@ -134,13 +134,7 @@ class SpotDriver:
 
         self.__node.get_logger().info('Init SpotDriver')
 
-        header = Header()
-        header.stamp.sec = 0
-        header.stamp.nanosec = 0
-        self.sim_time = header.stamp
-
         ## Topics
-        self.__node.create_subscription(Clock, '/clock', self.__sim_time_cb, 1) # use sim_time
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
         self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
@@ -247,12 +241,6 @@ class SpotDriver:
         spot_rot = self.spot_node.getField("rotation")
         spot_rot_val = spot_rot.getSFRotation()
         self.yaw_inst = spot_rot_val[2]
-
-    def __sim_time_cb(self, msg):
-        header = Header()
-        header.stamp.sec = msg.clock.sec
-        header.stamp.nanosec = msg.clock.nanosec
-        self.sim_time = header.stamp
 
     def yaw_control(self):
         """ Yaw body controller"""
@@ -386,7 +374,6 @@ class SpotDriver:
         imu = self.inertial_unit.getRollPitchYaw()
         gyro = self.gyro.getValues()
 
-        # time_stamp = self.sim_time
         time_stamp = self.__node.get_clock().now().to_msg()
 
         for idx, ur3e_sensor in enumerate(self.ur3e_sensors):
@@ -433,6 +420,8 @@ class SpotDriver:
         odom.twist.twist.angular.z = gyro[2]
         self.odom_pub.publish(odom)
 
+        unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
+
         joint_state = JointState()
         joint_state.header.stamp = time_stamp
         joint_state.name = []
@@ -440,16 +429,19 @@ class SpotDriver:
         joint_state.name.extend(self.gripper_motor_names)
         joint_state.name.extend(self.remaining_gripper_motor_names)
         joint_state.name.extend(self.motor_names)
+        joint_state.name.extend(unactuated_joints)
         joint_state.position = []
         joint_state.position.extend(self.ur3e_pos)
         joint_state.position.extend(self.gripper_pos)
         joint_state.position.extend(self.remaining_gripper_pos)
         joint_state.position.extend(self.motors_pos)
+        joint_state.position.extend([0. for _ in unactuated_joints])
         qty = (
               len(self.ur3e_motor_names)
             + len(self.gripper_motor_names)
             + len(self.remaining_gripper_motor_names)
             + len(self.motor_names)
+            + len(unactuated_joints)
             )
         joint_state.velocity = [0. for _ in range(qty)]
         joint_state.effort = [0. for _ in range(qty)]
