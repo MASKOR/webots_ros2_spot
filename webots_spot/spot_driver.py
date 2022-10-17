@@ -493,7 +493,6 @@ class SpotDriver:
         else:
             self.spot_inverse_control()
 
-        self.spot_inverse_control()
         self.handle_transforms_and_odometry()
 
         #Update Spot state
