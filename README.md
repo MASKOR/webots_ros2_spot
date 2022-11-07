@@ -1,24 +1,22 @@
 # Webots ROS2 Spot
 
-This is a ROS 2 package to simulate the Boston Dynamics spot in [webots](https://cyberbotics.com/). The goal is to control the spot via a teleop.
-Therefore, the joint angles for the leg motors must be calculated when a or none command velocity is received.
+This is a ROS 2 package to simulate the Boston Dynamics spot in [webots](https://cyberbotics.com/). Spot is able to walk around, to sit, standup and lie down. We also attached some sensors on spot, like a kincet and a 3D laser.
+The world contains apriltags, a red line to test lane follower and soon objects for manipulation tasks.
 
-In this project we try to realize the developed kinematic of [SoftServe](https://www.softserveinc.com/en-us/blog/spot-simulation-tools) for Gazebo under webots.
-
+![webots_spot_sim](https://fh-aachen.sciebo.de/s/4N8dz67jsxARgdN/download)
 
 ## Prerequisites
 
-    - Tested for ubuntu 20.04
-    - ROS 2 foxy
-    - Webots R2022a
+    - Tested for ubuntu 22.04
+    - ROS 2 humble
+    - Webots R2022b
     - Webots ROS 2 interface
 
-[Webots R2022a](https://cyberbotics.com/doc/guide/installation-procedure#installing-the-debian-package-with-the-advanced-packaging-tool-apt) can be installed via apt package manager or downloaded [here](https://github.com/cyberbotics/webots/releases).
+[Webots R2022b](https://cyberbotics.com/doc/guide/installation-procedure#installing-the-debian-package-with-the-advanced-packaging-tool-apt) can be installed via apt package manager or downloaded [here](https://github.com/cyberbotics/webots/releases).
 
-The webots ros2 interface can also be directly installed via [apt](https://github.com/cyberbotics/webots_ros2/wiki/Getting-Started) and should be working fine, but i would recommend to follow the [Build and Install](https://github.com/cyberbotics/webots_ros2/wiki/Build-and-Install) instructions and install it from sources.
-Then you are able to checkout the newest version 1.2.2 of the webots ros2 interface.
+The webots ros2 interface has to be installed from [sources](https://github.com/cyberbotics/webots_ros2/wiki/Complete-Installation-Guide#install-webots_ros2-from-sources).
 
-## Install 
+## Install
 
 ### webots_ros2_spot
 ```
@@ -38,8 +36,7 @@ git clone https://github.com/MASKOR/webots_spot_msgs src/spot_msgs
 ```
 # Build everything
 ```
-colcon build
-
+colcon build --symlink-install
 source install/local_setup.bash
 ```
 ### Install dependencies
@@ -58,6 +55,10 @@ Starting the simulation:
 
     ros2 launch webots_spot spot_launch.py
 
+Starting apriltag detection:
+
+    ros2 run webots_spot apriltag_ros
+
 To launch navigation with Rviz2:
 
     ros2 launch webots_spot nav_launch.py set_initial_pose:=true
@@ -73,14 +74,3 @@ To launch mapping with RTABMAP: #https://github.com/introlab/rtabmap_ros
 Teleop keyboard:
 
     ros2 run spot_teleop spot_teleop_keyboard
-
-## Demo
-
-![spot_teleop](https://fh-aachen.sciebo.de/s/eJ69q6EPqclEHHB/download)
-
-## Integration notes
-The leg kinematic of the spot is ported from the SoftServeSAG [robotics_spot repo](https://github.com/SoftServeSAG/robotics_spot/tree/temp_robomaker).
-
-## Inspiration:
-
-[Spot in AWS Robomaker](https://github.com/SoftServeSAG/robotics_spot/tree/temp_robomaker)
