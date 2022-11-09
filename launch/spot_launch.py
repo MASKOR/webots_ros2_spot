@@ -25,6 +25,24 @@ tag_locations = \
     ['1.26 0.8 0.5', '0 0 1 0']
 ]
 
+table_locations = \
+[
+    '1.54964 6.2296 0',
+    '0.15 7.97 0',
+    '0.75 10.69 0',
+    '5.08 10.69 0',
+    '6.79 8.65 0',
+]
+can_locations = \
+[
+    '1.66689 6.23468 0.86107',
+    '0.16106 8.08 0.86107',
+    '0.754069 10.6 0.86107',
+    '5.07304 10.6 0.86107',
+    '6.67712 8.65262 0.86107',
+]
+
+
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_spot')
 
@@ -58,7 +76,51 @@ def generate_launch_description():
         world_txt[1] = externproto_txt
         world_txt = '\n'.join(world_txt)
 
-        f.write(world_txt)
+        can_shuffling = random.sample(range(0, 5), 5)
+
+        tables_cans = ''
+        idx = 0
+        can_tf_publishing_nodes = []
+        for table_location,can_location,random_can in \
+            zip(table_locations,can_locations,can_shuffling):
+            
+            idx += 1
+            if random_can < 2: # Green Can
+                can_color = '0 1 0'
+                table_height = 0.8
+            elif random_can < 4: # Yellow Can
+                can_color = '1 1 0'
+                table_height = 0.5
+            else: # Red Can
+                can_color = '1 0 0'
+                table_height = 0.2
+
+            can_xy_tf = can_location.split(' ')
+            can_tf_publishing_nodes.append(Node(
+                    package='tf2_ros',
+                    executable='static_transform_publisher',
+                    output='screen',
+                    arguments=[str(can_xy_tf[0]), str(can_xy_tf[1]), str(table_height + 0.0611), '0.', '0', '0', 'odom', 'can' + str(idx)],
+                ))
+
+            tables_cans += \
+"""
+Table {
+  translation """ + table_location + """
+  name \"table_p""" + str(idx) + """\"
+  size 0.3 0.3 """ + str(table_height) + """
+  feetSize 0.04 0.05
+  legAppearance BrushedAluminium {
+  }
+}
+Can {
+  translation """ + can_location + """
+  rotation 0 0 -2 0
+  name \"can_p""" + str(idx) + """\"
+  color """ + can_color + """
+}"""
+
+        f.write(world_txt + tables_cans)
 
     with open('pairs.txt', 'w') as f:
         f.write(pairs)
@@ -122,6 +184,24 @@ def generate_launch_description():
         spot_apriltag,
         webots_event_handler,
         Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['10.46', '8.5', '0', '0', '0', '0', 'odom', 'green_bin'],
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['10.46', '7.78', '0', '0', '0', '0', 'odom', 'yellow_bin'],
+        ),
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=['10.46', '7.04', '0', '0', '0', '0', 'odom', 'red_bin'],
+        ),
+        Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
             remappings=[('cloud_in', '/Spot/Velodyne_Puck/point_cloud'), ],
             parameters=[{
@@ -139,4 +219,4 @@ def generate_launch_description():
             }],
             name='pointcloud_to_laserscan'
         ),
-    ])
+    ] + can_tf_publishing_nodes)

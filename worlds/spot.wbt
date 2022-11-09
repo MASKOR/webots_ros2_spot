@@ -60,10 +60,12 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/WallPlug.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Table.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Desk.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/drinks/protos/Can.proto"
+#EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/drinks/protos/Can.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/devices/robotiq/protos/Robotiq3fGripper.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/street_furniture/protos/PublicBin.proto"
 EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/UR3e.proto"
+EXTERNPROTO "../protos/Can.proto"
 
 WorldInfo {
   info [
@@ -1146,22 +1148,6 @@ Table {
   }
 }
 Table {
-  translation 1.4396400000000007 -0.38039999999999985 0.4
-  name "table(3a)"
-  size 0.3 0.3 0.4
-  feetSize 0.04 0.05
-  legAppearance BrushedAluminium {
-  }
-}
-Table {
-  translation 1.4396400000000007 -0.38039999999999985 0
-  name "table(3)"
-  size 0.3 0.3 0.4
-  feetSize 0.04 0.05
-  legAppearance BrushedAluminium {
-  }
-}
-Table {
   translation 8.25891 -1.7454 0
   name "table(4)"
   size 0.3 0.3 0.4
@@ -1424,7 +1410,18 @@ Solid {
   ]
   name "Lane(3)"
 }
-Can {
-  translation 1.55808 -0.392802 0.943061
-  rotation 0 0 -2 0
+PublicBin {
+  translation 10.46 8.5 -0.45
+  name "green_bin"
+  color 0 1 0
+}
+PublicBin {
+  translation 10.46 7.78 -0.45
+  name "yellow_bin"
+  color 1 1 0
+}
+PublicBin {
+  translation 10.46 7.04 -0.45
+  name "red_bin"
+  color 1 0 0
 }
