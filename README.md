@@ -3,7 +3,7 @@
 This is a ROS 2 package to simulate the Boston Dynamics spot in [webots](https://cyberbotics.com/). Spot is able to walk around, to sit, standup and lie down. We also attached some sensors on spot, like a kincet and a 3D laser.
 The world contains apriltags, a red line to test lane follower and soon objects for manipulation tasks.
 
-![webots_spot_sim](https://fh-aachen.sciebo.de/s/4N8dz67jsxARgdN/download)
+![spot_UR3](https://fh-aachen.sciebo.de/s/zDZLpVTjPWLzt7x/download)
 
 ## Prerequisites
 
@@ -48,6 +48,10 @@ source install/local_setup.bash
 Starting the simulation:
 
     ros2 launch webots_spot spot_launch.py
+
+Starting MoveIt:
+
+    ros2 launch webots_spot moveit_launch.py
 
 Starting apriltag detection:
 
