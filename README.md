@@ -18,26 +18,6 @@ The webots ros2 interface has to be installed from [sources](https://github.com/
 
 ## Install
 
-### webots_ros2_spot
-```
-# Source ROS 2
-source /opt/ros/$ROS_DISTRO/local_setup.bash
-
-cd /path/to/ros2_ws
-git clone https://github.com/MASKOR/webots_ros2_spot src/webots_spot
-```
-
-### spot_msgs
-```
-git clone https://github.com/MASKOR/webots_spot_msgs src/spot_msgs
-```
-
-# Build everything
-```
-colcon build --symlink-install
-source install/local_setup.bash
-```
-
 ### Install dependencies
 ```
 sudo apt install ros-$ROS_DISTRO-webots* ros-$ROS_DISTRO-nav2* -y
@@ -45,6 +25,22 @@ sudo apt install ros-$ROS_DISTRO-pointcloud-to-laserscan -y
 pip3 install scipy pupil-apriltags
 pip3 install open3d # for Ubuntu 20.04
 sudo apt install python3-open3d # for Ubuntu 22.04
+```
+
+### webots_ros2_spot
+```
+# Source ROS 2
+source /opt/ros/$ROS_DISTRO/local_setup.bash
+
+cd /path/to/ros2_ws
+git clone https://github.com/MASKOR/webots_ros2_spot src/webots_spot
+
+# spot_msgs
+git clone https://github.com/MASKOR/webots_spot_msgs src/spot_msgs
+
+# Build everything
+colcon build --symlink-install
+source install/local_setup.bash
 ```
 
 ## Start
@@ -71,4 +67,3 @@ To launch mapping with RTABMAP: #https://github.com/introlab/rtabmap_ros
 Teleop keyboard:
 
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
-
