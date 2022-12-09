@@ -60,9 +60,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/apartment_structure/protos/WallPlug.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Table.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/tables/protos/Desk.proto"
-#EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/drinks/protos/Can.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/devices/robotiq/protos/Robotiq3fGripper.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/street_furniture/protos/PublicBin.proto"
 EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/UR3e.proto"
 EXTERNPROTO "../protos/Can.proto"
@@ -1410,18 +1408,69 @@ Solid {
   ]
   name "Lane(3)"
 }
-PublicBin {
-  translation 10.46 8.5 -0.45
-  name "green_bin"
-  color 0 1 0
+Table {
+  translation 10.46 8.5 0.5
+  rotation 1 0 0 3.14159
+  name "green_bin1"
+  size 0.6 0.6 0.5
+  feetSize 0.3 0.05
+  legAppearance PBRAppearance {
+    baseColor 0 1 0
+    metalness 0
+  }
 }
-PublicBin {
-  translation 10.46 7.78 -0.45
-  name "yellow_bin"
-  color 1 1 0
+Table {
+  translation 10.46 8.5 0.5
+  rotation -1 0 0 3.14159
+  name "green_bin2"
+  size 0.6 0.6 0.5
+  feetSize 0.05 0.3
+  legAppearance PBRAppearance {
+    baseColor 0 1 0
+    metalness 0
+  }
 }
-PublicBin {
-  translation 10.46 7.04 -0.45
-  name "red_bin"
-  color 1 0 0
+Table {
+  translation 10.46 7.75 0.5
+  rotation 1 0 0 3.14159
+  name "yellow_bin1"
+  size 0.6 0.6 0.5
+  feetSize 0.3 0.05
+  legAppearance PBRAppearance {
+    baseColor 1 1 0
+    metalness 0
+  }
+}
+Table {
+  translation 10.46 7.75 0.5
+  rotation -1 0 0 3.14159
+  name "yellow_bin2"
+  size 0.6 0.6 0.5
+  feetSize 0.05 0.3
+  legAppearance PBRAppearance {
+    baseColor 1 1 0
+    metalness 0
+  }
+}
+Table {
+  translation 10.46 7 0.5
+  rotation 1 0 0 3.14159
+  name "red_bin1"
+  size 0.6 0.6 0.5
+  feetSize 0.3 0.05
+  legAppearance PBRAppearance {
+    baseColor 1 0 0
+    metalness 0
+  }
+}
+Table {
+  translation 10.46 7 0.5
+  rotation -1 0 0 3.14159
+  name "red_bin2"
+  size 0.6 0.6 0.5
+  feetSize 0.05 0.3
+  legAppearance PBRAppearance {
+    baseColor 1 0 0
+    metalness 0
+  }
 }

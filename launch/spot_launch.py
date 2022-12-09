@@ -187,19 +187,19 @@ Can {
             package='tf2_ros',
             executable='static_transform_publisher',
             output='screen',
-            arguments=['10.46', '8.5', '0', '0', '0', '0', 'odom', 'green_bin'],
+            arguments=['10.46', '8.5', '0.5', '0', '0', '0', 'odom', 'green_bin'],
         ),
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             output='screen',
-            arguments=['10.46', '7.78', '0', '0', '0', '0', 'odom', 'yellow_bin'],
+            arguments=['10.46', '7.75', '0.5', '0', '0', '0', 'odom', 'yellow_bin'],
         ),
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             output='screen',
-            arguments=['10.46', '7.04', '0', '0', '0', '0', 'odom', 'red_bin'],
+            arguments=['10.46', '7.', '0.5', '0', '0', '0', 'odom', 'red_bin'],
         ),
         Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
