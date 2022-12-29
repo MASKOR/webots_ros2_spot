@@ -29,7 +29,7 @@ class SpotDriver:
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
-        self.__robot.timestep = 32
+        self.__robot.timestep = int(self.__robot.getBasicTimeStep())
 
         ### Init motors
         self.motor_names = [

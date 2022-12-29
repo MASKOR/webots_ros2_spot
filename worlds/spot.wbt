@@ -124,6 +124,10 @@ DEF Spot Spot {
     }
   ]
 }
+Robot {
+  name "Ros2Supervisor"
+  controller "<extern>"
+}
 DEF ROOF Group {
   children [
     Transform {
