@@ -51,8 +51,15 @@ def randomise_imgs(robot):
     all_imgs = os.listdir(img_path)
     three_imgs = random.sample(all_imgs, 3)
     for idx, img in enumerate(three_imgs):
-        bucket = robot.getFromDef("Image" + str(idx+1))
-        bucket.getField("floorAppearance").getSFNode().getField('baseColorMap').getSFNode().getField('url').setMFString(0, img_path + img)
+        robot.getFromDef("Image" + str(idx+1)).getField('url').setMFString(0, img_path + img)
+
+
+def quat_from_aa(aa):
+    return R.from_rotvec(aa[3] * np.array(aa[:3])).as_quat()
+
+
+def diff_quat(q2, q1):
+    return (R.from_quat(q2) * R.from_quat(q1).inv()).as_quat()
 
 
 class SpotDriver:
@@ -61,6 +68,12 @@ class SpotDriver:
         randomise_lane(self.__robot)
         randomise_imgs(self.__robot)
         self.spot_node = self.__robot.getFromDef("Spot")
+
+        self.spot_translation = self.spot_node.getField('translation')
+        self.spot_translation_initial = self.spot_translation.getSFVec3f()
+        self.spot_rotation = self.spot_node.getField('rotation')
+        self.spot_rotation_initial = self.spot_rotation.getSFRotation()
+
         self.__robot.timestep = 32
 
         ### Init motors
@@ -128,30 +141,13 @@ class SpotDriver:
             self.remaining_gripper_pos.append(0.)
 
         ## Positional Sensors
-        self.motor_sensor_names = [
-            "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
-            "front right shoulder abduction sensor", "front right shoulder rotation sensor", "front right elbow sensor",
-            "rear left shoulder abduction sensor",   "rear left shoulder rotation sensor",   "rear left elbow sensor",
-            "rear right shoulder abduction sensor",  "rear right shoulder rotation sensor",  "rear right elbow sensor"
-        ]
+        self.motor_sensor_names = [name.replace('motor', 'sensor') for name in self.motor_names]
         self.motor_sensors = []
         self.motors_pos = []
         for idx, sensor_name in enumerate(self.motor_sensor_names):
             self.motor_sensors.append(self.__robot.getDevice(sensor_name))
             self.motor_sensors[idx].enable(self.__robot.timestep)
             self.motors_pos.append(0.)
-
-        ## GPS
-        self.gps_sensor = self.__robot.getDevice("gps")
-        self.gps_sensor.enable(self.__robot.timestep)
-
-        ## IMU
-        self.inertial_unit = self.__robot.getDevice("inertial unit")
-        self.inertial_unit.enable(self.__robot.timestep)
-
-        ## Gyro
-        self.gyro = self.__robot.getDevice("gyro")
-        self.gyro.enable(self.__robot.timestep)
 
         rclpy.init(args=None)
 
@@ -165,7 +161,6 @@ class SpotDriver:
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
-        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
         self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
 
         ## Services
@@ -393,14 +388,8 @@ class SpotDriver:
         self.__talker(target)
 
     def handle_transforms_and_odometry(self):
-
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
-
-        gps = self.gps_sensor.getValues()
-        linear_twist = self.gps_sensor.getSpeedVector()
-        imu = self.inertial_unit.getRollPitchYaw()
-        gyro = self.gyro.getValues()
 
         time_stamp = self.__node.get_clock().now().to_msg()
 
@@ -418,36 +407,39 @@ class SpotDriver:
         tfs.header.stamp = time_stamp
         tfs.header.frame_id= "odom"
         tfs._child_frame_id = "base_link"
-        tfs.transform.translation.x = gps[0]
-        tfs.transform.translation.y = gps[1]
-        tfs.transform.translation.z = gps[2]
-        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
-        tfs.transform.rotation.x = r.as_quat()[0]
-        tfs.transform.rotation.y = r.as_quat()[1]
-        tfs.transform.rotation.z = r.as_quat()[2]
-        tfs.transform.rotation.w = r.as_quat()[3]
+
+        d = self.spot_translation.getSFVec3f()
+        tfs.transform.translation.x = -(d[0] - self.spot_translation_initial[0])
+        tfs.transform.translation.y = -(d[1] - self.spot_translation_initial[1])
+        tfs.transform.translation.z = d[2] - self.spot_translation_initial[2]
+        
+        r = diff_quat(quat_from_aa(self.spot_rotation.getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+        tfs.transform.rotation.x = r[1]
+        tfs.transform.rotation.y = -r[0]
+        tfs.transform.rotation.z = r[2]
+        tfs.transform.rotation.w = r[3]
         self.tfb_.sendTransform(tfs)
 
-        odom = Odometry()
-        odom.header.frame_id = 'odom'
-        odom.header.stamp = time_stamp
-        odom.child_frame_id = 'base_link'
-        odom.pose.pose.position.x = gps[0]
-        odom.pose.pose.position.y = gps[1]
-        odom.pose.pose.position.z = gps[2]
-        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
-        odom.pose.pose.orientation.x = r.as_quat()[0]
-        odom.pose.pose.orientation.y = r.as_quat()[1]
-        odom.pose.pose.orientation.z = r.as_quat()[2]
-        odom.pose.pose.orientation.w = r.as_quat()[3]
-        odom.twist.twist.linear.x = linear_twist[0]
-        odom.twist.twist.linear.y = linear_twist[1]
-        odom.twist.twist.linear.z = linear_twist[2]
-        odom.twist.twist.angular.x = gyro[0]
-        odom.twist.twist.angular.y = gyro[1]
-        odom.twist.twist.angular.z = gyro[2]
-        self.odom_pub.publish(odom)
-
+        ## Odom to ABC
+        for x in "ABC":
+            tfs = TransformStamped()
+            tfs.header.stamp = time_stamp
+            tfs.header.frame_id= "odom"
+            tfs._child_frame_id = x
+            
+            self.cube = self.__robot.getFromDef(x)
+            di = self.cube.getField('translation').getSFVec3f()
+            tfs.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
+            tfs.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+            tfs.transform.translation.z = di[2] - self.spot_translation_initial[2]
+            
+            r = diff_quat(quat_from_aa(self.cube.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+            tfs.transform.rotation.x = r[1]
+            tfs.transform.rotation.y = -r[0]
+            tfs.transform.rotation.z = r[2]
+            tfs.transform.rotation.w = r[3]
+            self.tfb_.sendTransform(tfs)
+        
         unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
 
         joint_state = JointState()
