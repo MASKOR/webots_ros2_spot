@@ -20,6 +20,10 @@ import copy
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
 
+import os
+import random
+from ament_index_python.packages import get_package_share_directory
+
 NUMBER_OF_JOINTS = 12
 
 motions = {
@@ -29,9 +33,33 @@ motions = {
 }
 
 
+def randomise_lane(robot):
+    if random.random() < 0.5: # 50% probability for a rightside lane
+        l1 = robot.getFromDef("Lane1")
+        l1.getField('translation').setSFVec3f([6.6778,1.90426,0.001])
+        l1.getField('rotation').setSFRotation([0,0,-1,-1.04721])
+        l2 = robot.getFromDef("Lane2")
+        l2.getField('translation').setSFVec3f([3.48651,2.88433,0.001])
+        l2.getField('rotation').setSFRotation([0,0,-1,-1.57081])
+        l3 = robot.getFromDef("Lane3")
+        l3.getField('translation').setSFVec3f([2.02652,1.67433,0.001])
+        l3.getField('rotation').setSFRotation([0,0,-1,0])
+
+
+def randomise_imgs(robot):
+    img_path = os.path.join(get_package_share_directory('webots_spot'), 'misc_images/')
+    all_imgs = os.listdir(img_path)
+    three_imgs = random.sample(all_imgs, 3)
+    for idx, img in enumerate(three_imgs):
+        bucket = robot.getFromDef("Image" + str(idx+1))
+        bucket.getField("floorAppearance").getSFNode().getField('baseColorMap').getSFNode().getField('url').setMFString(0, img_path + img)
+
+
 class SpotDriver:
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
+        randomise_lane(self.__robot)
+        randomise_imgs(self.__robot)
         self.spot_node = self.__robot.getFromDef("Spot")
         self.__robot.timestep = 32
 
