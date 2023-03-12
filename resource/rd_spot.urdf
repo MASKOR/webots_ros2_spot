@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="Spot" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="/home/skpawar1305/Desktop/simulated_spot/src/webots_ros2_spot_maskor/resource/rd_spot.urdf" xmlns:xacro="http://ros.org/wiki/xacro">
   <link name="base_link">
     <visual>
       <origin xyz="0.462094 0 -0.000232" rpy="1.127615 -0.00001 -1.570793"/>
@@ -194,20 +194,6 @@
       </geometry>
     </collision>
   </link>
-  <link name="distance sensor">
-  </link>
-  <joint name="base_link_distance sensor_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="distance sensor"/>
-    <origin xyz="-0.36 0.04 0.121799" rpy="0.00001 0.000004 -3.14159"/>
-  </joint>
-  <link name="solid">
-  </link>
-  <joint name="distance sensor_solid_joint" type="fixed">
-    <parent link="distance sensor"/>
-    <child link="solid"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
   <link name="Velodyne_Puck">
     <visual>
       <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
@@ -227,590 +213,531 @@
     <child link="Velodyne_Puck"/>
     <origin xyz="-0.063 0 0.1518" rpy="-0.000008 -0.000008 0.000001"/>
   </joint>
-  <link name="solid_0">
+  <link name="solid">
   </link>
-  <joint name="base_link_solid_0_joint" type="fixed">
+  <joint name="base_link_solid_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="solid_0"/>
+    <child link="solid"/>
     <origin xyz="0.496831 0.000001 0.104801" rpy="1.2208 -0.00001 -1.570793"/>
   </joint>
   <link name="kinect range">
   </link>
-  <joint name="solid_0_kinect range_joint" type="fixed">
-    <parent link="solid_0"/>
+  <joint name="solid_kinect range_joint" type="fixed">
+    <parent link="solid"/>
     <child link="kinect range"/>
     <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
   </joint>
   <link name="kinect color">
   </link>
-  <joint name="solid_0_kinect color_joint" type="fixed">
-    <parent link="solid_0"/>
+  <joint name="solid_kinect color_joint" type="fixed">
+    <parent link="solid"/>
     <child link="kinect color"/>
-    <origin xyz="0 0 -0.0127" rpy="-0.785397 1.570792 0.785397"/>
+    <origin xyz="0 0 -0.0127" rpy="-2.356193 1.570792 -0.7854"/>
   </joint>
-  <link name="UR3e">
+  <link name="SpotArm">
     <visual>
-      <origin xyz="0 0 0.045" rpy="-3.141592 0 0"/>
+      <origin xyz="0 0 0.021" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.064" length="0.09"/>
+        <cylinder radius="0.075" length="0.035"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0.045" rpy="-3.141592 0 0"/>
+      <origin xyz="0 0 0.021" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.064" length="0.09"/>
+        <cylinder radius="0.075" length="0.035"/>
       </geometry>
     </collision>
   </link>
-  <joint name="base_link_UR3e_joint" type="fixed">
+  <joint name="base_link_SpotArm_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="UR3e"/>
-    <origin xyz="0.346 0 0.1018" rpy="0.000004 -0.00001 -1.570793"/>
+    <child link="SpotArm"/>
+    <origin xyz="0.35 0 0.1118" rpy="-0.000017 -0.000003 0.000005"/>
   </joint>
-  <joint name="shoulder_pan_joint" type="revolute">
-    <parent link="UR3e"/>
-    <child link="shoulder_link"/>
+  <joint name="spotarm_1_joint" type="revolute">
+    <parent link="SpotArm"/>
+    <child link="spotarm_link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="330" lower="-6.28319" upper="6.28319" velocity="3.14"/>
-    <origin xyz="0 0 0.152" rpy="0 0 0"/>
+    <limit effort="500" lower="-2.61799" upper="3.14159" velocity="0.5"/>
+    <origin xyz="0 0 0.04" rpy="0 0 0"/>
   </joint>
-  <link name="shoulder_link">
+  <link name="spotarm_link1">
     <visual>
-      <origin xyz="0 0 -0.003" rpy="-3.141592 0 0"/>
+      <origin xyz="0 -0.035 0.076" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.046" length="0.121"/>
+        <box size="0.14 0.01 0.08"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.003" rpy="-3.141592 0 0"/>
+      <origin xyz="0 -0.035 0.076" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.046" length="0.121"/>
+        <box size="0.14 0.01 0.08"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0.03 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0 0.035 0.076" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.045" length="0.066"/>
+        <box size="0.14 0.01 0.08"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0.03 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0 0.035 0.076" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.045" length="0.066"/>
+        <box size="0.14 0.01 0.08"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 -0.0555 0.1" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.032" length="0.031"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.0555 0.1" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.032" length="0.031"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0.0555 0.1" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.032" length="0.031"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0.0555 0.1" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.032" length="0.031"/>
       </geometry>
     </collision>
   </link>
-  <joint name="shoulder_lift_joint" type="revolute">
-    <parent link="shoulder_link"/>
-    <child link="upper_arm_link"/>
+  <joint name="spotarm_2_joint" type="revolute">
+    <parent link="spotarm_link1"/>
+    <child link="spotarm_link2"/>
+    <axis xyz="0 -1 0"/>
+    <limit effort="500" lower="-0.523599" upper="3.14159" velocity="0.5"/>
+    <origin xyz="0 0.03 0.1" rpy="0 0 0"/>
+  </joint>
+  <link name="spotarm_link2">
+    <visual>
+      <origin xyz="0.017 -0.03 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <box size="0.06 0.059 0.093"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.017 -0.03 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <box size="0.06 0.059 0.093"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.185 -0.03 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <cylinder radius="0.0456" length="0.24"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.185 -0.03 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <cylinder radius="0.0456" length="0.24"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spotarm_3_joint" type="revolute">
+    <parent link="spotarm_link2"/>
+    <child link="spotarm_link3"/>
     <axis xyz="0 1 0"/>
-    <limit effort="330" lower="-6.28319" upper="6.28319" velocity="3.14"/>
-    <origin xyz="0 0.12 0" rpy="0 1.570796 0"/>
+    <limit effort="500" lower="0" upper="2.61799" velocity="0.5"/>
+    <origin xyz="0.3385 -0.02 0.000137" rpy="0 0 0"/>
   </joint>
-  <link name="upper_arm_link">
+  <link name="spotarm_link3">
     <visual>
-      <origin xyz="0 0 0.035" rpy="-3.141592 0 0"/>
+      <origin xyz="0.044 -0.01 0.0514" rpy="3.141593 0.851593 3.141593"/>
       <geometry>
-        <cylinder radius="0.046" length="0.073"/>
+        <box size="0.16 0.041 0.04"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0.035" rpy="-3.141592 0 0"/>
+      <origin xyz="0.044 -0.01 0.0514" rpy="3.141593 0.851593 3.141593"/>
       <geometry>
-        <cylinder radius="0.046" length="0.073"/>
+        <box size="0.16 0.041 0.04"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0.157" rpy="-3.141592 0 0"/>
+      <origin xyz="0.1065 -0.01 0.0973" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.038" length="0.186"/>
+        <cylinder radius="0.0477" length="0.059"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0.157" rpy="-3.141592 0 0"/>
+      <origin xyz="0.1065 -0.01 0.0973" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.038" length="0.186"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0 0" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.046" length="0.119"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.046" length="0.119"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.002 0.2435" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.038" length="0.11"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.002 0.2435" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.038" length="0.11"/>
+        <cylinder radius="0.0477" length="0.059"/>
       </geometry>
     </collision>
   </link>
-  <joint name="elbow_joint" type="revolute">
-    <parent link="upper_arm_link"/>
-    <child link="forearm_link"/>
+  <joint name="spotarm_4_joint" type="revolute">
+    <parent link="spotarm_link3"/>
+    <child link="spotarm_link4"/>
+    <axis xyz="1 0 0"/>
+    <limit effort="500" lower="-4.3633" upper="1.22173" velocity="0.5"/>
+    <origin xyz="0.107 -0.01 0.09734" rpy="0 0 0"/>
+  </joint>
+  <link name="spotarm_link4">
+  </link>
+  <joint name="Slider11" type="prismatic">
+    <parent link="spotarm_link4"/>
+    <child link="spotarm_link5"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.035 0 0" rpy="0 0 0"/>
+    <limit effort="100" lower="0" upper="0.075" velocity="100"/>
+  </joint>
+  <link name="spotarm_link5">
+    <visual>
+      <origin xyz="0.232 0 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <box size="0.04 0.044 0.042"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.232 0 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <box size="0.04 0.044 0.042"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.106 0 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <cylinder radius="0.0477" length="0.21"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.106 0 0" rpy="3.141593 1.570793 3.141593"/>
+      <geometry>
+        <cylinder radius="0.0477" length="0.21"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spotarm_5_joint" type="revolute">
+    <parent link="spotarm_link5"/>
+    <child link="spotarm_link6"/>
     <axis xyz="0 1 0"/>
-    <limit effort="150" lower="-3.14159" upper="3.14159" velocity="3.14"/>
-    <origin xyz="0 -0.093 0.244" rpy="0 0 0"/>
+    <limit effort="500" lower="-1.0472" upper="1.0472" velocity="0.5"/>
+    <origin xyz="0.2413 0.01 0" rpy="0 0 0"/>
   </joint>
-  <link name="forearm_link">
+  <link name="spotarm_link6">
     <visual>
-      <origin xyz="0 0 0.125" rpy="-3.141592 0 0"/>
+      <origin xyz="0.0671 -0.0105 0" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.032" length="0.18"/>
+        <cylinder radius="0.0477" length="0.065"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0.125" rpy="-3.141592 0 0"/>
+      <origin xyz="0.0671 -0.0105 0" rpy="3.141593 1.570793 3.141593"/>
       <geometry>
-        <cylinder radius="0.032" length="0.18"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.002 0.213" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.032" length="0.1"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.002 0.213" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.032" length="0.1"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.05 0" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.037" length="0.05"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.05 0" rpy="-1.570796 0 0"/>
-      <geometry>
-        <cylinder radius="0.037" length="0.05"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.05 -0.025" rpy="-1.570796 0 0"/>
-      <geometry>
-        <sphere radius="0.037"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.05 -0.025" rpy="-1.570796 0 0"/>
-      <geometry>
-        <sphere radius="0.037"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.05 0.025" rpy="-1.570796 0 0"/>
-      <geometry>
-        <sphere radius="0.037"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.05 0.025" rpy="-1.570796 0 0"/>
-      <geometry>
-        <sphere radius="0.037"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0 0.07" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.03" length="0.1"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0.07" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.03" length="0.1"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.05 0.07" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="0.03"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.05 0.07" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="0.03"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 -0.05 0.07" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="0.03"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.05 0.07" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="0.03"/>
+        <cylinder radius="0.0477" length="0.065"/>
       </geometry>
     </collision>
   </link>
-  <joint name="wrist_1_joint" type="revolute">
-    <parent link="forearm_link"/>
-    <child link="wrist_1_link"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="54" lower="-6.28319" upper="6.28319" velocity="6.28"/>
-    <origin xyz="0 0 0.213" rpy="0 1.570796 0"/>
+  <joint name="spotarm_6_joint" type="revolute">
+    <parent link="spotarm_link6"/>
+    <child link="front"/>
+    <axis xyz="0.000004 0 1"/>
+    <limit effort="500" lower="-4.45059" upper="1.30899" velocity="0.5"/>
+    <origin xyz="0.1 -0.0105 0" rpy="3.141593 -1.570793 3.141593"/>
   </joint>
-  <link name="wrist_1_link">
+  <link name="front">
     <visual>
-      <origin xyz="0 0.075 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0 0.0005 -0.007" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.064"/>
+        <cylinder radius="0.0227" length="0.028"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0.075 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0 0.0005 -0.007" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.064"/>
+        <cylinder radius="0.0227" length="0.028"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0.104 0.003" rpy="3.141592 0 0"/>
+      <origin xyz="0.029 -0.01784 -0.053" rpy="0 0 0.59"/>
       <geometry>
-        <cylinder radius="0.033" length="0.1"/>
+        <box size="0.04 0.0217 0.105"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0.104 0.003" rpy="3.141592 0 0"/>
+      <origin xyz="0.029 -0.01784 -0.053" rpy="0 0 0.59"/>
       <geometry>
-        <cylinder radius="0.033" length="0.1"/>
+        <box size="0.04 0.0217 0.105"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.029 0.01884 -0.053" rpy="0 0 0.59"/>
+      <geometry>
+        <box size="0.04 0.0217 0.105"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.029 0.01884 -0.053" rpy="0 0 0.59"/>
+      <geometry>
+        <box size="0.04 0.0217 0.105"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.0172 0.0114 -0.053" rpy="3.141593 -1.570793 3.141593"/>
+      <geometry>
+        <box size="0.106 0.056 0.071"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0172 0.0114 -0.053" rpy="3.141593 -1.570793 3.141593"/>
+      <geometry>
+        <box size="0.106 0.056 0.071"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.0172 -0.0104 -0.053" rpy="3.141593 -1.570793 3.141593"/>
+      <geometry>
+        <box size="0.106 0.056 0.071"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.0172 -0.0104 -0.053" rpy="3.141593 -1.570793 3.141593"/>
+      <geometry>
+        <box size="0.106 0.056 0.071"/>
       </geometry>
     </collision>
   </link>
-  <joint name="wrist_2_joint" type="revolute">
-    <parent link="wrist_1_link"/>
-    <child link="wrist_2_link"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="54" lower="-6.28319" upper="6.28319" velocity="6.28"/>
-    <origin xyz="0 0.104 0" rpy="0 0 0"/>
+  <joint name="gripper_right_finger_joint" type="prismatic">
+    <parent link="front"/>
+    <child link="gripper_right_finger_link"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0 0.0005 -0.007" rpy="0 0 0"/>
+    <limit effort="16" lower="0" upper="0.045" velocity="0.05"/>
   </joint>
-  <link name="wrist_2_link">
+  <link name="gripper_right_finger_link">
     <visual>
-      <origin xyz="0 0.002 0.0854" rpy="-1.570796 0 0"/>
+      <origin xyz="0.004 0 -0.1741" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.097"/>
+        <box size="0.0076 0.05091 0.08982"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0.002 0.0854" rpy="-1.570796 0 0"/>
+      <origin xyz="0.004 0 -0.1741" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.097"/>
+        <box size="0.0076 0.05091 0.08982"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0.0636" rpy="-3.141592 0 0"/>
+      <origin xyz="0.0049 0.0153 -0.1208" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.043"/>
+        <box size="0.0055 0.0295 0.018"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0.0636" rpy="-3.141592 0 0"/>
+      <origin xyz="0.0049 0.0153 -0.1208" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.043"/>
+        <box size="0.0055 0.0295 0.018"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.0085 0.0156 -0.1048" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03213 0.02959 0.01487"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.0085 0.0156 -0.1048" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03213 0.02959 0.01487"/>
       </geometry>
     </collision>
   </link>
-  <joint name="wrist_3_joint" type="revolute">
-    <parent link="wrist_2_link"/>
-    <child link="wrist_3_link"/>
-    <axis xyz="0 1 0"/>
-    <limit effort="54" lower="-6.28319" upper="6.28319" velocity="6.28"/>
-    <origin xyz="0 0 0.085" rpy="0 0 0"/>
+  <joint name="gripper_left_finger_joint" type="prismatic">
+    <parent link="front"/>
+    <child link="gripper_left_finger_link"/>
+    <axis xyz="1 0.000093 0"/>
+    <origin xyz="0 0 0" rpy="0 0 3.1415"/>
+    <limit effort="16" lower="0" upper="0.045" velocity="0.05"/>
   </joint>
-  <link name="wrist_3_link">
+  <link name="gripper_left_finger_link">
     <visual>
-      <origin xyz="0 0.07 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0.004 0 -0.1741" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.044"/>
+        <box size="0.0076 0.05091 0.08982"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0.07 0" rpy="-1.570796 0 0"/>
+      <origin xyz="0.004 0 -0.1741" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.032" length="0.044"/>
+        <box size="0.0076 0.05091 0.08982"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.0049 0.0153 -0.1208" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.0055 0.0295 0.018"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0049 0.0153 -0.1208" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.0055 0.0295 0.018"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="-0.0085 0.0156 -0.1048" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03213 0.02959 0.01487"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.0085 0.0156 -0.1048" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03213 0.02959 0.01487"/>
       </geometry>
     </collision>
   </link>
-  <link name="Robotiq3fGripper">
-    <visual>
-      <origin xyz="0 -0.029 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.023" length="0.05"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 -0.029 0" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.023" length="0.05"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0.005 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.126 0.093 0.13"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0.005 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.126 0.093 0.13"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(19)">
   </link>
-  <joint name="wrist_3_link_Robotiq3fGripper_joint" type="fixed">
-    <parent link="wrist_3_link"/>
-    <child link="Robotiq3fGripper"/>
-    <origin xyz="0 0.13 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(19)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(19)"/>
+    <origin xyz="0.0415 -0.0029 -0.0004" rpy="3.14159 0 0"/>
   </joint>
-  <joint name="finger_middle_joint_1" type="revolute">
-    <parent link="Robotiq3fGripper"/>
-    <child link="finger_middle_link_1"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0.0495" upper="1.2218" velocity="100"/>
-    <origin xyz="0.045516 0.0414 0" rpy="0 0 1.57"/>
-  </joint>
-  <link name="finger_middle_link_1">
-    <visual>
-      <origin xyz="0.01231 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.01231 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(18)">
   </link>
-  <joint name="finger_middle_joint_2" type="revolute">
-    <parent link="finger_middle_link_1"/>
-    <child link="finger_middle_link_2"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0" upper="1.5708" velocity="100"/>
-    <origin xyz="0.05 -0.028 0" rpy="0 0 -0.52"/>
+  <joint name="front_cap screw(18)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(18)"/>
+    <origin xyz="-0.0415 0.0029 -0.0004" rpy="3.14159 0 0"/>
   </joint>
-  <link name="finger_middle_link_2">
-    <visual>
-      <origin xyz="0.02694 -0.008952 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.02694 -0.008952 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(17)">
   </link>
-  <joint name="finger_middle_joint_3" type="revolute">
-    <parent link="finger_middle_link_2"/>
-    <child link="finger_middle_link_3"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-1.2217" upper="-0.0523" velocity="100"/>
-    <origin xyz="0.039 0 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(17)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(17)"/>
+    <origin xyz="0.0433 0.0315 0.0026" rpy="3.14159 0 0"/>
   </joint>
-  <link name="finger_middle_link_3">
-    <visual>
-      <origin xyz="0.018 0.00913 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.018 0.00913 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(16)">
   </link>
-  <joint name="palm_finger_2_joint" type="revolute">
-    <parent link="Robotiq3fGripper"/>
-    <child link="finger_2_link_0"/>
-    <axis xyz="0 1 -0.000007"/>
-    <limit effort="100" lower="-0.192" upper="0.1784" velocity="100"/>
-    <origin xyz="-0.0455 0.0214 -0.036" rpy="3.141592 -0.000008 1.571593"/>
+  <joint name="front_cap screw(16)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(16)"/>
+    <origin xyz="-0.0433 -0.0315 0.0026" rpy="3.14159 0 0"/>
   </joint>
-  <link name="finger_2_link_0">
-    <visual>
-      <origin xyz="0.007 0.006 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.04 0.04 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.007 0.006 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.04 0.04 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(15)">
   </link>
-  <joint name="finger_2_joint_1" type="revolute">
-    <parent link="finger_2_link_0"/>
-    <child link="finger_2_link_1"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0.0495" upper="1.2218" velocity="100"/>
-    <origin xyz="0.02 0 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(15)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(15)"/>
+    <origin xyz="0 0.033 0.0026" rpy="3.14159 0 0"/>
   </joint>
-  <link name="finger_2_link_1">
-    <visual>
-      <origin xyz="0.012315 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.012315 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(14)">
   </link>
-  <joint name="finger_2_joint_2" type="revolute">
-    <parent link="finger_2_link_1"/>
-    <child link="finger_2_link_2"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0" upper="1.5708" velocity="100"/>
-    <origin xyz="0.05 -0.028 0" rpy="0 0 -0.52"/>
+  <joint name="front_cap screw(14)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(14)"/>
+    <origin xyz="0 -0.033 0.0026" rpy="3.14159 0 0"/>
   </joint>
-  <link name="finger_2_link_2">
-    <visual>
-      <origin xyz="0.02694 -0.00895 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.02694 -0.00895 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(13)">
   </link>
-  <joint name="finger_2_joint_3" type="revolute">
-    <parent link="finger_2_link_2"/>
-    <child link="finger_2_link_3"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-1.2217" upper="-0.0523" velocity="100"/>
-    <origin xyz="0.039 0 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(13)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(13)"/>
+    <origin xyz="0.0426 -0.0094 -0.09448" rpy="0 0 0"/>
   </joint>
-  <link name="finger_2_link_3">
-    <visual>
-      <origin xyz="0.018 0.00913 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.018 0.00913 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(12)">
   </link>
-  <joint name="palm_finger_1_joint" type="revolute">
-    <parent link="Robotiq3fGripper"/>
-    <child link="finger_1_link_0"/>
-    <axis xyz="0 1 -0.000007"/>
-    <limit effort="100" lower="-0.1784" upper="0.192" velocity="100"/>
-    <origin xyz="-0.0455 0.0214 0.036" rpy="3.141592 -0.000008 1.571593"/>
+  <joint name="front_cap screw(12)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(12)"/>
+    <origin xyz="-0.0425 0.0094 -0.0945" rpy="0 0 0"/>
   </joint>
-  <link name="finger_1_link_0">
-    <visual>
-      <origin xyz="0.007 0.006 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.04 0.04 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.007 0.006 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.04 0.04 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(11)">
   </link>
-  <joint name="finger_1_joint_1" type="revolute">
-    <parent link="finger_1_link_0"/>
-    <child link="finger_1_link_1"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0.0495" upper="1.2218" velocity="100"/>
-    <origin xyz="0.02 0 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(11)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(11)"/>
+    <origin xyz="-0.0477 -0.008 -0.0108" rpy="3.141593 1.570793 3.141593"/>
   </joint>
-  <link name="finger_1_link_1">
-    <visual>
-      <origin xyz="0.012316 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.012316 -0.02039 0" rpy="0 0 -0.467371"/>
-      <geometry>
-        <box size="0.091 0.038 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(10)">
   </link>
-  <joint name="finger_1_joint_2" type="revolute">
-    <parent link="finger_1_link_1"/>
-    <child link="finger_1_link_2"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="0" upper="1.5708" velocity="100"/>
-    <origin xyz="0.05 -0.028 0" rpy="0 0 -0.52"/>
+  <joint name="front_cap screw(10)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(10)"/>
+    <origin xyz="-0.0477 -0.008 -0.043" rpy="3.141593 1.570793 3.141593"/>
   </joint>
-  <link name="finger_1_link_2">
-    <visual>
-      <origin xyz="0.02694 -0.00895 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.02694 -0.00895 0" rpy="0 0 -0.012556"/>
-      <geometry>
-        <box size="0.04 0.032 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(9)">
   </link>
-  <joint name="finger_1_joint_3" type="revolute">
-    <parent link="finger_1_link_2"/>
-    <child link="finger_1_link_3"/>
-    <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-1.2217" upper="-0.0523" velocity="100"/>
-    <origin xyz="0.039 0 0" rpy="0 0 0"/>
+  <joint name="front_cap screw(9)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(9)"/>
+    <origin xyz="-0.0477 -0.008 -0.075" rpy="3.141593 1.570793 3.141593"/>
   </joint>
-  <link name="finger_1_link_3">
-    <visual>
-      <origin xyz="0.018004 0.009133 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0.018004 0.009133 0" rpy="0 0 0.520259"/>
-      <geometry>
-        <box size="0.035 0.018 0.032"/>
-      </geometry>
-    </collision>
+  <link name="cap screw(8)">
   </link>
+  <joint name="front_cap screw(8)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(8)"/>
+    <origin xyz="-0.0477 0.008 -0.075" rpy="3.141593 1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(7)">
+  </link>
+  <joint name="front_cap screw(7)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(7)"/>
+    <origin xyz="-0.0477 0.008 -0.043" rpy="3.141593 1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(6)">
+  </link>
+  <joint name="front_cap screw(6)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(6)"/>
+    <origin xyz="-0.0477 0.008 -0.0108" rpy="3.141593 1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(5)">
+  </link>
+  <joint name="front_cap screw(5)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(5)"/>
+    <origin xyz="0.0477 -0.008 -0.0108" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(4)">
+  </link>
+  <joint name="front_cap screw(4)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(4)"/>
+    <origin xyz="0.0477 -0.008 -0.043" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(3)">
+  </link>
+  <joint name="front_cap screw(3)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(3)"/>
+    <origin xyz="0.0477 -0.008 -0.075" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(2)">
+  </link>
+  <joint name="front_cap screw(2)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(2)"/>
+    <origin xyz="0.0477 0.008 -0.075" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw(1)">
+  </link>
+  <joint name="front_cap screw(1)_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw(1)"/>
+    <origin xyz="0.0477 0.008 -0.043" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
+  <link name="cap screw">
+  </link>
+  <joint name="front_cap screw_joint" type="fixed">
+    <parent link="front"/>
+    <child link="cap screw"/>
+    <origin xyz="0.0477 0.008 -0.0108" rpy="3.141593 -1.570793 3.141593"/>
+  </joint>
   <joint name="rear right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
     <child link="rear right shoulder"/>
@@ -1279,12 +1206,12 @@
   </joint>
   <joint name="rear right piston motor" type="continuous">
     <parent link="rear right upperarm"/>
-    <child link="solid_1"/>
+    <child link="solid_0"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_1">
+  <link name="solid_0">
   </link>
   <joint name="rear left shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -1754,12 +1681,12 @@
   </joint>
   <joint name="rear left piston motor" type="continuous">
     <parent link="rear left upperarm"/>
-    <child link="solid_2"/>
+    <child link="solid_1"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_2">
+  <link name="solid_1">
   </link>
   <joint name="front right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -2229,12 +2156,12 @@
   </joint>
   <joint name="front right piston motor" type="continuous">
     <parent link="front right upperarm"/>
-    <child link="solid_3"/>
+    <child link="solid_2"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_3">
+  <link name="solid_2">
   </link>
   <joint name="front left shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
@@ -2704,12 +2631,12 @@
   </joint>
   <joint name="front left piston motor" type="continuous">
     <parent link="front left upperarm"/>
-    <child link="solid_4"/>
+    <child link="solid_3"/>
     <axis xyz="1 0 0"/>
     <limit effort="10" velocity="10"/>
     <origin xyz="-0.1172 -0.29077 0.2083" rpy="-0.5236 0 0"/>
   </joint>
-  <link name="solid_4">
+  <link name="solid_3">
   </link>
   <link name="rear depth">
   </link>
@@ -2723,7 +2650,7 @@
   <joint name="base_link_rear camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="rear camera"/>
-    <origin xyz="-0.448136 -0.018115 0.012558" rpy="0.000015 0.474984 -3.141579"/>
+    <origin xyz="-0.448136 -0.018115 0.012558" rpy="-1.570781 0.474984 -4.712375"/>
   </joint>
   <link name="left flank depth">
   </link>
@@ -2737,7 +2664,7 @@
   <joint name="base_link_left flank camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="left flank camera"/>
-    <origin xyz="-0.13568 0.110127 0.065528" rpy="-0.000003 0.403191 1.570802"/>
+    <origin xyz="-0.13568 0.110127 0.065528" rpy="-1.570799 0.403191 0.000005"/>
   </joint>
   <link name="right flank depth">
   </link>
@@ -2751,7 +2678,7 @@
   <joint name="base_link_right flank camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="right flank camera"/>
-    <origin xyz="-0.135678 -0.110163 0.06561" rpy="0.000005 0.413171 -1.570794"/>
+    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-1.570791 0.413171 -3.141591"/>
   </joint>
   <link name="left head depth">
   </link>
@@ -2765,7 +2692,7 @@
   <joint name="base_link_left head camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="left head camera"/>
-    <origin xyz="0.46325 0.045111 0.029551" rpy="-0.158862 0.433786 -0.408004"/>
+    <origin xyz="0.46325 0.045111 0.029551" rpy="-1.729658 0.433786 -1.9788"/>
   </joint>
   <link name="right head depth">
   </link>
@@ -2779,7 +2706,7 @@
   <joint name="base_link_right head camera_joint" type="fixed">
     <parent link="base_link"/>
     <child link="right head camera"/>
-    <origin xyz="0.462603 -0.044896 0.027972" rpy="0.193959 0.3931 0.409605"/>
+    <origin xyz="0.462603 -0.044896 0.027972" rpy="-1.376837 0.3931 -1.161192"/>
   </joint>
   <link name="left bottom led">
   </link>

@@ -9,7 +9,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/factory/pipes/protos/PipeSection.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/solids/protos/SolidBox.proto"
 EXTERNPROTO "../protos/Spot.proto"
-EXTERNPROTO "../protos/UR3e.proto"
+EXTERNPROTO "../protos/SpotArm.proto"
 EXTERNPROTO "../protos/ImageBox.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/robotiq/protos/Robotiq3fGripper.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/microsoft/protos/Kinect.proto"
@@ -233,15 +233,9 @@ DEF Spot Spot {
   controller "<extern>"
   supervisor TRUE
   frontExtension [
-    UR3e {
-      translation 0 -0.01 -0.09
-      rotation 1 0 0 -1.5707953071795862
-      toolSlot [
-        Robotiq3fGripper {
-          name "Robotiq3fGripper"
-        }
-      ]
-      staticBase FALSE
+    SpotArm {
+      translation 0 0 -0.094
+      rotation -0.577351 0.577348 0.577352 2.0944
     }
     Kinect {
       translation 0 -0.007 -0.240831

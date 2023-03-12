@@ -90,12 +90,12 @@ class SpotDriver:
         ### Init ur3e motors
         self.ur3e_motors=[]
         self.ur3e_motor_names = [
-            'shoulder_pan_joint',
-            'shoulder_lift_joint',
-            'elbow_joint',
-            'wrist_1_joint',
-            'wrist_2_joint',
-            'wrist_3_joint',
+            'spotarm_1_joint',
+            'spotarm_2_joint',
+            'spotarm_3_joint',
+            'spotarm_4_joint',
+            'spotarm_5_joint',
+            'spotarm_6_joint',
         ]
         for motor_name in self.ur3e_motor_names:
             self.ur3e_motors.append(self.__robot.getDevice(motor_name))
@@ -113,9 +113,8 @@ class SpotDriver:
         self.gripper_sensors = []
         self.gripper_pos = []
         self.gripper_motor_names = [
-            'finger_1_joint_1',
-            'finger_2_joint_1',
-            'finger_middle_joint_1',
+            'gripper_left_finger_joint',
+            'gripper_right_finger_joint'
         ]
         for idx, motor_name in enumerate(self.gripper_motor_names):
             self.gripper_motors.append(self.__robot.getDevice(motor_name))
@@ -126,14 +125,7 @@ class SpotDriver:
         self.remaining_gripper_sensors = []
         self.remaining_gripper_pos = []
         self.remaining_gripper_motor_names = [
-            'finger_middle_joint_2',
-            'finger_middle_joint_3',
-            'palm_finger_1_joint',
-            'finger_1_joint_2',
-            'finger_1_joint_3',
-            'palm_finger_2_joint',
-            'finger_2_joint_2',
-            'finger_2_joint_3',
+            'Slider11'
         ]
         for idx, motor_name in enumerate(self.remaining_gripper_motor_names):
             self.remaining_gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
@@ -688,10 +680,10 @@ class SpotDriver:
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.85, 0.85, 0.6][idx])
+                motor.setPosition([0., 0.][idx])
         else:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.0495, 0.0495, 0.0495][idx])
+                motor.setPosition([0.045, 0.045][idx])
 
         #Update Spot state
         self.__model_cb()
