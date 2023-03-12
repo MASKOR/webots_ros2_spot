@@ -62,11 +62,18 @@ def diff_quat(q2, q1):
     return (R.from_quat(q2) * R.from_quat(q1).inv()).as_quat()
 
 
+def retract_arm(robot):
+    # Retracted arm initially
+    robot.getDevice("spotarm_2_joint").setPosition(3.1415)
+    robot.getDevice("spotarm_3_joint").setPosition(3.0)
+
+
 class SpotDriver:
     def init(self, webots_node, properties):
         self.__robot = webots_node.robot
         randomise_lane(self.__robot)
         randomise_imgs(self.__robot)
+        retract_arm(self.__robot)
         self.spot_node = self.__robot.getFromDef("Spot")
 
         self.spot_translation = self.spot_node.getField('translation')
@@ -90,12 +97,13 @@ class SpotDriver:
         ### Init ur3e motors
         self.ur3e_motors=[]
         self.ur3e_motor_names = [
+            'Slider11',
             'spotarm_1_joint',
             'spotarm_2_joint',
             'spotarm_3_joint',
             'spotarm_4_joint',
             'spotarm_5_joint',
-            'spotarm_6_joint',
+            'spotarm_6_joint'
         ]
         for motor_name in self.ur3e_motor_names:
             self.ur3e_motors.append(self.__robot.getDevice(motor_name))
@@ -125,7 +133,7 @@ class SpotDriver:
         self.remaining_gripper_sensors = []
         self.remaining_gripper_pos = []
         self.remaining_gripper_motor_names = [
-            'Slider11'
+            # 'Slider11'
         ]
         for idx, motor_name in enumerate(self.remaining_gripper_motor_names):
             self.remaining_gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
@@ -607,7 +615,7 @@ class SpotDriver:
             target = self.ur3e_targets[0]
             self.u3re_n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
             self.ur3e_step_difference = [(target[i] - self.ur3e_pos[i]) / self.u3re_n_steps_to_achieve_target
-                                    for i in range(6)]
+                                    for i in range(7)]
 
     def __moveit_cb(self, goal_handle):
         self.__moveit_node.get_logger().info('Executing goal...')
@@ -615,7 +623,6 @@ class SpotDriver:
         self.ur3e_targets = []
         for p in goal_handle.request.trajectory.points:
             seq = list(p.positions)
-            seq = [seq[2], seq[1], seq[0], seq[3], seq[4], seq[5]] # ActionServer gets joint angles with alphabetical joint names order
             self.ur3e_targets.append(seq)
         
         while len(self.ur3e_targets) > 0:
@@ -683,7 +690,7 @@ class SpotDriver:
                 motor.setPosition([0., 0.][idx])
         else:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.045, 0.045][idx])
+                motor.setPosition([0.04, 0.04][idx])
 
         #Update Spot state
         self.__model_cb()

@@ -6,9 +6,10 @@ ur_joint_trajectory_controller:
   type: FollowJointTrajectory
   default: true
   joints:
-    - shoulder_pan_joint
-    - shoulder_lift_joint
-    - elbow_joint
-    - wrist_1_joint
-    - wrist_2_joint
-    - wrist_3_joint
+    - spotarm_1_joint
+    - spotarm_2_joint
+    - spotarm_3_joint
+    - spotarm_4_joint
+    - Slider11
+    - spotarm_5_joint
+    - spotarm_6_joint

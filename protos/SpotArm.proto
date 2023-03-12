@@ -106,7 +106,7 @@ PROTO SpotArm [
                       RotationalMotor {
                         name "spotarm_3_joint"
                         maxVelocity 0.5
-                        maxPosition 2.61799
+                        maxPosition 3.0
                         maxTorque 500.0
                       }
                       PositionSensor {
@@ -162,6 +162,7 @@ PROTO SpotArm [
                               }
                               SliderJoint {
                                 jointParameters JointParameters {
+                                  axis 1 0 0
                                 }
                                 device [
                                   LinearMotor {

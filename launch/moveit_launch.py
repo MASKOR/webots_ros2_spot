@@ -42,7 +42,7 @@ def generate_launch_description():
     if 'moveit' in get_packages_with_prefixes():
         # Configuration
         description = {'robot_description': load_file('rd_spot.urdf')}
-        description_semantic = {'robot_description_semantic': load_file('moveit_ur3e.srdf')}
+        description_semantic = {'robot_description_semantic': load_file('moveit_spot_arm.srdf')}
         description_kinematics = {'robot_description_kinematics': load_yaml('moveit_kinematics.yaml')}
         sim_time = {'use_sim_time': False}
 
