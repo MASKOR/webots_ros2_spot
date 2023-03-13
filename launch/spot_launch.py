@@ -53,14 +53,6 @@ def generate_launch_description():
         executable='spot_pointcloud2',
         output='screen',
     )
-    
-    apriltag = LaunchConfiguration('detect_tags', default=False)
-    spot_apriltag = Node(
-        package='webots_spot',
-        executable='apriltag_ros',
-        output='screen',
-        condition=launch.conditions.IfCondition(apriltag),        
-    )
 
     webots_event_handler = launch.actions.RegisterEventHandler(
         event_handler=launch.event_handlers.OnProcessExit(
@@ -83,7 +75,6 @@ def generate_launch_description():
         ros2_supervisor,
         robot_state_publisher,
         # spot_pointcloud2,
-        spot_apriltag,
         webots_event_handler,
         Node(
             package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',

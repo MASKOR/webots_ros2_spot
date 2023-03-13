@@ -3,14 +3,11 @@ from rclpy.node import Node
 from rclpy.action import ActionServer
 from rclpy.executors import MultiThreadedExecutor
 
-from std_msgs.msg import Header
 from spot_msgs.msg import GaitInput
 from spot_msgs.srv import SpotMotion
-from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory
-from rosgraph_msgs.msg import Clock
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 
 from scipy.spatial.transform import Rotation as R
