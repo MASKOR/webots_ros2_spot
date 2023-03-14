@@ -44,7 +44,7 @@ def randomise_lane(robot):
 
 
 def randomise_imgs(robot):
-    img_path = os.path.join(get_package_share_directory('webots_spot'), 'misc_images/')
+    img_path = os.path.join(get_package_share_directory('webots_spot'), 'yolo_images/')
     all_imgs = os.listdir(img_path)
     three_imgs = random.sample(all_imgs, 3)
     for idx, img in enumerate(three_imgs):
