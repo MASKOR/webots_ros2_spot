@@ -236,6 +236,14 @@ DEF Spot Spot {
     SpotArm {
       translation 0 0 -0.094
       rotation -0.577351 0.577348 0.577352 2.0944
+      gripperCam [
+        Camera {
+          translation 0.19 0 0
+          name "gripper camera"
+          width 1280
+          height 720
+        }
+      ]
     }
     Kinect {
       translation 0 -0.007 -0.240831

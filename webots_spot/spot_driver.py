@@ -63,6 +63,7 @@ def retract_arm(robot):
     # Retracted arm initially
     robot.getDevice("spotarm_2_joint").setPosition(3.1415)
     robot.getDevice("spotarm_3_joint").setPosition(3.0)
+    robot.getDevice("spotarm_5_joint").setPosition(np.deg2rad(11))
 
 
 class SpotDriver:
@@ -684,10 +685,10 @@ class SpotDriver:
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0., 0.][idx])
+                motor.setPosition([0.01, 0.01][idx])
         else:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.04, 0.04][idx])
+                motor.setPosition([0.045, 0.045][idx])
 
         #Update Spot state
         self.__model_cb()

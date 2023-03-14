@@ -27,7 +27,7 @@
         <joint name="spotarm_2_joint" value="3.1415"/>
         <joint name="spotarm_3_joint" value="3"/>
         <joint name="spotarm_4_joint" value="0"/>
-        <joint name="spotarm_5_joint" value="0"/>
+        <joint name="spotarm_5_joint" value="0.1919"/>
         <joint name="spotarm_6_joint" value="0"/>
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->

@@ -12,6 +12,7 @@ PROTO SpotArm [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
   field  SFString    name            "SpotArm"        # Is `Solid.name`.
+  field  MFNode      gripperCam      []               # To add a camera at the end of the gripper.
 ]
 {
   Solid {
@@ -221,6 +222,9 @@ PROTO SpotArm [
                                                 }
                                               }
                                             ]
+                                          }
+                                          Transform {
+                                            children IS gripperCam
                                           }
                                           HingeJoint {
                                             jointParameters HingeJointParameters {
