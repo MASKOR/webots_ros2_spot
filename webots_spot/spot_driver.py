@@ -4,7 +4,7 @@ from rclpy.action import ActionServer
 from rclpy.executors import MultiThreadedExecutor
 
 from spot_msgs.msg import GaitInput
-from spot_msgs.srv import SpotMotion
+from spot_msgs.srv import SpotMotion, SpotHeight
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory
@@ -131,7 +131,6 @@ class SpotDriver:
         self.remaining_gripper_sensors = []
         self.remaining_gripper_pos = []
         self.remaining_gripper_motor_names = [
-            # 'Slider11'
         ]
         for idx, motor_name in enumerate(self.remaining_gripper_motor_names):
             self.remaining_gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
@@ -168,6 +167,7 @@ class SpotDriver:
         self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/close_gripper', self.__close_gripper_cb)
         self.__node.create_service(SpotMotion, '/Spot/open_gripper', self.__open_gripper_cb)
+        self.__node.create_service(SpotHeight, '/Spot/set_height', self.__spot_height_cb)
 
         ## ActionServer
         self._action_server = ActionServer(
@@ -290,7 +290,7 @@ class SpotDriver:
 
             self.xd = 0.
             self.yd = 0.
-            self.zd = 0.
+            # self.zd = 0.
             self.rolld = 0.
             self.pitchd = 0.
             self.yawd = 0.
@@ -576,6 +576,13 @@ class SpotDriver:
             return response
         response.answer = 'opening gripper'
         self.gripper_close = False
+        return response
+
+    def __spot_height_cb(self, request, response):
+        if not -0.3 <= request.height <= 0:
+            response.answer = 'set height within -0.3 and 0'
+            return response
+        self.zd = -request.height
         return response
 
     def __ur3e_defined_motions(self):
