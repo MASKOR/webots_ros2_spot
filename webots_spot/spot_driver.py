@@ -400,43 +400,27 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
-        ## Odom To Base_Link
-        tfs = TransformStamped()
-        tfs.header.stamp = time_stamp
-        tfs.header.frame_id= "odom"
-        tfs._child_frame_id = "base_link"
-
-        d = self.spot_translation.getSFVec3f()
-        tfs.transform.translation.x = -(d[0] - self.spot_translation_initial[0])
-        tfs.transform.translation.y = -(d[1] - self.spot_translation_initial[1])
-        tfs.transform.translation.z = d[2] - self.spot_translation_initial[2]
-        
-        r = diff_quat(quat_from_aa(self.spot_rotation.getSFRotation()), quat_from_aa(self.spot_rotation_initial))
-        tfs.transform.rotation.x = r[1]
-        tfs.transform.rotation.y = -r[0]
-        tfs.transform.rotation.z = r[2]
-        tfs.transform.rotation.w = r[3]
+        ## Odom to "base_link", "A", "B", "C", "P", "Image1", "Image2", "Image3", "PlaceBox"
+        tfs = []
+        for x in ["Spot", "A", "B", "C", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+            tf = TransformStamped()
+            tf.header.stamp = time_stamp
+            tf.header.frame_id= "odom"
+            tf._child_frame_id = x if x != "Spot" else "base_link"
+            
+            part = self.__robot.getFromDef(x)
+            di = part.getField('translation').getSFVec3f()
+            tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
+            tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+            tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
+            
+            r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+            tf.transform.rotation.x = -r[0]
+            tf.transform.rotation.y = -r[1]
+            tf.transform.rotation.z = r[2]
+            tf.transform.rotation.w = r[3]
+            tfs.append(tf)
         self.tfb_.sendTransform(tfs)
-
-        ## Odom to ABC
-        for x in "ABC":
-            tfs = TransformStamped()
-            tfs.header.stamp = time_stamp
-            tfs.header.frame_id= "odom"
-            tfs._child_frame_id = x
-            
-            self.cube = self.__robot.getFromDef(x)
-            di = self.cube.getField('translation').getSFVec3f()
-            tfs.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
-            tfs.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
-            tfs.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            
-            r = diff_quat(quat_from_aa(self.cube.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
-            tfs.transform.rotation.x = r[1]
-            tfs.transform.rotation.y = -r[0]
-            tfs.transform.rotation.z = r[2]
-            tfs.transform.rotation.w = r[3]
-            self.tfb_.sendTransform(tfs)
         
         unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
 

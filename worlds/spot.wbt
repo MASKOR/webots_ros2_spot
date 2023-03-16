@@ -330,11 +330,11 @@ ImageBox {
   rotation 0 1 0 3.14159
   name "image_bucket_pick"
 }
-ImageBox {
+DEF PlaceBox ImageBox {
   translation 7.5 -4 0
   name "image_bucket_place"
 }
-SolidBox {
+DEF P SolidBox {
   translation 8.45 -4 0.51
   name "P"
   size 0.05 0.05 0.05
