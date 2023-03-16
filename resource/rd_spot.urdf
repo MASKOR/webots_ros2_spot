@@ -508,6 +508,19 @@
       </geometry>
     </collision>
   </link>
+  <link name="gripper_centre">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.01"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="gripper_centre_joint" type="fixed">
+    <parent link="front"/>
+    <child link="gripper_centre"/>
+    <origin xyz="0 0 -0.18" rpy="0 0 0"/>
+  </joint>
   <joint name="gripper_right_finger_joint" type="prismatic">
     <parent link="front"/>
     <child link="gripper_right_finger_link"/>
