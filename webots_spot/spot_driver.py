@@ -3,8 +3,8 @@ from rclpy.node import Node
 from rclpy.action import ActionServer
 from rclpy.executors import MultiThreadedExecutor
 
-from spot_msgs.msg import GaitInput
-from spot_msgs.srv import SpotMotion, SpotHeight
+from webots_spot_msgs.msg import GaitInput
+from webots_spot_msgs.srv import SpotMotion, SpotHeight
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory
