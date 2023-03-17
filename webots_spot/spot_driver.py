@@ -676,7 +676,7 @@ class SpotDriver:
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.01, 0.01][idx])
+                motor.setPosition([0.018, 0.018][idx])
         else:
             for idx, motor in enumerate(self.gripper_motors):
                 motor.setPosition([0.045, 0.045][idx])

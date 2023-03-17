@@ -35,7 +35,7 @@ setup(
             'spot_driver = ' + package_name + '.spot_driver:main',
             'spot_pointcloud2 = ' + package_name + '.spot_pointcloud2:main',
             'set_initial_pose = ' + package_name + '.set_initial_pose:main',
-            'apriltag_ros = ' + package_name + '.apriltag_ros:main',
+            'gpp_blocksworld_server = ' + package_name + '.gpp_blocksworld_server:main',
         ],
     },
 )
