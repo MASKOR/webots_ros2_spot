@@ -66,12 +66,70 @@ def retract_arm(robot):
     robot.getDevice("spotarm_5_joint").setPosition(np.deg2rad(11))
 
 
+def shuffle_cubes_n_modify_dot_gpp(robot):
+    combinations = []
+    for i in range(3):
+        for j in range(3):
+            combinations.append([-8, round(-4 + i*0.2, 3), round(0.025 + j*0.05, 3)])
+
+    locations = random.sample(combinations, 3)
+    cube_locations = {}
+    for c, location in zip("ABC", locations):
+        cube_locations[c] = location
+    
+    cube_locations_aphabets = {}
+    for cube, location in cube_locations.items():
+        on_top_of_cube = False
+        for c, l in cube_locations.items():
+            if cube == c:
+                continue
+            if location[0] == l[0] and location[1] == l[1] and location[2] == round(l[2] + 0.05, 3): #0.05 becomes 0.050...01
+                on_top_of_cube = True
+                cube_locations_aphabets[cube] = c
+                break
+            if location[0] == l[0] and location[1] == l[1] and location[2] == l[2] + 0.1:
+                on_top_of_cube = True
+                cube_locations_aphabets[cube] = c
+                # break
+        if not on_top_of_cube:
+            if location[1] == -4:
+                cube_locations_aphabets[cube] = "t1"
+            elif location[1] == -3.8:
+                cube_locations_aphabets[cube] = "t2"
+            else:
+                cube_locations_aphabets[cube] = "t3"
+            robot.getFromDef(cube).getField('translation').setSFVec3f([location[0], location[1], 0.025]) # prevent abrupt fall on floor
+        else:
+            robot.getFromDef(cube).getField('translation').setSFVec3f([location[0], location[1], location[2]])
+
+    gpp = os.path.join(get_package_share_directory('webots_spot'), 'resource')
+    with open(gpp + '/webots_blocksworld.gpp', 'r') as f:
+        gpp_code = f.read()
+    with open(gpp + '/webots_blocksworld_updated.gpp', 'w') as f:
+        idx = 0
+        for cube, location in cube_locations_aphabets.items():
+            idx += 1
+            gpp_code = gpp_code.replace('(' + cube.lower() + ') = t' + str(idx) + ';', '(' + cube.lower() + ') = ' + str(location.lower()) + ';')
+        f.write(gpp_code)
+
+
 class SpotDriver:
     def init(self, webots_node, properties):
+        rclpy.init(args=None)
+
+        self.__node = Node('spot_driver')
+        self.__moveit_node = Node('spot_moveit')
+
+        self.tfb_ = TransformBroadcaster(self.__node)        
+
+        self.__node.get_logger().info('Init SpotDriver')
+
         self.__robot = webots_node.robot
         randomise_lane(self.__robot)
         randomise_imgs(self.__robot)
         retract_arm(self.__robot)
+        shuffle_cubes_n_modify_dot_gpp(self.__robot)
+
         self.spot_node = self.__robot.getFromDef("Spot")
 
         self.spot_translation = self.spot_node.getField('translation')
@@ -145,15 +203,6 @@ class SpotDriver:
             self.motor_sensors.append(self.__robot.getDevice(sensor_name))
             self.motor_sensors[idx].enable(self.__robot.timestep)
             self.motors_pos.append(0.)
-
-        rclpy.init(args=None)
-
-        self.__node = Node('spot_driver')
-        self.__moveit_node = Node('spot_moveit')
-
-        self.tfb_ = TransformBroadcaster(self.__node)        
-
-        self.__node.get_logger().info('Init SpotDriver')
 
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
@@ -400,9 +449,9 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
-        ## Odom to "base_link", "A", "B", "C", "P", "Image1", "Image2", "Image3", "PlaceBox"
+        ## Odom to following:
         tfs = []
-        for x in ["Spot", "A", "B", "C", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+        for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
             tf.header.frame_id= "odom"

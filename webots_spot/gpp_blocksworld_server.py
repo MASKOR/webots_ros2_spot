@@ -157,23 +157,23 @@ class MinimalClientAsync():
                 xyz = [self.tf_base_link_block[0],self.tf_base_link_block[1],self.tf_base_link_block[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
                 self.req.ik_request.pose_stamped.pose.position.y = xyz[1]
-                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.11
+                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.1
             else:
                 xyz = [self.tf_base_link_block[0],self.tf_base_link_block[1],self.tf_base_link_block[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
                 self.req.ik_request.pose_stamped.pose.position.y = xyz[1]
-                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.06
+                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.05
         else:
             if self.is_above:
                 xyz = [self.tf_base_link_location[0],self.tf_base_link_location[1],self.tf_base_link_location[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
                 self.req.ik_request.pose_stamped.pose.position.y = xyz[1]
-                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.16
+                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.14
             else:
                 xyz = [self.tf_base_link_location[0],self.tf_base_link_location[1],self.tf_base_link_location[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
                 self.req.ik_request.pose_stamped.pose.position.y = xyz[1]
-                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.11
+                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.09
 
         self.req.ik_request.timeout.sec = 5
 
@@ -297,8 +297,6 @@ close_gripper_client = moveit_node.create_client(SpotMotion, '/Spot/close_grippe
 open_gripper_client = moveit_node.create_client(SpotMotion, '/Spot/open_gripper')
 
 def main():
-    # Set up mulithreading
-
     action_server = ActionServer(
                 stacker_node,
                 Stack,

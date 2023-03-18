@@ -172,8 +172,7 @@ SolidBox {
   }
 }
 DEF A SolidBox {
-  translation -8.15635 -4.07243 0.0508692
-  rotation 0 0 -1 0
+  translation -8 -4 0.025
   name "A"
   size 0.05 0.05 0.05
   appearance PBRAppearance {
@@ -189,8 +188,7 @@ DEF A SolidBox {
   }
 }
 DEF B SolidBox {
-  translation -8.15635 -3.87243 0.0508692
-  rotation 0 0 -1 0
+  translation -8 -3.8 0.025
   name "B"
   size 0.05 0.05 0.05
   appearance PBRAppearance {
@@ -206,8 +204,7 @@ DEF B SolidBox {
   }
 }
 DEF C SolidBox {
-  translation -8.15635 -3.66243 0.0508692
-  rotation 0 0 1 0
+  translation -8 -3.6 0.025
   name "C"
   size 0.05 0.05 0.05
   appearance PBRAppearance {
@@ -221,6 +218,15 @@ DEF C SolidBox {
   }
   physics Physics {
   }
+}
+DEF T1 Solid {
+  translation -8 -4 0.025
+}
+DEF T2 Solid {
+  translation -8 -3.8 0.025
+}
+DEF T3 Solid {
+  translation -8 -3.6 0.025
 }
 DEF Spot Spot {
   translation 8.39 0.11 0.6
