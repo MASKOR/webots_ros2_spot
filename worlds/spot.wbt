@@ -221,12 +221,15 @@ DEF C SolidBox {
 }
 DEF T1 Solid {
   translation -8 -4 0.025
+  name "T1"
 }
 DEF T2 Solid {
   translation -8 -3.8 0.025
+  name "T2"
 }
 DEF T3 Solid {
   translation -8 -3.6 0.025
+  name "T3"
 }
 DEF Spot Spot {
   translation 8.39 0.11 0.6
