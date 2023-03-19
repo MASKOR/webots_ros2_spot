@@ -37,12 +37,13 @@ class MoveGroupActionClient(Node):
         jc.weight = 1.0
 
         joints = {}
-        joints['shoulder_pan_joint'] = np.deg2rad(84)
-        joints['shoulder_lift_joint'] = np.deg2rad(0)
-        joints['elbow_joint'] = np.deg2rad(-10)
-        joints['wrist_1_joint'] = np.deg2rad(-169)
-        joints['wrist_2_joint'] = np.deg2rad(-83)
-        joints['wrist_3_joint'] = np.deg2rad(-179)
+        joints['Slider11'] = 0
+        joints['spotarm_1_joint'] = 0
+        joints['spotarm_2_joint'] = 3.1415
+        joints['spotarm_3_joint'] = 3
+        joints['spotarm_4_joint'] = 0
+        joints['spotarm_5_joint'] = 0.2
+        joints['spotarm_6_joint'] = 0
 
         constraints = Constraints()
         for (joint, angle) in joints.items():
@@ -53,7 +54,7 @@ class MoveGroupActionClient(Node):
         self.motion_plan_request.goal_constraints.append(constraints)
 
         self.motion_plan_request.pipeline_id = 'move_group'
-        self.motion_plan_request.group_name = 'spot_ur3e_arm'
+        self.motion_plan_request.group_name = 'spot_arm'
         self.motion_plan_request.num_planning_attempts = 10
         self.motion_plan_request.allowed_planning_time = 5.0
         self.motion_plan_request.max_velocity_scaling_factor = 0.1
