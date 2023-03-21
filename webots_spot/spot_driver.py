@@ -90,7 +90,6 @@ def shuffle_cubes_n_modify_dot_gpp(robot):
             if location[0] == l[0] and location[1] == l[1] and location[2] == l[2] + 0.1:
                 on_top_of_cube = True
                 cube_locations_aphabets[cube] = c
-                # break
         if not on_top_of_cube:
             if location[1] == -4:
                 cube_locations_aphabets[cube] = "t1"
@@ -209,7 +208,7 @@ class SpotDriver:
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
         self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
 
-        ## Services
+        ## Services        
         self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/sit_down', self.__sit_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/lie_down', self.__lie_motion_cb)
@@ -217,6 +216,8 @@ class SpotDriver:
         self.__node.create_service(SpotMotion, '/Spot/close_gripper', self.__close_gripper_cb)
         self.__node.create_service(SpotMotion, '/Spot/open_gripper', self.__open_gripper_cb)
         self.__node.create_service(SpotHeight, '/Spot/set_height', self.__spot_height_cb)
+
+        self.__node.create_service(SpotMotion, '/Spot/blocksworld_pose', self.blocksworld_pose)
 
         ## ActionServer
         self._action_server = ActionServer(
@@ -509,6 +510,19 @@ class SpotDriver:
                                 for i in range(NUMBER_OF_JOINTS)]
         self.m_target = []
 
+    def blocksworld_pose(self, request, response):
+        self.spot_node.getField('translation').setSFVec3f([-7.2,-3.73,0.61])
+        self.spot_node.getField('rotation').setSFRotation([0,0,-1,-3.14159])
+
+        self.fixed_motion = True
+
+        self.paw = False
+        self.paw2 = False
+        self.movement_decomposition(motions['lie'], 1)
+        response.answer = 'lying down'
+
+        return response
+
     def __stand_motion_cb(self, request, response):
         self.fixed_motion = True
         if self.previous_cmd and not request.override:
@@ -636,7 +650,7 @@ class SpotDriver:
                 motor.setPosition(self.ur3e_targets[0][idx])
             next_target = True
             for position, target in zip(self.ur3e_pos, self.ur3e_targets[0]):
-                if abs(position - target) > 0.01:
+                if abs(position - target) > 0.04:
                     next_target = False
                     break
             if next_target:
@@ -665,7 +679,7 @@ class SpotDriver:
         
         while len(self.ur3e_targets) > 0:
             if self.allow_new_target and len(self.ur3e_targets) > 0:
-                self.__moveit_movement_decomposition(0.4)
+                self.__moveit_movement_decomposition(0.6)
             self.__ur3e_defined_motions()
 
         goal_handle.succeed()
@@ -725,7 +739,7 @@ class SpotDriver:
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
-                motor.setPosition([0.018, 0.018][idx])
+                motor.setPosition([0.02, 0.02][idx])
         else:
             for idx, motor in enumerate(self.gripper_motors):
                 motor.setPosition([0.045, 0.045][idx])
