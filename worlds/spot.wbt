@@ -50,10 +50,15 @@ Pedestrian {
   ]
   enableBoundingObject TRUE
 }
-PipeSection {
-  translation -1.84 4.01 0.849999
+DEF Pipe PipeSection {
+  translation -1.84 4.01 0.85
   rotation 0.5773509358560258 0.577349935856137 0.577349935856137 -2.0944
   height 2
+  appearance PBRAppearance {
+    baseColor 1 1 0
+    roughness 0.5
+    metalness 0
+  }
 }
 SolidBox {
   translation 3.63 0.21 0.85

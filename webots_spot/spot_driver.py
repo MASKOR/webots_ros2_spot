@@ -9,6 +9,7 @@ from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory
 from tf2_ros.transform_broadcaster import TransformBroadcaster
+from std_srvs.srv import Empty
 
 from scipy.spatial.transform import Rotation as R
 import numpy as np
@@ -43,12 +44,25 @@ def randomise_lane(robot):
         l3.getField('rotation').setSFRotation([0,0,-1,0])
 
 
-def randomise_imgs(robot):
-    img_path = os.path.join(get_package_share_directory('webots_spot'), 'yolo_images/')
+def randomise_imgs(robot, hazmat=False):
+    if hazmat:
+        img_path = os.path.join(get_package_share_directory('webots_spot'), 'hazmat_signs/')
+    else:
+        img_path = os.path.join(get_package_share_directory('webots_spot'), 'yolo_images/')
     all_imgs = os.listdir(img_path)
     three_imgs = random.sample(all_imgs, 3)
     for idx, img in enumerate(three_imgs):
         robot.getFromDef("Image" + str(idx+1)).getField('url').setMFString(0, img_path + img)
+
+
+def set_rod(robot, red=False):
+    pipe = robot.getFromDef('Pipe')
+    if red:
+        pipe.getField('translation').setSFVec3f([-1.84,4.01,0.74])
+        pipe.getField('appearance').getSFNode().getField('baseColor').setSFColor([1,0,0])
+    else:
+        pipe.getField('translation').setSFVec3f([-1.84,4.01,0.85])
+        pipe.getField('appearance').getSFNode().getField('baseColor').setSFColor([1,1,0])
 
 
 def quat_from_aa(aa):
@@ -126,6 +140,7 @@ class SpotDriver:
         self.__robot = webots_node.robot
         randomise_lane(self.__robot)
         randomise_imgs(self.__robot)
+        set_rod(self.__robot)
         retract_arm(self.__robot)
         shuffle_cubes_n_modify_dot_gpp(self.__robot)
 
@@ -218,6 +233,8 @@ class SpotDriver:
         self.__node.create_service(SpotHeight, '/Spot/set_height', self.__spot_height_cb)
 
         self.__node.create_service(SpotMotion, '/Spot/blocksworld_pose', self.blocksworld_pose)
+        self.__node.create_service(Empty, '/hazmat_signs', self.hazmat_signs)
+        self.__node.create_service(Empty, '/red_rod', self.red_rod)
 
         ## ActionServer
         self._action_server = ActionServer(
@@ -523,6 +540,14 @@ class SpotDriver:
 
         return response
 
+    def hazmat_signs(self, request, response):
+        randomise_imgs(self.__robot, True)
+        return response
+    
+    def red_rod(self, request, response):
+        set_rod(self.__robot, True)
+        return response
+    
     def __stand_motion_cb(self, request, response):
         self.fixed_motion = True
         if self.previous_cmd and not request.override:

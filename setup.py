@@ -16,6 +16,7 @@ setup(
         (os.path.join('share', package_name, 'worlds'), glob('worlds/tags/*.png')),
         (os.path.join('share', package_name, 'resource'), glob('resource/*')),
         (os.path.join('share', package_name, 'yolo_images'), glob('yolo_images/*')),
+        (os.path.join('share', package_name, 'hazmat_signs'), glob('hazmat_signs/*')),
         (os.path.join('share', package_name, 'protos'), glob('protos/*.proto')),
         (os.path.join('share', package_name, 'protos', 'icons'), glob('protos/icons/*')),
         (os.path.join('share', package_name, 'protos', 'meshes'), glob('protos/meshes/*')),
