@@ -29,6 +29,9 @@ sudo apt install python3-open3d # for Ubuntu 22.04
 
 ### webots_ros2_spot
 ```
+# Boston Dynamic
+pip3 install bosdyn-client bosdyn-mission bosdyn-api bosdyn-core
+
 # Source ROS 2
 source /opt/ros/$ROS_DISTRO/local_setup.bash
 
