@@ -11,7 +11,7 @@ def generate_launch_description():
         package='gologpp_agent',
         executable='gologpp_agent',
         output='screen',
-        parameters=[{'gpp_code': gpp + '/webots_blocksworld_updated.gpp'}],
+        parameters=[{'gpp_code': gpp + '/webots_blocksworld.gpp'}],
     )
     
     return LaunchDescription([

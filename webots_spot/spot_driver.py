@@ -4,7 +4,7 @@ from rclpy.action import ActionServer
 from rclpy.executors import MultiThreadedExecutor
 
 from webots_spot_msgs.msg import GaitInput
-from webots_spot_msgs.srv import SpotMotion, SpotHeight
+from webots_spot_msgs.srv import SpotMotion, SpotHeight, BlockPose
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory
@@ -80,7 +80,7 @@ def retract_arm(robot):
     robot.getDevice("spotarm_5_joint").setPosition(np.deg2rad(11))
 
 
-def shuffle_cubes_n_modify_dot_gpp(robot):
+def shuffle_cubes(robot):
     combinations = []
     for i in range(3):
         for j in range(3):
@@ -115,15 +115,7 @@ def shuffle_cubes_n_modify_dot_gpp(robot):
         else:
             robot.getFromDef(cube).getField('translation').setSFVec3f([location[0], location[1], location[2]])
 
-    gpp = os.path.join(get_package_share_directory('webots_spot'), 'resource')
-    with open(gpp + '/webots_blocksworld.gpp', 'r') as f:
-        gpp_code = f.read()
-    with open(gpp + '/webots_blocksworld_updated.gpp', 'w') as f:
-        idx = 0
-        for cube, location in cube_locations_aphabets.items():
-            idx += 1
-            gpp_code = gpp_code.replace('(' + cube.lower() + ') = t' + str(idx) + ';', '(' + cube.lower() + ') = ' + str(location.lower()) + ';')
-        f.write(gpp_code)
+    return cube_locations_aphabets
 
 
 class SpotDriver:
@@ -142,7 +134,7 @@ class SpotDriver:
         randomise_imgs(self.__robot)
         set_rod(self.__robot)
         retract_arm(self.__robot)
-        shuffle_cubes_n_modify_dot_gpp(self.__robot)
+        self.cubes_loc = shuffle_cubes(self.__robot)
 
         self.spot_node = self.__robot.getFromDef("Spot")
 
@@ -235,6 +227,7 @@ class SpotDriver:
         self.__node.create_service(SpotMotion, '/Spot/blocksworld_pose', self.blocksworld_pose)
         self.__node.create_service(Empty, '/hazmat_signs', self.hazmat_signs)
         self.__node.create_service(Empty, '/red_rod', self.red_rod)
+        self.__node.create_service(BlockPose, '/get_block_pose', self.gpp_block_pose)
 
         ## ActionServer
         self._action_server = ActionServer(
@@ -548,6 +541,10 @@ class SpotDriver:
         set_rod(self.__robot, True)
         return response
     
+    def gpp_block_pose(self, request, response):
+        response.location = self.cubes_loc[request.block.upper()].lower()
+        return response
+
     def __stand_motion_cb(self, request, response):
         self.fixed_motion = True
         if self.previous_cmd and not request.override:
