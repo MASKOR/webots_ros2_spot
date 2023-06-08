@@ -1,7 +1,6 @@
 #VRML_SIM R2023a utf8
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/floors/protos/RectangleArena.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/ThreadMetalPlate.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/Roughcast.proto"
@@ -11,7 +10,6 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/project
 EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/SpotArm.proto"
 EXTERNPROTO "../protos/ImageBox.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/robotiq/protos/Robotiq3fGripper.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/microsoft/protos/Kinect.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/velodyne/protos/VelodynePuck.proto"
 
@@ -19,17 +17,17 @@ WorldInfo {
   title "Spot_Maze"
 }
 Viewpoint {
-  orientation -0.3514025745846757 -0.08398531544295117 0.9324498363800645 3.580145909966252
-  position 20.0206486298158 10.533063907228222 19.231879117926756
+  orientation 0.06585402628270601 0.9882492243525383 -0.13793736908091042 0.9000242875594902
+  position -25.385366789832965 7.2474779125814415 31.944751632765957
 }
 TexturedBackground {
   texture "factory"
   skybox FALSE
 }
 RectangleArena {
-  translation 0.59 0 0
+  translation 0.59 5 0
   rotation 0 1 0 0
-  floorSize 18 10
+  floorSize 18 20
   floorTileSize 1 1
   floorAppearance ThreadMetalPlate {
   }
@@ -65,7 +63,6 @@ SolidBox {
   name "arena_wall_1"
   size 0.03 4 1.7
   appearance PBRAppearance {
-    baseColor 1 1 1
     roughness 0.5
     metalness 0
   }
@@ -176,6 +173,118 @@ SolidBox {
     metalness 0
   }
 }
+SolidBox {
+  translation 0.590027 4.98 0.85
+  rotation 0 0 1 1.5708
+  name "arena_seperator_wall"
+  size 0.03 18 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -5.16 8.14 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_1"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -2.045 10.0296 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_2"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -0.13642 13.1397 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_3"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 1.76401 10.0319 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_4"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 4.88401 8.14189 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_5"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 6.76401 11.2719 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_6"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
 DEF A SolidBox {
   translation -8 -4 0.025
   name "A"
@@ -237,14 +346,14 @@ DEF T3 Solid {
   name "T3"
 }
 DEF Spot Spot {
-  translation 8.39 0.11 0.6
+  translation -6.97 8.12 0.82
   rotation 0 0 1 -3.14159
   controller "<extern>"
   supervisor TRUE
   frontExtension [
     SpotArm {
       translation 0 0 -0.094
-      rotation -0.577351 0.577348 0.577352 2.0944
+      rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
       gripperCam [
         Camera {
           translation 0.19 0 0
@@ -360,9 +469,8 @@ DEF P SolidBox {
   }
 }
 Solid {
-  name "clock"
   translation 9.59 0 0.6
-  rotation 0.577351 -0.57735 0.57735 -2.0944
+  rotation 0.5773509358560258 -0.577349935856137 0.577349935856137 -2.0944
   children [
     Shape {
       appearance PBRAppearance {
@@ -379,11 +487,11 @@ Solid {
       }
     }
   ]
+  name "clock"
 }
 Solid {
-  name "aruco"
   translation 3.65 0 0.6
-  rotation 0.577351 0.57735 0.57735 2.0944
+  rotation 0.5773509358560258 0.577349935856137 0.577349935856137 2.0944
   children [
     Shape {
       appearance PBRAppearance {
@@ -400,4 +508,5 @@ Solid {
       }
     }
   ]
+  name "aruco"
 }
