@@ -1,13 +1,15 @@
 import rclpy
 from rclpy.node import Node
-from rclpy.clock import Clock
+from rclpy.action import ActionServer
+from rclpy.executors import MultiThreadedExecutor
 
-from spot_msgs.msg import GaitInput
-from spot_msgs.srv import SpotMotion
+from webots_spot_msgs.msg import GaitInput
+from webots_spot_msgs.srv import SpotMotion, SpotHeight, BlockPose
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
-from nav_msgs.msg import Odometry
+from control_msgs.action import FollowJointTrajectory
 from tf2_ros.transform_broadcaster import TransformBroadcaster
+from std_srvs.srv import Empty
 
 from scipy.spatial.transform import Rotation as R
 import numpy as np
@@ -15,6 +17,10 @@ import copy
 
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
+
+import os
+import random
+from ament_index_python.packages import get_package_share_directory
 
 NUMBER_OF_JOINTS = 12
 
@@ -25,11 +31,119 @@ motions = {
 }
 
 
+def randomise_lane(robot):
+    if random.random() < 0.5: # 50% probability for a rightside lane
+        l1 = robot.getFromDef("Lane1")
+        l1.getField('translation').setSFVec3f([6.6778,1.90426,0.001])
+        l1.getField('rotation').setSFRotation([0,0,-1,-1.04721])
+        l2 = robot.getFromDef("Lane2")
+        l2.getField('translation').setSFVec3f([3.48651,2.88433,0.001])
+        l2.getField('rotation').setSFRotation([0,0,-1,-1.57081])
+        l3 = robot.getFromDef("Lane3")
+        l3.getField('translation').setSFVec3f([2.02652,1.67433,0.001])
+        l3.getField('rotation').setSFRotation([0,0,-1,0])
+
+
+def randomise_imgs(robot, hazmat=False):
+    if hazmat:
+        img_path = os.path.join(get_package_share_directory('webots_spot'), 'hazmat_signs/')
+    else:
+        img_path = os.path.join(get_package_share_directory('webots_spot'), 'yolo_images/')
+    all_imgs = os.listdir(img_path)
+    three_imgs = random.sample(all_imgs, 3)
+    for idx, img in enumerate(three_imgs):
+        robot.getFromDef("Image" + str(idx+1)).getField('url').setMFString(0, img_path + img)
+
+
+def set_rod(robot, red=False):
+    pipe = robot.getFromDef('Pipe')
+    if red:
+        pipe.getField('translation').setSFVec3f([-1.84,4.01,0.74])
+        pipe.getField('appearance').getSFNode().getField('baseColor').setSFColor([1,0,0])
+    else:
+        pipe.getField('translation').setSFVec3f([-1.84,4.01,0.85])
+        pipe.getField('appearance').getSFNode().getField('baseColor').setSFColor([1,1,0])
+
+
+def quat_from_aa(aa):
+    return R.from_rotvec(aa[3] * np.array(aa[:3])).as_quat()
+
+
+def diff_quat(q2, q1):
+    return (R.from_quat(q2) * R.from_quat(q1).inv()).as_quat()
+
+
+def retract_arm(robot):
+    # Retracted arm initially
+    robot.getDevice("spotarm_2_joint").setPosition(3.1415)
+    robot.getDevice("spotarm_3_joint").setPosition(3.0)
+    robot.getDevice("spotarm_5_joint").setPosition(np.deg2rad(11))
+
+
+def shuffle_cubes(robot):
+    combinations = []
+    for i in range(3):
+        for j in range(3):
+            combinations.append([-8, round(-4 + i*0.2, 3), round(0.025 + j*0.05, 3)])
+
+    locations = random.sample(combinations, 3)
+    cube_locations = {}
+    for c, location in zip("ABC", locations):
+        cube_locations[c] = location
+    
+    cube_locations_aphabets = {}
+    for cube, location in cube_locations.items():
+        on_top_of_cube = False
+        for c, l in cube_locations.items():
+            if cube == c:
+                continue
+            if location[0] == l[0] and location[1] == l[1] and location[2] == round(l[2] + 0.05, 3): #0.05 becomes 0.050...01
+                on_top_of_cube = True
+                cube_locations_aphabets[cube] = c
+                break
+            if location[0] == l[0] and location[1] == l[1] and location[2] == l[2] + 0.1:
+                on_top_of_cube = True
+                cube_locations_aphabets[cube] = c
+        if not on_top_of_cube:
+            if location[1] == -4:
+                cube_locations_aphabets[cube] = "t1"
+            elif location[1] == -3.8:
+                cube_locations_aphabets[cube] = "t2"
+            else:
+                cube_locations_aphabets[cube] = "t3"
+            robot.getFromDef(cube).getField('translation').setSFVec3f([location[0], location[1], 0.025]) # prevent abrupt fall on floor
+        else:
+            robot.getFromDef(cube).getField('translation').setSFVec3f([location[0], location[1], location[2]])
+
+    return cube_locations_aphabets
+
+
 class SpotDriver:
     def init(self, webots_node, properties):
+        rclpy.init(args=None)
+
+        self.__node = Node('spot_driver')
+        self.__moveit_node = Node('spot_moveit')
+
+        self.tfb_ = TransformBroadcaster(self.__node)        
+
+        self.__node.get_logger().info('Init SpotDriver')
+
         self.__robot = webots_node.robot
+        randomise_lane(self.__robot)
+        randomise_imgs(self.__robot)
+        set_rod(self.__robot)
+        retract_arm(self.__robot)
+        self.cubes_loc = shuffle_cubes(self.__robot)
+
         self.spot_node = self.__robot.getFromDef("Spot")
-        self.__robot.timestep = int(self.__robot.getBasicTimeStep())
+
+        self.spot_translation = self.spot_node.getField('translation')
+        self.spot_translation_initial = self.spot_translation.getSFVec3f()
+        self.spot_rotation = self.spot_node.getField('rotation')
+        self.spot_rotation_initial = self.spot_rotation.getSFRotation()
+
+        self.__robot.timestep = 32
 
         ### Init motors
         self.motor_names = [
@@ -41,14 +155,54 @@ class SpotDriver:
         self.motors = []
         for motor_name in self.motor_names:
             self.motors.append(self.__robot.getDevice(motor_name))
+        
+        ### Init ur3e motors
+        self.ur3e_motors=[]
+        self.ur3e_motor_names = [
+            'Slider11',
+            'spotarm_1_joint',
+            'spotarm_2_joint',
+            'spotarm_3_joint',
+            'spotarm_4_joint',
+            'spotarm_5_joint',
+            'spotarm_6_joint'
+        ]
+        for motor_name in self.ur3e_motor_names:
+            self.ur3e_motors.append(self.__robot.getDevice(motor_name))
+        self.ur3e_sensors = []
+        self.ur3e_pos = []
+        for idx, sensor_name in enumerate(self.ur3e_motor_names):
+            self.ur3e_sensors.append(
+                self.__robot.getDevice(sensor_name + '_sensor')
+            )
+            self.ur3e_sensors[idx].enable(self.__robot.timestep)
+            self.ur3e_pos.append(0.)
+
+        ### Init gripper motors
+        self.gripper_motors=[]
+        self.gripper_sensors = []
+        self.gripper_pos = []
+        self.gripper_motor_names = [
+            'gripper_left_finger_joint',
+            'gripper_right_finger_joint'
+        ]
+        for idx, motor_name in enumerate(self.gripper_motor_names):
+            self.gripper_motors.append(self.__robot.getDevice(motor_name))
+            self.gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
+            self.gripper_sensors[idx].enable(self.__robot.timestep)
+            self.gripper_pos.append(0.)
+
+        self.remaining_gripper_sensors = []
+        self.remaining_gripper_pos = []
+        self.remaining_gripper_motor_names = [
+        ]
+        for idx, motor_name in enumerate(self.remaining_gripper_motor_names):
+            self.remaining_gripper_sensors.append(self.__robot.getDevice(motor_name + '_sensor'))  
+            self.remaining_gripper_sensors[idx].enable(self.__robot.timestep)
+            self.remaining_gripper_pos.append(0.)
 
         ## Positional Sensors
-        self.motor_sensor_names = [
-            "front left shoulder abduction sensor",  "front left shoulder rotation sensor",  "front left elbow sensor",
-            "front right shoulder abduction sensor", "front right shoulder rotation sensor", "front right elbow sensor",
-            "rear left shoulder abduction sensor",   "rear left shoulder rotation sensor",   "rear left elbow sensor",
-            "rear right shoulder abduction sensor",  "rear right shoulder rotation sensor",  "rear right elbow sensor"
-        ]
+        self.motor_sensor_names = [name.replace('motor', 'sensor') for name in self.motor_names]
         self.motor_sensors = []
         self.motors_pos = []
         for idx, sensor_name in enumerate(self.motor_sensor_names):
@@ -56,45 +210,37 @@ class SpotDriver:
             self.motor_sensors[idx].enable(self.__robot.timestep)
             self.motors_pos.append(0.)
 
-        # manually calculated offsets of webots' spot wrt vertical axis
-        self.motors_initial_pos = [
-            0.001, -0.5185, 1.21,
-            0.001, -0.5185, 1.21,
-            0.001, -0.5185, 1.21,
-            0.001, -0.5185, 1.21,
-            ]
-
-        ## GPS
-        self.gps_sensor = self.__robot.getDevice("gps")
-        self.gps_sensor.enable(self.__robot.timestep)
-
-        ## IMU
-        self.inertial_unit = self.__robot.getDevice("inertial unit")
-        self.inertial_unit.enable(self.__robot.timestep)
-
-        ## Gyro
-        self.gyro = self.__robot.getDevice("gyro")
-        self.gyro.enable(self.__robot.timestep)
-
-        rclpy.init(args=None)
-        self.ros_clock = Clock()
-
-        self.__node = Node('spot_driver')
-        self.__node.get_logger().info('Init SpotDriver')
-
-        self.tfb_ = TransformBroadcaster(self.__node)
-
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
-        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
         self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
 
-        ## Services
+        ## Services        
         self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/sit_down', self.__sit_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/lie_down', self.__lie_motion_cb)
         self.__node.create_service(SpotMotion, '/Spot/shake_hand', self.__shakehand_motion_cb)
+        self.__node.create_service(SpotMotion, '/Spot/close_gripper', self.__close_gripper_cb)
+        self.__node.create_service(SpotMotion, '/Spot/open_gripper', self.__open_gripper_cb)
+        self.__node.create_service(SpotHeight, '/Spot/set_height', self.__spot_height_cb)
+
+        self.__node.create_service(SpotMotion, '/Spot/blocksworld_pose', self.blocksworld_pose)
+        self.__node.create_service(Empty, '/hazmat_signs', self.hazmat_signs)
+        self.__node.create_service(Empty, '/red_rod', self.red_rod)
+        self.__node.create_service(BlockPose, '/get_block_pose', self.gpp_block_pose)
+
+        ## ActionServer
+        self._action_server = ActionServer(
+            self.__moveit_node,
+            # self.__node,
+            FollowJointTrajectory,
+            'ur_joint_trajectory_controller/follow_joint_trajectory',
+            self.__moveit_cb)
+
+        # # Set up mulithreading
+        self.executor = MultiThreadedExecutor(num_threads=2)
+        self.executor.add_node(self.__node)
+        self.executor.add_node(self.__moveit_node)
 
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
@@ -114,7 +260,8 @@ class SpotDriver:
         self.spot = SpotModel()
         self.T_bf0 = self.spot.WorldToFoot
         self.T_bf = copy.deepcopy(self.T_bf0)
-        self.bzg = BezierGait(dt=self.__robot.timestep/1000)
+        self.bzg = BezierGait(dt=0.032)
+        self.motors_initial_pos = []
 
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
@@ -164,6 +311,13 @@ class SpotDriver:
         self.paw_time = 0.
         self.previous_cmd = False
 
+        # UR3e and Gripper
+        self.u3re_n_steps_to_achieve_target = 0
+        self.ur3e_targets = []
+        self.ur3e_target = []
+        self.allow_new_target = False
+        self.gripper_close = False
+
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
         spot_rot_val = spot_rot.getSFRotation()
@@ -196,12 +350,12 @@ class SpotDriver:
 
             self.xd = 0.
             self.yd = 0.
-            self.zd = 0.
+            # self.zd = 0.
             self.rolld = 0.
             self.pitchd = 0.
             self.yawd = 0.
             self.StepLength = StepLength * msg.linear.x
-
+            
             # Rotation along vertical axis
             self.YawRate = msg.angular.z
             if self.YawRate != 0 and self.StepLength == 0:
@@ -234,7 +388,7 @@ class SpotDriver:
     def __gait_cb(self, msg):
         # Override motion command
         self.fixed_motion = False
-
+        
         self.xd = msg.x
         self.yd = msg.y
         self.zd = msg.z
@@ -255,6 +409,7 @@ class SpotDriver:
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motors_target_pos[idx] - self.motors_initial_pos[idx])
 
+
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
         orn = np.array([self.rolld, self.pitchd, self.yawd])
@@ -267,19 +422,15 @@ class SpotDriver:
 
         # Update Swing Period
         self.bzg.Tswing = self.SwingPeriod
-        contacts = [
-            self.front_left_lower_leg_contact,
-            self.front_right_lower_leg_contact,
-            self.rear_left_lower_leg_contact,
-            self.rear_right_lower_leg_contact
-            ]
+        contacts = [self.front_left_lower_leg_contact, self.front_right_lower_leg_contact,
+                    self.rear_left_lower_leg_contact,
+                    self.rear_right_lower_leg_contact]
 
         # Get Desired Foot Poses
         T_bf = self.bzg.GenerateTrajectory(self.StepLength, self.LateralFraction, YawRate_desired,
                                            self.StepVelocity, self.T_bf0, self.T_bf,
                                            self.ClearanceHeight, self.PenetrationDepth,
                                            contacts)
-
         joint_angles = -self.spot.IK(orn, pos, T_bf)
 
         target = [
@@ -289,61 +440,71 @@ class SpotDriver:
             joint_angles[3][0], joint_angles[3][1], joint_angles[3][2],
             ]
 
+        if not self.motors_initial_pos:
+            self.motors_initial_pos = target
+
         self.__talker(target)
 
     def handle_transforms_and_odometry(self):
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
-        gps = self.gps_sensor.getValues()
-        linear_twist = self.gps_sensor.getSpeedVector()
-        imu = self.inertial_unit.getRollPitchYaw()
-        gyro = self.gyro.getValues()
-
         time_stamp = self.__node.get_clock().now().to_msg()
 
-        ## Odom To Base_Link
-        tfs = TransformStamped()
-        tfs.header.stamp = time_stamp
-        tfs.header.frame_id= "odom"
-        tfs._child_frame_id = "base_link"
-        tfs.transform.translation.x = gps[0]
-        tfs.transform.translation.y = gps[1]
-        tfs.transform.translation.z = gps[2]
-        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
-        tfs.transform.rotation.x = r.as_quat()[0]
-        tfs.transform.rotation.y = r.as_quat()[1]
-        tfs.transform.rotation.z = r.as_quat()[2]
-        tfs.transform.rotation.w = r.as_quat()[3]
-        self.tfb_.sendTransform(tfs)
+        for idx, ur3e_sensor in enumerate(self.ur3e_sensors):
+            self.ur3e_pos[idx] = ur3e_sensor.getValue()
 
-        odom = Odometry()
-        odom.header.frame_id = 'odom'
-        odom.header.stamp = time_stamp
-        odom.child_frame_id = 'base_link'
-        odom.pose.pose.position.x = gps[0]
-        odom.pose.pose.position.y = gps[1]
-        odom.pose.pose.position.z = gps[2]
-        r = R.from_euler('xyz',[imu[0],imu[1],imu[2]])
-        odom.pose.pose.orientation.x = r.as_quat()[0]
-        odom.pose.pose.orientation.y = r.as_quat()[1]
-        odom.pose.pose.orientation.z = r.as_quat()[2]
-        odom.pose.pose.orientation.w = r.as_quat()[3]
-        odom.twist.twist.linear.x = linear_twist[0]
-        odom.twist.twist.linear.y = linear_twist[1]
-        odom.twist.twist.linear.z = linear_twist[2]
-        odom.twist.twist.angular.x = gyro[0]
-        odom.twist.twist.angular.y = gyro[1]
-        odom.twist.twist.angular.z = gyro[2]
-        self.odom_pub.publish(odom)
+        for idx, gripper_sensor in enumerate(self.gripper_sensors):
+            self.gripper_pos[idx] = gripper_sensor.getValue()
+
+        for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
+            self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
+
+        ## Odom to following:
+        tfs = []
+        for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+            tf = TransformStamped()
+            tf.header.stamp = time_stamp
+            tf.header.frame_id= "odom"
+            tf._child_frame_id = x if x != "Spot" else "base_link"
+            
+            part = self.__robot.getFromDef(x)
+            di = part.getField('translation').getSFVec3f()
+            tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
+            tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+            tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
+            
+            r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+            tf.transform.rotation.x = -r[0]
+            tf.transform.rotation.y = -r[1]
+            tf.transform.rotation.z = r[2]
+            tf.transform.rotation.w = r[3]
+            tfs.append(tf)
+        self.tfb_.sendTransform(tfs)
+        
+        unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
 
         joint_state = JointState()
         joint_state.header.stamp = time_stamp
         joint_state.name = []
+        joint_state.name.extend(self.ur3e_motor_names)
+        joint_state.name.extend(self.gripper_motor_names)
+        joint_state.name.extend(self.remaining_gripper_motor_names)
         joint_state.name.extend(self.motor_names)
+        joint_state.name.extend(unactuated_joints)
         joint_state.position = []
+        joint_state.position.extend(self.ur3e_pos)
+        joint_state.position.extend(self.gripper_pos)
+        joint_state.position.extend(self.remaining_gripper_pos)
         joint_state.position.extend(self.motors_pos)
-        qty = len(self.motor_names)
+        joint_state.position.extend([0. for _ in unactuated_joints])
+        qty = (
+              len(self.ur3e_motor_names)
+            + len(self.gripper_motor_names)
+            + len(self.remaining_gripper_motor_names)
+            + len(self.motor_names)
+            + len(unactuated_joints)
+            )
         joint_state.velocity = [0. for _ in range(qty)]
         joint_state.effort = [0. for _ in range(qty)]
         self.joint_state_pub.publish(joint_state)
@@ -358,6 +519,31 @@ class SpotDriver:
         self.step_difference = [(target[i] - self.motors_pos[i]) / self.n_steps_to_achieve_target
                                 for i in range(NUMBER_OF_JOINTS)]
         self.m_target = []
+
+    def blocksworld_pose(self, request, response):
+        self.spot_node.getField('translation').setSFVec3f([-7.2,-3.73,0.61])
+        self.spot_node.getField('rotation').setSFRotation([0,0,-1,-3.14159])
+
+        self.fixed_motion = True
+
+        self.paw = False
+        self.paw2 = False
+        self.movement_decomposition(motions['lie'], 1)
+        response.answer = 'lying down'
+
+        return response
+
+    def hazmat_signs(self, request, response):
+        randomise_imgs(self.__robot, True)
+        return response
+    
+    def red_rod(self, request, response):
+        set_rod(self.__robot, True)
+        return response
+    
+    def gpp_block_pose(self, request, response):
+        response.location = self.cubes_loc[request.block.upper()].lower()
+        return response
 
     def __stand_motion_cb(self, request, response):
         self.fixed_motion = True
@@ -411,6 +597,7 @@ class SpotDriver:
         return response
 
     def defined_motions(self):
+        self.handle_transforms_and_odometry() # Let the sensor values get updated
         if self.n_steps_to_achieve_target > 0:
             if not self.m_target:
                 self.m_target = [self.step_difference[i] + self.motors_pos[i] for i in range(NUMBER_OF_JOINTS)]
@@ -420,7 +607,7 @@ class SpotDriver:
             # Increment motor positions by step_difference
             for idx, motor in enumerate(self.motors):
                 motor.setPosition(self.m_target[idx])
-
+            
             self.n_steps_to_achieve_target -= 1
         else:
             if self.paw:
@@ -429,7 +616,7 @@ class SpotDriver:
                 self.paw2 = True # Do the shakehands motion
             else:
                 self.previous_cmd = False
-
+                
             self.m_target = []
 
         if self.paw2:
@@ -443,6 +630,83 @@ class SpotDriver:
                                               0.20, -0.40, -0.19,
                                              -0.40, -0.90, 1.18,
                                               0.40, -0.90, 1.18], 1)
+
+    def __close_gripper_cb(self, request, response):
+        if self.gripper_close:
+            response.answer = 'gripper already close'
+            return response
+        response.answer = 'closing gripper'
+        self.gripper_close = True
+        return response
+
+    def __open_gripper_cb(self, request, response):
+        if not self.gripper_close:
+            response.answer = 'gripper already open'
+            return response
+        response.answer = 'opening gripper'
+        self.gripper_close = False
+        return response
+
+    def __spot_height_cb(self, request, response):
+        if not -0.3 <= request.height <= 0:
+            response.answer = 'set height within -0.3 and 0'
+            return response
+        self.zd = -request.height
+        return response
+
+    def __ur3e_defined_motions(self):
+        if self.u3re_n_steps_to_achieve_target > 0:
+            if not self.ur3e_target:
+                self.ur3e_target = [self.ur3e_step_difference[i] + self.ur3e_pos[i] for i in range(len(self.ur3e_motor_names))]
+            else: # if compared to current motors_positions, the final motion is smaller
+                self.ur3e_target = [self.ur3e_step_difference[i] + self.ur3e_target[i] for i in range(len(self.ur3e_motor_names))]
+
+            # Increment motor positions by step_difference
+            for idx, motor in enumerate(self.ur3e_motors):
+                motor.setPosition(self.ur3e_target[idx])
+            
+            self.u3re_n_steps_to_achieve_target -= 1
+        elif len(self.ur3e_targets) > 0:
+            # Forcefully go to target, moveit2 expect a deviation of max 0.01
+            for idx, motor in enumerate(self.ur3e_motors):
+                motor.setPosition(self.ur3e_targets[0][idx])
+            next_target = True
+            for position, target in zip(self.ur3e_pos, self.ur3e_targets[0]):
+                if abs(position - target) > 0.04:
+                    next_target = False
+                    break
+            if next_target:
+                self.ur3e_targets.pop(0)
+        else:
+            self.allow_new_target = True
+
+    def __moveit_movement_decomposition(self, duration):
+        """
+        Decompose big motion into smaller motions
+        """
+        if len(self.ur3e_targets) > 0 and self.allow_new_target:
+            self.allow_new_target = False
+            target = self.ur3e_targets[0]
+            self.u3re_n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
+            self.ur3e_step_difference = [(target[i] - self.ur3e_pos[i]) / self.u3re_n_steps_to_achieve_target
+                                    for i in range(7)]
+
+    def __moveit_cb(self, goal_handle):
+        self.__moveit_node.get_logger().info('Executing goal...')
+        
+        self.ur3e_targets = []
+        for p in goal_handle.request.trajectory.points:
+            seq = list(p.positions)
+            self.ur3e_targets.append(seq)
+        
+        while len(self.ur3e_targets) > 0:
+            if self.allow_new_target and len(self.ur3e_targets) > 0:
+                self.__moveit_movement_decomposition(0.6)
+            self.__ur3e_defined_motions()
+
+        goal_handle.succeed()
+        result = FollowJointTrajectory.Result()
+        return result
 
     def callback_front_left_lower_leg_contact(self, data):
         if data == 0:
@@ -481,7 +745,7 @@ class SpotDriver:
             self.chattering_rear_right_lower_leg_contact = 0
 
     def step(self):
-        rclpy.spin_once(self.__node, timeout_sec=0)
+        self.executor.spin_once(timeout_sec=0)
 
         self.callback_front_left_lower_leg_contact(bool(self.touch_fl.getValue()))
         self.callback_front_right_lower_leg_contact(bool(self.touch_fr.getValue()))
@@ -494,6 +758,13 @@ class SpotDriver:
             self.spot_inverse_control()
 
         self.handle_transforms_and_odometry()
+
+        if self.gripper_close:
+            for idx, motor in enumerate(self.gripper_motors):
+                motor.setPosition([0.02, 0.02][idx])
+        else:
+            for idx, motor in enumerate(self.gripper_motors):
+                motor.setPosition([0.045, 0.045][idx])
 
         #Update Spot state
         self.__model_cb()

@@ -1,0 +1,471 @@
+#VRML_SIM R2022b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the SpotArm
+# Extracted from: https://github.com/MarceloContreras/FR_proyecto/blob/main/Spot_arm/Spot_Arm_Export_description/urdf/Spot.urdf by @skpawar1305
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/MattePaint.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/BrushedAluminium.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/robots/pal_robotics/tiago_extensions/protos/TiagoGripper.proto"
+
+PROTO SpotArm [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "SpotArm"        # Is `Solid.name`.
+  field  MFNode      gripperCam      []               # To add a camera at the end of the gripper.
+]
+{
+  Solid {
+    translation IS translation
+    rotation IS rotation
+    children [
+      Transform {
+        scale 0.001000 0.001000 0.001000
+        children [
+          Shape {
+            appearance DEF black MattePaint {
+              baseColor 0 0 0
+            }
+            geometry DEF spotarm_base_link Mesh {
+              url "SpotArm/meshes/spotarm_base_link.obj"
+            }
+          }
+        ]
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 1.000000
+          anchor 0.000000 0.000000 0.040000
+        }
+        device [
+          RotationalMotor {
+            name "spotarm_1_joint"
+            maxVelocity 0.5
+            minPosition -2.61799
+            maxPosition 3.14159
+            maxTorque 500.0
+          }
+          PositionSensor {
+            name "spotarm_1_joint_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.000000 0.000000 0.040000
+          children [
+            Transform {
+              translation -0.000000 -0.000000 -0.040000
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance USE black
+                  geometry DEF spotarm_link1 Mesh {
+                    url "SpotArm/meshes/spotarm_link1.obj"
+                  }
+                }
+              ]
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.000000
+                anchor 0.000000 0.030000 0.100000
+              }
+              device [
+                RotationalMotor {
+                  name "spotarm_2_joint"
+                  maxVelocity 0.5
+                  minPosition -0.523599
+                  maxPosition 3.14159
+                  maxTorque 500.0
+                }
+                PositionSensor {
+                  name "spotarm_2_joint_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.030000 0.100000
+                children [
+                  Transform {
+                    translation -0.000000 -0.030000 -0.140000
+                    scale 0.001000 0.001000 0.001000
+                    children [
+                      Shape {
+                        appearance DEF YELLOW MattePaint {
+                          baseColor 0.847059 0.666667 0
+                        }
+                        geometry DEF spotarm_link2 Mesh {
+                          url "SpotArm/meshes/spotarm_link2.obj"
+                        }
+                      }
+                    ]
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 1.000000 0.000000
+                      anchor 0.338500 -0.020000 0.000137
+                    }
+                    device [
+                      RotationalMotor {
+                        name "spotarm_3_joint"
+                        maxVelocity 0.5
+                        maxPosition 3.0
+                        maxTorque 500.0
+                      }
+                      PositionSensor {
+                        name "spotarm_3_joint_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.338500 -0.020000 0.000137
+                      children [
+                        Transform {
+                          translation -0.338500 -0.010000 -0.140137
+                          scale 0.001000 0.001000 0.001000
+                          children [
+                            Shape {
+                              appearance DEF silver BrushedAluminium {
+                              }
+                              geometry DEF spotarm_link3 Mesh {
+                                url "SpotArm/meshes/spotarm_link3.obj"
+                              }
+                            }
+                          ]
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            anchor 0.107000 -0.010000 0.097340
+                          }
+                          device [
+                            RotationalMotor {
+                              name "spotarm_4_joint"
+                              maxVelocity 0.5
+                              minPosition -4.3633
+                              maxPosition 1.22173
+                              maxTorque 500.0
+                            }
+                            PositionSensor {
+                              name "spotarm_4_joint_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.107000 -0.010000 0.097340
+                            children [
+                              Transform {
+                                translation -0.445500 0.000000 -0.237477
+                                scale 0.001000 0.001000 0.001000
+                                children [
+                                  Shape {
+                                    appearance USE silver
+                                    geometry DEF spotarm_link4 Mesh {
+                                      url "SpotArm/meshes/spotarm_link4.obj"
+                                    }
+                                  }
+                                ]
+                              }
+                              SliderJoint {
+                                jointParameters JointParameters {
+                                  axis 1 0 0
+                                }
+                                device [
+                                  LinearMotor {
+                                    name "Slider11"
+                                    maxVelocity 100.0
+                                    maxPosition 0.075
+                                    maxForce 100.0
+                                  }
+                                  PositionSensor {
+                                    name "Slider11_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.035000 0.000000 0.000000
+                                  children [
+                                    Transform {
+                                      translation -0.480500 0.000000 -0.237477
+                                      scale 0.001000 0.001000 0.001000
+                                      children [
+                                        Shape {
+                                          appearance USE YELLOW
+                                          geometry DEF spotarm_link5 Mesh {
+                                            url "SpotArm/meshes/spotarm_link5.obj"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                        axis -0.000000 1.000000 0.000000
+                                        anchor 0.241300 0.010000 0.000000
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "spotarm_5_joint"
+                                          maxVelocity 0.5
+                                          minPosition -1.047198
+                                          maxPosition 1.047198
+                                          maxTorque 500.0
+                                        }
+                                        PositionSensor {
+                                          name "spotarm_5_joint_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        translation 0.241300 0.010000 0.000000
+                                        children [
+                                          Transform {
+                                            translation -0.721800 -0.010000 -0.237477
+                                            scale 0.001000 0.001000 0.001000
+                                            children [
+                                              Shape {
+                                                appearance USE silver
+                                                geometry DEF spotarm_link6 Mesh {
+                                                  url "SpotArm/meshes/spotarm_link6.obj"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                          Transform {
+                                            children IS gripperCam
+                                          }
+                                          HingeJoint {
+                                            jointParameters HingeJointParameters {
+                                              axis -1.000000 -0.000000 -0.000000
+                                              anchor 0.100000 -0.010500 0.000000
+                                            }
+                                            device [
+                                              RotationalMotor {
+                                                name "spotarm_6_joint"
+                                                maxVelocity 0.5
+                                                minPosition -4.45059
+                                                maxPosition 1.30899
+                                                maxTorque 500.0
+                                              }
+                                              PositionSensor {
+                                                name "spotarm_6_joint_sensor"
+                                              }
+                                            ]
+                                            endPoint TiagoGripper {
+                                              translation 0.107 -0.01 0
+                                              rotation 0 1 0 -1.5708
+                                            }
+                                          }
+                                        ]
+                                        name "spotarm_link6"
+                                        boundingObject Transform {
+                                          translation 0.0671 -0.0105 0
+                                          rotation 0 1 0 1.5708
+                                          children [
+                                            Cylinder {
+                                              height 0.065
+                                              radius 0.0477
+                                            }
+                                          ]
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.1001176
+                                          centerOfMass [ 0.053894 -0.010500 0.000000 ]
+                                          inertiaMatrix [
+                                            1.219000e-03 1.201000e-03 1.214000e-03
+                                            0.000000e+00 -0.000000e+00 -0.000000e+00
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "spotarm_link5"
+                                  boundingObject Group {
+                                    children [
+                                      Transform {
+                                        translation 0.232 0 0
+                                        rotation 0 1 0 1.5708
+                                        children [
+                                          Box {
+                                            size 0.04 0.044 0.042
+                                          }
+                                        ]
+                                      }
+                                      Transform {
+                                        translation 0.106 0 0
+                                        rotation 0 1 0 1.5708
+                                        children [
+                                          Cylinder {
+                                            height 0.21
+                                            radius 0.0477
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.2025825
+                                    centerOfMass [ 0.114857 -0.000000 0.000000 ]
+                                    inertiaMatrix [
+                                      3.336000e-03 1.079800e-02 1.079200e-02
+                                      -0.000000e+00 -0.000000e+00 0.000000e+00
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "spotarm_link4"
+                            physics Physics {
+                              density -1
+                              mass 0.1993774
+                              centerOfMass [ 0.091165 -0.000000 0.000000 ]
+                              inertiaMatrix [
+                                1.271000e-03 6.352000e-03 6.352000e-03
+                                -0.000000e+00 -0.000000e+00 0.000000e+00
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "spotarm_link3"
+                      boundingObject Group {
+                        children [
+                          Transform {
+                            translation 0.044 -0.01 0.0514
+                            rotation 0 1 0 2.29
+                            children [
+                              Box {
+                                size 0.16 0.041 0.04
+                              }
+                            ]
+                          }
+                          Transform {
+                            translation 0.1065 -0.01 0.0973
+                            rotation 0 1 0 1.5708
+                            children [
+                              Cylinder {
+                                height 0.059
+                                radius 0.0477
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.1343185
+                        centerOfMass [ 0.078088 -0.010000 0.078574 ]
+                        inertiaMatrix [
+                          2.456000e-03 3.583000e-03 2.394000e-03
+                          -0.000000e+00 -1.302000e-03 -0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "spotarm_link2"
+                boundingObject Group {
+                  children [
+                    Transform {
+                      translation 0.017 -0.03 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        Box {
+                          size 0.06 0.059 0.093
+                        }
+                      ]
+                    }
+                    Transform {
+                      translation 0.185 -0.03 0
+                      rotation 0 1 0 1.5708
+                      children [
+                        Cylinder {
+                          height 0.24
+                          radius 0.0456
+                        }
+                      ]
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.4994415
+                  centerOfMass [ 0.165584 -0.030000 0.000003 ]
+                  inertiaMatrix [
+                    4.693000e-03 4.131700e-02 4.128800e-02
+                    -0.000000e+00 -2.000000e-06 -0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "spotarm_link1"
+          boundingObject Group {
+            children [
+              Transform {
+                translation 0 -0.035 0.076
+                rotation 0 1 0 1.5708
+                children [
+                  Box {
+                    size 0.14 0.01 0.08
+                  }
+                ]
+              }
+              Transform {
+                translation 0 0.035 0.076
+                rotation 0 1 0 1.5708
+                children [
+                  Box {
+                    size 0.14 0.01 0.08
+                  }
+                ]
+              }
+              Transform {
+                translation 0 -0.0555 0.1
+                rotation 1 0 0 1.5708
+                children [
+                  Cylinder {
+                    height 0.031
+                    radius 0.032
+                  }
+                ]
+              }
+              Transform {
+                translation 0 0.0555 0.1
+                rotation 1 0 0 1.5708
+                children [
+                  Cylinder {
+                    height 0.031
+                    radius 0.032
+                  }
+                ]
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.1323326
+            centerOfMass [ -0.000102 -0.002440 0.064082 ]
+            inertiaMatrix [
+              5.142000e-03 3.539000e-03 3.127000e-03
+              -0.000000e+00 5.000000e-06 1.160000e-04
+            ]
+          }
+        }
+      }
+    ]
+    name IS name
+    boundingObject Transform {
+      translation 0 0 0.021
+      children [
+        Cylinder {
+          height 0.035
+          radius 0.075
+        }
+      ]
+    }
+    physics Physics {
+      density -1
+      mass 0.1672030
+      centerOfMass [ 0.000000 0.000000 0.018976 ]
+      inertiaMatrix [
+        2.269000e-03 2.269000e-03 4.095000e-03
+        0.000000e+00 -0.000000e+00 -0.000000e+00
+      ]
+    }
+  }
+}

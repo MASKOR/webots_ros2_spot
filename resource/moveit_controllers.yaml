@@ -1,0 +1,15 @@
+controller_names:
+  - ur_joint_trajectory_controller
+  
+ur_joint_trajectory_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - spotarm_1_joint
+    - spotarm_2_joint
+    - spotarm_3_joint
+    - spotarm_4_joint
+    - Slider11
+    - spotarm_5_joint
+    - spotarm_6_joint

@@ -1,0 +1,82 @@
+
+symbol domain block = {a, b, c}
+symbol domain location = block | {t1, t2, t3}
+
+location fluent loc(block x) {
+initially:
+	(a) = t1;
+	(b) = t2;
+	(c) = t3;
+}
+
+location function str_to_loc(string s) =
+	if (s == "a")
+		a
+	else if (s == "b")
+		b
+	else if (s == "c")
+		c
+	else if (s == "t1")
+		t1
+	else if (s == "t2")
+		t2
+	else
+		t3
+
+string fluent loc_response_str() {
+initially:
+	() = "";
+}
+
+string exog_function sense_result(string ros_action_name);
+
+action update_block_pose(block x) {
+senses:
+	loc_response_str() = sense_result("/get_block_pose");
+mapping:
+	"/get_block_pose" {
+		block = x
+	}
+effect:
+	loc(x) = str_to_loc(loc_response_str());
+}
+
+action stack(block x, location y) {
+precondition:
+	  x != y // Can't stack x on x
+	& loc(x) != y // Can't stack the same thing twice
+	& (!exists(block z) loc(z) == x) // Nothing is on x
+	& (!exists(block z) loc(z) == y) // or nothing is on y
+mapping:
+	"/stack" {
+		block = x,
+		location = y
+	}
+effect:
+	loc(x) = y;
+}
+
+
+bool function goal() =
+	loc(b) == a & loc(c) == b
+
+
+number function reward() =
+	if (goal())
+		100
+	else
+		-1
+
+bool function postcond() = goal()
+
+procedure main() {
+	update_block_pose(a);
+	update_block_pose(b);
+	update_block_pose(c);
+
+	solve(8, reward())
+		while (!goal())
+			pick (block x in {a, b, c})
+				pick(location y in {t1, t2, t3, a, b, c})
+					stack(x, y);
+}

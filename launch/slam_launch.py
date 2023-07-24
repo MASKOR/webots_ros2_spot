@@ -17,7 +17,6 @@ def generate_launch_description():
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
         output='screen',
-        remappings=[('/scan', '/Spot/scan')],
     )
     slam_rviz_config = os.path.join(get_package_share_directory('webots_spot'), 'resource', 'slam.rviz')
     slam_rviz = Node(
