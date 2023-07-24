@@ -1,24 +1,24 @@
-#VRML_SIM R2023a utf8
+#VRML_SIM R2023b utf8
 
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/floors/protos/RectangleArena.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/ThreadMetalPlate.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/appearances/protos/Roughcast.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/humans/pedestrian/protos/Pedestrian.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/factory/pipes/protos/PipeSection.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/solids/protos/SolidBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/ThreadMetalPlate.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/humans/pedestrian/protos/Pedestrian.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/factory/pipes/protos/PipeSection.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
 EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/SpotArm.proto"
 EXTERNPROTO "../protos/ImageBox.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/microsoft/protos/Kinect.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/devices/velodyne/protos/VelodynePuck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
 
 WorldInfo {
   title "Spot_Maze"
 }
 Viewpoint {
-  orientation 0.06585402628270601 0.9882492243525383 -0.13793736908091042 0.9000242875594902
-  position -25.385366789832965 7.2474779125814415 31.944751632765957
+  orientation -0.3514025745846757 -0.08398531544295117 0.9324498363800645 3.580145909966252
+  position 20.0206486298158 10.533063907228222 19.231879117926756
 }
 TexturedBackground {
   texture "factory"
@@ -75,7 +75,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -90,7 +90,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -105,7 +105,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -120,7 +120,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -135,7 +135,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -150,7 +150,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -166,7 +166,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -182,7 +182,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -198,7 +198,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -214,7 +214,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -230,7 +230,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -246,7 +246,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -262,7 +262,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -278,7 +278,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -346,7 +346,7 @@ DEF T3 Solid {
   name "T3"
 }
 DEF Spot Spot {
-  translation -6.97 8.12 0.82
+  translation 8.39 0.11 0.6
   rotation 0 0 1 -3.14159
   controller "<extern>"
   supervisor TRUE
@@ -376,10 +376,6 @@ DEF Spot Spot {
       name "Velodyne_Puck"
     }
   ]
-}
-Robot {
-  name "Ros2Supervisor"
-  controller "<extern>"
 }
 DEF Lane1 Solid {
   translation 6.70814 -1.56573 0.001
