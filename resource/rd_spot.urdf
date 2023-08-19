@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="/home/skpawar1305/Desktop/simulated_spot/src/webots_ros2_spot_maskor/resource/rd_spot.urdf" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="Spot" xmlns:xacro="http://ros.org/wiki/xacro">
   <link name="base_link">
     <visual>
       <origin xyz="0.462094 0 -0.000232" rpy="1.127615 -0.00001 -1.570793"/>

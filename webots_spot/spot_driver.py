@@ -3,6 +3,7 @@ from rclpy.node import Node
 from rclpy.action import ActionServer
 from rclpy.executors import MultiThreadedExecutor
 
+from builtin_interfaces.msg import Time
 from webots_spot_msgs.msg import GaitInput
 from webots_spot_msgs.srv import SpotMotion, SpotHeight, BlockPose
 from geometry_msgs.msg import Twist, TransformStamped
@@ -128,6 +129,10 @@ class SpotDriver:
         self.tfb_ = TransformBroadcaster(self.__node)        
 
         self.__node.get_logger().info('Init SpotDriver')
+        self.use_sim_time = True
+        if not self.__node.has_parameter('use_sim_time'):
+            self.__node.declare_parameter('use_sim_time', self.use_sim_time)
+        self.use_sim_time = self.__node.get_parameter('use_sim_time')
 
         self.__robot = webots_node.robot
         randomise_lane(self.__robot)
@@ -409,7 +414,6 @@ class SpotDriver:
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
 
-
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
         orn = np.array([self.rolld, self.pitchd, self.yawd])
@@ -446,7 +450,13 @@ class SpotDriver:
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
-        time_stamp = self.__node.get_clock().now().to_msg()
+        if not self.use_sim_time:
+            time_stamp = self.__node.get_clock().now().to_msg()
+        else:
+            current_time = self.__robot.getTime()
+            time_stamp = Time()
+            time_stamp.sec = int(current_time)
+            time_stamp.nanosec = int((current_time % 1) * 1e9)
 
         for idx, ur3e_sensor in enumerate(self.ur3e_sensors):
             self.ur3e_pos[idx] = ur3e_sensor.getValue()

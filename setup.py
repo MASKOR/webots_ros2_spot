@@ -23,6 +23,7 @@ setup(
         (os.path.join('share', package_name, 'protos', 'textures'), glob('protos/textures/*')),
         (os.path.join('share', package_name, 'protos', 'SpotArm', 'meshes'), glob('protos/SpotArm/meshes/*')),
         (os.path.join('share', package_name, 'params'), glob('params/*.yaml')),
+        (os.path.join('share', package_name, 'map'), glob('map/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
