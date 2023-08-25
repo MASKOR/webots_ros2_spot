@@ -40,6 +40,9 @@ The world contains apriltags, a red line to test lane follower and objects for m
     # webots_spot_msgs
     git clone https://github.com/MASKOR/webots_spot_msgs src/webots_spot_msgs
 
+    # webots_spot_teleop (optional)
+    git clone https://github.com/MASKOR/webots_spot_teleop src/webots_spot_teleop
+
     # Build everything
     colcon build --symlink-install
     . install/setup.bash
@@ -71,4 +74,5 @@ To launch mapping with RTABMAP: #https://github.com/introlab/rtabmap_ros
 
 Teleop keyboard:
 
-    ros2 run spot_teleop spot_teleop_keyboard
+    ros2 run teleop_twist_keyboard teleop_twist_keyboard
+    # OR ros2 run spot_teleop spot_teleop_keyboard for body_pose control as well

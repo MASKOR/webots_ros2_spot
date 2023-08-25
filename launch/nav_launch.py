@@ -10,7 +10,7 @@ from launch.actions import IncludeLaunchDescription
 
 def generate_launch_description():
     package_dir = get_package_share_directory('webots_spot')
-    use_sim_time = LaunchConfiguration('use_sim_time', default=False)
+    use_sim_time = LaunchConfiguration('use_sim_time', default=True)
 
     nav2_map = os.path.join(package_dir, 'map', 'map.yaml')
     nav2_params = os.path.join(package_dir, 'params', 'nav2_params.yaml')

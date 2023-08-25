@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import os
-import pathlib
 import launch
+from launch.substitutions import LaunchConfiguration
 from launch import LaunchDescription
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
@@ -15,28 +15,34 @@ package_dir = get_package_share_directory('webots_spot')
 
 
 def generate_launch_description():
+    use_sim_time = LaunchConfiguration('use_sim_time', default=True)
+    
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, 'worlds', 'spot.wbt'])
+        world=PathJoinSubstitution([package_dir, 'worlds', 'spot.wbt']),
+        ros2_supervisor=True
     )
 
     spot_driver = WebotsController(
         robot_name='Spot',
-        parameters=[
-            {'robot_description': os.path.join(package_dir, 'resource', 'spot.urdf'),
-             'use_sim_time': False,
-             'set_robot_state_publisher': False}, # foot positions are wrong with webot's urdf
-        ],
+        parameters=[{
+            'robot_description': os.path.join(package_dir, 'resource', 'spot.urdf'),
+            'use_sim_time': use_sim_time,
+            'set_robot_state_publisher': False, # foot positions are wrong with webot's urdf
+        }],
         respawn=True
     )
+
+    with open(os.path.join(package_dir, 'resource', 'rd_spot.urdf')) as f:
+        robot_desc = f.read()
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[
-            {'robot_description': pathlib.Path(os.path.join(package_dir, 'resource', 'rd_spot.urdf')).read_text(),
-             'use_sim_time': False},
-        ],
+        parameters=[{
+            'robot_description': robot_desc,
+            'use_sim_time': use_sim_time,
+        }],
     )
 
     spot_pointcloud2 = Node(
@@ -73,6 +79,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         webots,
+        webots._supervisor,
         spot_driver,
         robot_state_publisher,
         # spot_pointcloud2,

@@ -35,7 +35,7 @@ PROTO SpotLeg [
             name %<= '"' + legName + ' shoulder abduction motor"' >%
             minPosition -0.6
             maxPosition 0.5
-            maxTorque 50
+            maxTorque 100
           }
         ]
         endPoint DEF SHOULDER Solid {
@@ -53,7 +53,7 @@ PROTO SpotLeg [
                   name %<= '"' + legName + ' shoulder rotation motor"' >%
                   minPosition -1.7
                   maxPosition 1.7
-                  maxTorque 50
+                  maxTorque 100
                 }
               ]
               endPoint DEF UPPERARM Solid {
@@ -101,7 +101,7 @@ PROTO SpotLeg [
                         name %<= '"' + legName + ' elbow motor"' >%
                         minPosition -0.45
                         maxPosition 1.6
-                        maxTorque 50
+                        maxTorque 100
                       }
                     ]
                     endPoint DEF FOREARM Solid {
