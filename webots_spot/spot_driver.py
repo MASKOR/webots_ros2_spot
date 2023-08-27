@@ -655,8 +655,8 @@ class SpotDriver:
         return response
 
     def __spot_height_cb(self, request, response):
-        if not -0.3 <= request.height <= 0:
-            response.answer = 'set height within -0.3 and 0'
+        if not -0.2 <= request.height <= 0.2:
+            response.answer = 'set height within -0.2 and 0.2'
             return response
         self.zd = -request.height
         return response
