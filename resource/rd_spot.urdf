@@ -751,6 +751,13 @@
     <child link="cap screw"/>
     <origin xyz="0.0477 0.008 -0.0108" rpy="3.141593 -1.570793 3.141593"/>
   </joint>
+  <link name="gripper_camera">
+  </link>
+  <joint name="spotarm_link6_gripper camera_joint" type="fixed">
+    <parent link="spotarm_link6"/>
+    <child link="gripper_camera"/>
+    <origin xyz="0.19 0 0" rpy="-1.570796 0 -1.570796"/>
+  </joint>
   <joint name="rear right shoulder abduction motor" type="revolute">
     <parent link="base_link"/>
     <child link="rear right shoulder"/>

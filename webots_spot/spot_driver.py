@@ -85,13 +85,13 @@ def shuffle_cubes(robot):
     combinations = []
     for i in range(3):
         for j in range(3):
-            combinations.append([-8, round(-4 + i*0.2, 3), round(0.025 + j*0.05, 3)])
+            combinations.append([-8, round(-3.9 + i*0.1, 3), round(0.025 + j*0.05, 3)])
 
     locations = random.sample(combinations, 3)
     cube_locations = {}
     for c, location in zip("ABC", locations):
         cube_locations[c] = location
-    
+
     cube_locations_aphabets = {}
     for cube, location in cube_locations.items():
         on_top_of_cube = False
@@ -106,7 +106,7 @@ def shuffle_cubes(robot):
                 on_top_of_cube = True
                 cube_locations_aphabets[cube] = c
         if not on_top_of_cube:
-            if location[1] == -4:
+            if location[1] == -3.9:
                 cube_locations_aphabets[cube] = "t1"
             elif location[1] == -3.8:
                 cube_locations_aphabets[cube] = "t2"
@@ -469,7 +469,8 @@ class SpotDriver:
 
         ## Odom to following:
         tfs = []
-        for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+        # for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+        for x in ["Spot", "A", "B", "C", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
             tf.header.frame_id= "odom"
@@ -528,8 +529,8 @@ class SpotDriver:
         self.m_target = []
 
     def blocksworld_pose(self, request, response):
-        self.spot_node.getField('translation').setSFVec3f([-7.2,-3.73,0.61])
-        self.spot_node.getField('rotation').setSFRotation([0,0,-1,-3.14159])
+        self.spot_node.getField('translation').setSFVec3f([-7.14,-3.78,0.61])
+        self.spot_node.getField('rotation').setSFRotation([0,0,-1,-np.pi])
 
         self.fixed_motion = True
 
@@ -537,6 +538,15 @@ class SpotDriver:
         self.paw2 = False
         self.movement_decomposition(motions['lie'], 1)
         response.answer = 'lying down'
+
+        # Retracted arm initially
+        self.__robot.getDevice("spotarm_1_joint").setPosition(np.deg2rad(0))
+        self.__robot.getDevice("spotarm_2_joint").setPosition(np.deg2rad(101))
+        self.__robot.getDevice("spotarm_3_joint").setPosition(np.deg2rad(120))
+        self.__robot.getDevice("spotarm_4_joint").setPosition(np.deg2rad(0))
+        self.__robot.getDevice("Slider11").setPosition(0.004)
+        self.__robot.getDevice("spotarm_5_joint").setPosition(np.deg2rad(60))
+        self.__robot.getDevice("spotarm_6_joint").setPosition(np.deg2rad(0))
 
         return response
 
@@ -604,7 +614,6 @@ class SpotDriver:
         return response
 
     def defined_motions(self):
-        self.handle_transforms_and_odometry() # Let the sensor values get updated
         if self.n_steps_to_achieve_target > 0:
             if not self.m_target:
                 self.m_target = [self.step_difference[i] + self.motors_pos[i] for i in range(NUMBER_OF_JOINTS)]
@@ -655,10 +664,11 @@ class SpotDriver:
         return response
 
     def __spot_height_cb(self, request, response):
-        if not -0.3 <= request.height <= 0:
-            response.answer = 'set height within -0.3 and 0'
+        if not -0.2 <= request.height <= 0.2:
+            response.answer = 'set height within -0.2 and 0.2'
             return response
         self.zd = -request.height
+        self.fixed_motion = False
         return response
 
     def __ur3e_defined_motions(self):
