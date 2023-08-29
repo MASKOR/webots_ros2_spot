@@ -19,6 +19,7 @@ The world contains apriltags, a red line to test lane follower and objects for m
     sudo apt install ros-$ROS_DISTRO-nav2* -y
     sudo apt install ros-$ROS_DISTRO-pointcloud-to-laserscan -y
     sudo apt install ros-$ROS_DISTRO-moveit* -y
+    sudo apt install ros-$ROS_DISTRO-vision-msgs* -y
     sudo apt install python3-open3d -y # for Ubuntu 22.04
     pip3 install scipy pupil-apriltags
     pip3 install open3d # for Ubuntu 20.04
