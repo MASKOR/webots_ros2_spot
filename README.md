@@ -48,6 +48,9 @@ The world contains apriltags, a red line to test lane follower and objects for m
     colcon build --symlink-install
     . install/setup.bash
 
+    # With '--symlink-install', following python file isn't marked as an executable, do it manually
+    chmod +x ~/ros2_ws/install/webots_ros2_driver/lib/webots_ros2_driver/ros2_supervisor.py
+
 ## Start
 Starting the simulation:
 
