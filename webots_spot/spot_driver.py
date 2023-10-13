@@ -54,6 +54,10 @@ def randomise_imgs(robot, hazmat=False):
         img_path = os.path.join(get_package_share_directory('webots_spot'), 'yolo_images/')
     all_imgs = os.listdir(img_path)
     three_imgs = random.sample(all_imgs, 3)
+    if hazmat:
+        img_path = '../hazmat_signs/'
+    else:
+        img_path = '../yolo_images/'
     for idx, img in enumerate(three_imgs):
         robot.getFromDef("Image" + str(idx+1)).getField('url').setMFString(0, img_path + img)
 
