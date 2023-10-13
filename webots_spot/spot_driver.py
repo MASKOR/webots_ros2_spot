@@ -8,6 +8,7 @@ from webots_spot_msgs.msg import GaitInput
 from webots_spot_msgs.srv import SpotMotion, SpotHeight, BlockPose
 from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
+from nav_msgs.msg import Odometry
 from control_msgs.action import FollowJointTrajectory
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 from std_srvs.srv import Empty
@@ -219,6 +220,7 @@ class SpotDriver:
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
         self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
+        self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
 
         ## Services        
         self.__node.create_service(SpotMotion, '/Spot/stand_up', self.__stand_motion_cb)
@@ -474,13 +476,13 @@ class SpotDriver:
             tf.header.stamp = time_stamp
             tf.header.frame_id= "odom"
             tf._child_frame_id = x if x != "Spot" else "base_link"
-            
+
             part = self.__robot.getFromDef(x)
             di = part.getField('translation').getSFVec3f()
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
             tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            
+
             r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
             tf.transform.rotation.x = -r[0]
             tf.transform.rotation.y = -r[1]
@@ -488,7 +490,52 @@ class SpotDriver:
             tf.transform.rotation.w = r[3]
             tfs.append(tf)
         self.tfb_.sendTransform(tfs)
-        
+
+        ## /Spot/odometry
+        tf_odom_base_link = tfs[0].transform
+        translation = [tf_odom_base_link.translation.x, tf_odom_base_link.translation.y, tf_odom_base_link.translation.z]
+
+        r = R.from_quat([tf_odom_base_link.rotation.x,
+                         tf_odom_base_link.rotation.y,
+                         tf_odom_base_link.rotation.z,
+                         tf_odom_base_link.rotation.w])
+        rotation = [r.as_euler('xyz')[0], r.as_euler('xyz')[1], r.as_euler('xyz')[2]]
+
+        current_time = self.__robot.getTime()
+
+        if not hasattr(self, 'previous_time'):
+            self.previous_time = current_time
+            self.previous_rotation = rotation
+            self.previous_translation = translation
+        else:
+            time_delta = (current_time - self.previous_time)
+            rotation_twist = [(new - old) / time_delta for new, old in zip(rotation, self.previous_rotation)]
+            translation_twist = [(new - old) / time_delta for new, old in zip(translation, self.previous_translation)]
+
+            self.previous_time = current_time
+            self.previous_rotation = rotation
+            self.previous_translation = translation
+
+            odom = Odometry()
+            odom.header.frame_id = 'odom'
+            odom.header.stamp = time_stamp
+            odom.child_frame_id = 'base_link'
+            odom.pose.pose.position.x = translation[0]
+            odom.pose.pose.position.y = translation[1]
+            odom.pose.pose.position.z = translation[2]
+            r = R.from_euler('xyz',[rotation[0],rotation[1],rotation[2]])
+            odom.pose.pose.orientation.x = r.as_quat()[0]
+            odom.pose.pose.orientation.y = r.as_quat()[1]
+            odom.pose.pose.orientation.z = r.as_quat()[2]
+            odom.pose.pose.orientation.w = r.as_quat()[3]
+            odom.twist.twist.linear.x = translation_twist[0]
+            odom.twist.twist.linear.y = translation_twist[1]
+            odom.twist.twist.linear.z = translation_twist[2]
+            odom.twist.twist.angular.x = rotation_twist[0]
+            odom.twist.twist.angular.y = rotation_twist[1]
+            odom.twist.twist.angular.z = rotation_twist[2]
+            self.odom_pub.publish(odom)
+
         unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
 
         joint_state = JointState()
