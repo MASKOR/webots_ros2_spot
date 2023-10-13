@@ -25,6 +25,7 @@ import random
 from ament_index_python.packages import get_package_share_directory
 
 NUMBER_OF_JOINTS = 12
+HEIGHT = 0.52 # From spot kinematics
 
 motions = {
     'stand': [-0.1, 0.0, 0.0, 0.1, 0.0, 0.0, -0.1, 0.0, 0.0, 0.1, 0.0, 0.0],
@@ -469,6 +470,8 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
+        base_link_from_ground = HEIGHT + self.zd
+
         ## Odom to following:
         tfs = []
         for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
@@ -482,6 +485,7 @@ class SpotDriver:
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
             tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
+            tf.transform.translation.z += base_link_from_ground
 
             r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
             tf.transform.rotation.x = -r[0]
@@ -489,6 +493,15 @@ class SpotDriver:
             tf.transform.rotation.z = r[2]
             tf.transform.rotation.w = r[3]
             tfs.append(tf)
+
+        ## base_footprint
+        tf = TransformStamped()
+        tf.header.stamp = time_stamp
+        tf.header.frame_id= "base_link"
+        tf._child_frame_id = "base_footprint"
+        tf.transform.translation.z = -base_link_from_ground
+        tfs.append(tf)
+
         self.tfb_.sendTransform(tfs)
 
         ## /Spot/odometry
