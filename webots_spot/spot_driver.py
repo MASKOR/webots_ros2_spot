@@ -474,7 +474,7 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
-        base_link_from_ground = HEIGHT + self.zd
+        base_link_from_ground = HEIGHT - self.zd
 
         ## Odom to following:
         tfs = []
@@ -489,7 +489,7 @@ class SpotDriver:
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
             tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            tf.transform.translation.z += base_link_from_ground
+            tf.transform.translation.z += HEIGHT + 0.095 # BASE_LINK To Ground at Rest
 
             r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
             tf.transform.rotation.x = -r[0]
