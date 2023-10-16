@@ -8,7 +8,7 @@ from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from webots_ros2_driver.webots_launcher import WebotsLauncher
+from webots_ros2_driver.webots_launcher import WebotsLauncher, Ros2SupervisorLauncher
 from webots_ros2_driver.webots_controller import WebotsController
 
 package_dir = get_package_share_directory('webots_spot')
@@ -18,9 +18,9 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default=True)
     
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, 'worlds', 'spot.wbt']),
-        ros2_supervisor=True
+        world=PathJoinSubstitution([package_dir, 'worlds', 'spot.wbt'])
     )
+    ros2_supervisor = Ros2SupervisorLauncher()
 
     spot_driver = WebotsController(
         robot_name='Spot',
@@ -79,7 +79,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         webots,
-        webots._supervisor,
+        ros2_supervisor,
         spot_driver,
         robot_state_publisher,
         # spot_pointcloud2,

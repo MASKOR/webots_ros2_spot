@@ -2656,7 +2656,7 @@
   <joint name="base_link_rear depth_joint" type="fixed">
     <parent link="base_link"/>
     <child link="rear depth"/>
-    <origin xyz="-0.278136 -1.397633 0.628752" rpy="0.000015 0.474984 -3.141579"/>
+    <origin xyz="-0.448136 -0.018115 0.012558" rpy="0.000015 0.474984 -3.141579"/>
   </joint>
   <link name="rear camera">
   </link>
