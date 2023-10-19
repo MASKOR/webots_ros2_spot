@@ -473,61 +473,7 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
-        tfs = []        
-        ## base_footprint
-        base_link_from_ground = HEIGHT - self.zd
-        tf = TransformStamped()
-        tf.header.stamp = time_stamp
-        tf.header.frame_id= "base_link"
-        tf._child_frame_id = "base_footprint"
-        tf.transform.translation.z = -base_link_from_ground
-        tfs.append(tf)
-
-        self.tfb_.sendTransform(tfs)
-
-        ## /Spot/odometry
-        tf_odom_base_link = tfs[0].transform
-        translation = [tf_odom_base_link.translation.x, tf_odom_base_link.translation.y, tf_odom_base_link.translation.z]
-
-        r = R.from_quat([tf_odom_base_link.rotation.x,
-                         tf_odom_base_link.rotation.y,
-                         tf_odom_base_link.rotation.z,
-                         tf_odom_base_link.rotation.w])
-        rotation = [r.as_euler('xyz')[0], r.as_euler('xyz')[1], r.as_euler('xyz')[2]]
-
-        current_time = self.__robot.getTime()
-        if not hasattr(self, 'previous_time'):
-            self.previous_time = current_time
-            self.previous_rotation = rotation
-            self.previous_translation = translation
-        else:
-            time_delta = (current_time - self.previous_time)
-            rotation_twist = [(new - old) / time_delta for new, old in zip(rotation, self.previous_rotation)]
-            translation_twist = [(new - old) / time_delta for new, old in zip(translation, self.previous_translation)]
-
-            self.previous_time = current_time
-            self.previous_rotation = rotation
-            self.previous_translation = translation
-
-            odom = Odometry()
-            odom.header.frame_id = 'odom'
-            odom.header.stamp = time_stamp
-            odom.child_frame_id = 'base_link'
-            odom.pose.pose.position.x = translation[0]
-            odom.pose.pose.position.y = translation[1]
-            odom.pose.pose.position.z = translation[2]
-            r = R.from_euler('xyz',[rotation[0],rotation[1],rotation[2]])
-            odom.pose.pose.orientation.x = r.as_quat()[0]
-            odom.pose.pose.orientation.y = r.as_quat()[1]
-            odom.pose.pose.orientation.z = r.as_quat()[2]
-            odom.pose.pose.orientation.w = r.as_quat()[3]
-            odom.twist.twist.linear.x = translation_twist[0]
-            odom.twist.twist.linear.y = translation_twist[1]
-            odom.twist.twist.linear.z = translation_twist[2]
-            odom.twist.twist.angular.x = rotation_twist[0]
-            odom.twist.twist.angular.y = rotation_twist[1]
-            odom.twist.twist.angular.z = rotation_twist[2]
-            self.odom_pub.publish(odom)
+       
 
         unactuated_joints = ['front left piston motor', 'front right piston motor', 'rear left piston motor', 'rear right piston motor']
 
@@ -565,12 +511,19 @@ class SpotDriver:
     publish all static TFs
     """
     def publish_static_tfs(self) -> None:       
+        print("publish_static_tfs(self)")
         """
         The reference frame for fixed object in the world / map
         Should be 'world' or 'map'
         TODO: make configurable from launch file
         """
-        world_frame = "map"
+        world_frame = "world"
+        map_frame = "map"
+        odom_frame = "odom"
+        robot_frame = "base_link"
+        publish_map_to_odom_tf = True
+        
+        
         tfs = []
 
         if not self.use_sim_time:
@@ -585,10 +538,11 @@ class SpotDriver:
         if the world frame is "world", we need static TF from world -> map
         """
         if (world_frame=="world"):
+            print("publishing world to map TF....")
             world_to_map_tf = TransformStamped()
             world_to_map_tf.header.stamp = time_stamp
-            world_to_map_tf.header.frame_id= "world"
-            world_to_map_tf._child_frame_id = "map"      
+            world_to_map_tf.header.frame_id= world_frame
+            world_to_map_tf._child_frame_id = map_frame      
             world_to_map_tf.transform.translation.x = 0.0
             world_to_map_tf.transform.translation.y = 0.0
             world_to_map_tf.transform.translation.z = 0.0
@@ -598,9 +552,26 @@ class SpotDriver:
             world_to_map_tf.transform.rotation.z = 0.0
             world_to_map_tf.transform.rotation.w = 1.0
             tfs.append(world_to_map_tf)
+
+        if (publish_map_to_odom_tf):
+            print("publishing map to odom TF....")
+            map_to_odom_tf = TransformStamped()
+            map_to_odom_tf.header.stamp = time_stamp
+            map_to_odom_tf.header.frame_id= map_frame
+            map_to_odom_tf._child_frame_id = odom_frame   
+            map_to_odom_tf.transform.translation.x = 0.0
+            map_to_odom_tf.transform.translation.y = 0.0
+            map_to_odom_tf.transform.translation.z = 0.0
+            map_to_odom_tf.transform.translation.z = 0.0
+            map_to_odom_tf.transform.rotation.x = 0.0
+            map_to_odom_tf.transform.rotation.y = 0.0
+            map_to_odom_tf.transform.rotation.z = 0.0
+            map_to_odom_tf.transform.rotation.w = 1.0
+            tfs.append(map_to_odom_tf)
+        
                
         """
-        publish TFs for fixed object in the world
+        TFs for fixed object in the world
         """
         for x in ["A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
             tf = TransformStamped()
@@ -622,11 +593,21 @@ class SpotDriver:
             tf.transform.rotation.w = r[3]
             tfs.append(tf)
 
+        """
+        base_link -> base_footprint
+        """
+        base_footprint_tf = TransformStamped()
+        base_footprint_tf.header.stamp = time_stamp
+        base_footprint_tf.header.frame_id= "base_link"
+        base_footprint_tf._child_frame_id = "base_footprint"
+        base_footprint_tf.transform.translation.z = -(HEIGHT - self.zd)
+        tfs.append(base_footprint_tf)
+
         self.tfb_.sendTransform(tfs)
 
 
     def publish_odom(self) -> None:
-
+        print("publish_odom(self)")
         """
         Parameters for odom
         TODO: make configurable from launch file
@@ -636,24 +617,96 @@ class SpotDriver:
         odom_frame = "odom"
         robot_frame = "base_link"
 
-        """
-        Publish Odom Message 
-        """
-        if (publish_odom_msg):
 
-            pass
+        if not self.use_sim_time:
+            time_stamp = self.__node.get_clock().now().to_msg()
+        else:
+            current_time = self.__robot.getTime()
+            time_stamp = Time()
+            time_stamp.sec = int(current_time)
+            time_stamp.nanosec = int((current_time % 1) * 1e9)
+
+        #read current translation and rotation from simulation
+        part = self.__robot.getFromDef("Spot")
+        di = part.getField('translation').getSFVec3f()
+        r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+
+        trans_x = -(di[0] - self.spot_translation_initial[0])
+        trans_y = -(di[1] - self.spot_translation_initial[1])
+        trans_z = (di[2] - self.spot_translation_initial[2])
+        trans_z += HEIGHT + 0.095 # BASE_LINK To Ground at Rest
+        translation = [trans_x, trans_y, trans_z]
+        
+        rot_x = -r[0]
+        rot_y = -r[1]
+        rot_z = r[2]
+        rot_w = r[3]
+        r = R.from_quat([rot_x,
+                         rot_y,
+                         rot_z,
+                         rot_w])
+        rotation = [r.as_euler('xyz')[0], r.as_euler('xyz')[1], r.as_euler('xyz')[2]]
 
 
-        """
-        Publish Odom TF
-        TODO: create a kinematic model that calculates odom TF from odom msg
-        """
-        if (publish_odom_tf):
+        current_time = self.__robot.getTime()
+        if not hasattr(self, 'previous_time'):
+            self.previous_time = current_time
+            self.previous_rotation = rotation
+            self.previous_translation = translation
+        else:
+            time_delta = (current_time - self.previous_time)
+            rotation_twist = [(new - old) / time_delta for new, old in zip(rotation, self.previous_rotation)]
+            translation_twist = [(new - old) / time_delta for new, old in zip(translation, self.previous_translation)]
 
-            pass
+            self.previous_time = current_time
+            self.previous_rotation = rotation
+            self.previous_translation = translation
 
+            """
+            Publish Odom Message 
+            """
+            if (publish_odom_msg):
+                print("publishing odometry msg....")
+                odom_msg = Odometry()
+                odom_msg.header.frame_id = odom_frame
+                odom_msg.header.stamp = time_stamp
+                odom_msg.child_frame_id = robot_frame
+                odom_msg.pose.pose.position.x = translation[0]
+                odom_msg.pose.pose.position.y = translation[1]
+                odom_msg.pose.pose.position.z = translation[2]
+                r = R.from_euler('xyz',[rotation[0],rotation[1],rotation[2]])
+                odom_msg.pose.pose.orientation.x = r.as_quat()[0]
+                odom_msg.pose.pose.orientation.y = r.as_quat()[1]
+                odom_msg.pose.pose.orientation.z = r.as_quat()[2]
+                odom_msg.pose.pose.orientation.w = r.as_quat()[3]
+                odom_msg.twist.twist.linear.x = translation_twist[0]
+                odom_msg.twist.twist.linear.y = translation_twist[1]
+                odom_msg.twist.twist.linear.z = translation_twist[2]
+                odom_msg.twist.twist.angular.x = rotation_twist[0]
+                odom_msg.twist.twist.angular.y = rotation_twist[1]
+                odom_msg.twist.twist.angular.z = rotation_twist[2]
+                self.odom_pub.publish(odom_msg)
 
-        pass
+            """
+            Publish Odom TF
+            TODO: create a kinematic model that calculates odom TF from odom msg
+            """
+            if (publish_odom_tf):
+                print("publishing odometry TF....")
+                tfs = []
+                odom_tf = TransformStamped()
+                odom_tf.header.stamp = time_stamp
+                odom_tf.header.frame_id = odom_frame
+                odom_tf._child_frame_id = robot_frame
+                odom_tf.transform.translation.x = translation[0]
+                odom_tf.transform.translation.y = translation[1]
+                odom_tf.transform.translation.z = translation[2]
+                odom_tf.transform.rotation.x = r.as_quat()[0]
+                odom_tf.transform.rotation.y = r.as_quat()[1]
+                odom_tf.transform.rotation.z = r.as_quat()[2]
+                odom_tf.transform.rotation.w = r.as_quat()[3]
+                tfs.append(odom_tf)
+                self.tfb_.sendTransform(tfs)
 
 
     def movement_decomposition(self, target, duration):
@@ -870,6 +923,7 @@ class SpotDriver:
 
         self.handle_transforms_and_odometry()
         self.publish_static_tfs()
+        self.publish_odom()
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
