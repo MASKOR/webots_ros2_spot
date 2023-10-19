@@ -473,31 +473,9 @@ class SpotDriver:
         for idx, gripper_sensor in enumerate(self.remaining_gripper_sensors):
             self.remaining_gripper_pos[idx] = gripper_sensor.getValue()
 
-        base_link_from_ground = HEIGHT - self.zd
-
-        ## Odom to following:
-        tfs = []
-        for x in ["Spot", "A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
-            tf = TransformStamped()
-            tf.header.stamp = time_stamp
-            tf.header.frame_id= "odom"
-            tf._child_frame_id = x if x != "Spot" else "base_link"
-
-            part = self.__robot.getFromDef(x)
-            di = part.getField('translation').getSFVec3f()
-            tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
-            tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
-            tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            tf.transform.translation.z += HEIGHT + 0.095 # BASE_LINK To Ground at Rest
-
-            r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
-            tf.transform.rotation.x = -r[0]
-            tf.transform.rotation.y = -r[1]
-            tf.transform.rotation.z = r[2]
-            tf.transform.rotation.w = r[3]
-            tfs.append(tf)
-
+        tfs = []        
         ## base_footprint
+        base_link_from_ground = HEIGHT - self.zd
         tf = TransformStamped()
         tf.header.stamp = time_stamp
         tf.header.frame_id= "base_link"
@@ -582,16 +560,70 @@ class SpotDriver:
 
         pass
 
-    def publish_static_tfs(self) -> None:
 
+    """
+    publish all static TFs
+    """
+    def publish_static_tfs(self) -> None:       
         """
         The reference frame for fixed object in the world / map
         Should be 'world' or 'map'
         TODO: make configurable from launch file
         """
-        world_frame = "map" 
-        
-        pass
+        world_frame = "map"
+        tfs = []
+
+        if not self.use_sim_time:
+            time_stamp = self.__node.get_clock().now().to_msg()
+        else:
+            current_time = self.__robot.getTime()
+            time_stamp = Time()
+            time_stamp.sec = int(current_time)
+            time_stamp.nanosec = int((current_time % 1) * 1e9)
+
+        """
+        if the world frame is "world", we need static TF from world -> map
+        """
+        if (world_frame=="world"):
+            world_to_map_tf = TransformStamped()
+            world_to_map_tf.header.stamp = time_stamp
+            world_to_map_tf.header.frame_id= "world"
+            world_to_map_tf._child_frame_id = "map"      
+            world_to_map_tf.transform.translation.x = 0.0
+            world_to_map_tf.transform.translation.y = 0.0
+            world_to_map_tf.transform.translation.z = 0.0
+            world_to_map_tf.transform.translation.z = 0.0
+            world_to_map_tf.transform.rotation.x = 0.0
+            world_to_map_tf.transform.rotation.y = 0.0
+            world_to_map_tf.transform.rotation.z = 0.0
+            world_to_map_tf.transform.rotation.w = 1.0
+            tfs.append(world_to_map_tf)
+               
+        """
+        publish TFs for fixed object in the world
+        """
+        for x in ["A", "B", "C", "T1", "T2", "T3", "P", "Image1", "Image2", "Image3", "PlaceBox"]:
+            tf = TransformStamped()
+            tf.header.stamp = time_stamp
+            tf.header.frame_id= world_frame
+            tf._child_frame_id = x
+
+            part = self.__robot.getFromDef(x)
+            di = part.getField('translation').getSFVec3f()
+            tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
+            tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+            tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
+            tf.transform.translation.z += HEIGHT + 0.095 # BASE_LINK To Ground at Rest
+
+            r = diff_quat(quat_from_aa(part.getField('rotation').getSFRotation()), quat_from_aa(self.spot_rotation_initial))
+            tf.transform.rotation.x = -r[0]
+            tf.transform.rotation.y = -r[1]
+            tf.transform.rotation.z = r[2]
+            tf.transform.rotation.w = r[3]
+            tfs.append(tf)
+
+        self.tfb_.sendTransform(tfs)
+
 
     def publish_odom(self) -> None:
 
@@ -837,6 +869,7 @@ class SpotDriver:
             self.spot_inverse_control()
 
         self.handle_transforms_and_odometry()
+        self.publish_static_tfs()
 
         if self.gripper_close:
             for idx, motor in enumerate(self.gripper_motors):
