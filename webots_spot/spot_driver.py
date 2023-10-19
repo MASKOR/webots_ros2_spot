@@ -518,7 +518,6 @@ class SpotDriver:
         rotation = [r.as_euler('xyz')[0], r.as_euler('xyz')[1], r.as_euler('xyz')[2]]
 
         current_time = self.__robot.getTime()
-
         if not hasattr(self, 'previous_time'):
             self.previous_time = current_time
             self.previous_rotation = rotation
@@ -578,6 +577,52 @@ class SpotDriver:
         joint_state.velocity = [0. for _ in range(qty)]
         joint_state.effort = [0. for _ in range(qty)]
         self.joint_state_pub.publish(joint_state)
+
+    def publish_joint_states(self) -> None:
+
+        pass
+
+    def publish_static_tfs(self) -> None:
+
+        """
+        The reference frame for fixed object in the world / map
+        Should be 'world' or 'map'
+        TODO: make configurable from launch file
+        """
+        world_frame = "map" 
+        
+        pass
+
+    def publish_odom(self) -> None:
+
+        """
+        Parameters for odom
+        TODO: make configurable from launch file
+        """
+        publish_odom_msg = True
+        publish_odom_tf = True
+        odom_frame = "odom"
+        robot_frame = "base_link"
+
+        """
+        Publish Odom Message 
+        """
+        if (publish_odom_msg):
+
+            pass
+
+
+        """
+        Publish Odom TF
+        TODO: create a kinematic model that calculates odom TF from odom msg
+        """
+        if (publish_odom_tf):
+
+            pass
+
+
+        pass
+
 
     def movement_decomposition(self, target, duration):
         """
