@@ -1,0 +1,40 @@
+# This config file is used by ros2_control
+controller_manager:
+  ros__parameters:
+    update_rate: 30  # Hz
+
+    spotarm_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    spotarm_joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    tiago_gripper_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+spotarm_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - spotarm_1_joint
+      - spotarm_2_joint
+      - spotarm_3_joint
+      - spotarm_4_joint
+      - Slider11
+      - spotarm_5_joint
+      - spotarm_6_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+tiago_gripper_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - gripper_left_finger_joint
+      - gripper_right_finger_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
