@@ -41,9 +41,16 @@ def generate_launch_description():
     # Check if moveit is installed
     if 'moveit' in get_packages_with_prefixes():
         # Configuration
-        description = {'robot_description': load_file('rd_spot.urdf')}
+        description = {'robot_description': load_file('spot.urdf')}
         description_semantic = {'robot_description_semantic': load_file('moveit_spot_arm.srdf')}
         description_kinematics = {'robot_description_kinematics': load_yaml('moveit_kinematics.yaml')}
+        
+        octomap_config = {'octomap_frame': 'odom', 
+                      'octomap_resolution': 0.05,
+                      'max_range': 5.0}
+
+        octomap_updater_config = load_yaml('moveit_sensors_3d.yaml')
+
         sim_time = {'use_sim_time': True}
 
         # Rviz node
@@ -80,6 +87,8 @@ def generate_launch_description():
                     description,
                     description_semantic,
                     description_kinematics,
+                    octomap_config,
+                    octomap_updater_config,
                     moveit_controllers,
                     movegroup,
                     sim_time

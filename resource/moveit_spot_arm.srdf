@@ -36,6 +36,8 @@
         <joint name="gripper_right_finger_joint" value="0"/>
     </group_state>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="odom_base_link" type="floating" parent_frame="odom" child_link="base_link"/>
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="gc" type="fixed" parent_frame="front" child_link="gripper_centre"/>
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="front left shoulder abduction motor"/>
