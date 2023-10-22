@@ -1,7 +1,8 @@
 controller_names:
-  - ur_joint_trajectory_controller
-  
-ur_joint_trajectory_controller:
+  - spotarm_joint_trajectory_controller
+  - tiago_gripper_joint_trajectory_controller
+
+spotarm_joint_trajectory_controller:
   action_ns: follow_joint_trajectory
   type: FollowJointTrajectory
   default: true
@@ -13,3 +14,11 @@ ur_joint_trajectory_controller:
     - Slider11
     - spotarm_5_joint
     - spotarm_6_joint
+
+tiago_gripper_joint_trajectory_controller:
+  action_ns: follow_joint_trajectory
+  type: FollowJointTrajectory
+  default: true
+  joints:
+    - gripper_left_finger_joint
+    - gripper_right_finger_joint

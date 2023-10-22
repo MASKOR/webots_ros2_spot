@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<robot name="SpotArm" xmlns:xacro="http://ros.org/wiki/xacro">
+  <webots>
+    <plugin type="webots_ros2_control::Ros2Control"/>
+  </webots>
+  <ros2_control name="WebotsControl" type="system">
+    <hardware>
+      <plugin>webots_ros2_control::Ros2ControlSystem</plugin>
+    </hardware>
+
+    <!-- SpotArm -->
+    <joint name="spotarm_1_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="spotarm_2_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="spotarm_3_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="spotarm_4_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="Slider11">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="spotarm_5_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="spotarm_6_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- Tiago Gripper -->
+    <joint name="gripper_left_finger_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="gripper_right_finger_joint">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+</robot>

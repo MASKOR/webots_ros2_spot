@@ -359,6 +359,7 @@ DEF Spot Spot {
     SpotArm {
       translation 0 0 -0.094
       rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
+      controller "<extern>"
       gripperCam [
         Camera {
           translation 0.19 0 0
