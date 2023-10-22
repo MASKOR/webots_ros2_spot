@@ -10,14 +10,15 @@ def main():
     node = rclpy.create_node('action_client_node')
 
     # Create an action client for the spotarm_joint_trajectory_controller
-    arm_client = ActionClient(node, FollowJointTrajectory, '/spotarm_joint_trajectory_controller/follow_joint_trajectory')
+    arm_client = ActionClient(node, FollowJointTrajectory, '/spotarm/joint_trajectory_controller/follow_joint_trajectory')
 
     # Create an action client for the tiago_gripper_joint_trajectory_controller
-    gripper_client = ActionClient(node, FollowJointTrajectory, '/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory')
+    gripper_client = ActionClient(node, FollowJointTrajectory, '/spotarm/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory')
 
     arm_client.wait_for_server()
-    gripper_client.wait_for_server()
+    time.sleep(1)
 
+    gripper_client.wait_for_server()
     time.sleep(1)
 
     # Create a goal request to set arm joint positions

@@ -17,9 +17,26 @@ package_dir = get_package_share_directory('webots_spot')
 
 # Define all the ROS 2 nodes that need to be restart on simulation reset here
 def get_ros2_nodes(*args):
-    # SpotArm Driver node
+    # Spot Driver node
+    spot_ros2_control_params = os.path.join(package_dir, 'resource', 'spot_ros2_controllers.yaml')
+    spot_driver = WebotsController(
+        namespace='spot',
+        robot_name='Spot',
+        parameters=[
+            {'robot_description': os.path.join(package_dir, 'resource', 'spot_control.urdf')},
+            {'use_sim_time': True},
+            {'set_robot_state_publisher': False},
+            spot_ros2_control_params
+        ],
+        remappings=[
+            ('/spot/joint_states', '/joint_states'),
+        ]
+    )
+
     spotarm_ros2_control_params = os.path.join(package_dir, 'resource', 'spotarm_ros2_controllers.yaml')
+    # SpotArm Driver node
     spotarm_driver = WebotsController(
+        namespace='spotarm',
         robot_name='SpotArm',
         parameters=[
             {'robot_description': os.path.join(package_dir, 'resource', 'spotarm_control.urdf')},
@@ -27,41 +44,71 @@ def get_ros2_nodes(*args):
             {'set_robot_state_publisher': False},
             spotarm_ros2_control_params
         ],
+        remappings=[
+            ('/spotarm/joint_states', '/joint_states'),
+        ]
+    )
+
+    # ROS2 control spawners for Spot
+    controller_manager_timeout = ['--controller-manager-timeout', '500']
+    controller_manager_prefix = 'python.exe' if os.name == 'nt' else ''
+    spot_forward_command_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        output='screen',
+        prefix=controller_manager_prefix,
+        arguments=['spot_forward_command_controller', '-c', 'spot/controller_manager'] + controller_manager_timeout,
+    )
+    spot_joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        output='screen',
+        prefix=controller_manager_prefix,
+        arguments=['spot_joint_state_broadcaster', '-c', 'spot/controller_manager'] + controller_manager_timeout,
     )
 
     # ROS2 control spawners for SpotArm
     controller_manager_timeout = ['--controller-manager-timeout', '500']
     controller_manager_prefix = 'python.exe' if os.name == 'nt' else ''
-    trajectory_controller_spawner = Node(
+    spotarm_trajectory_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
         output='screen',
         prefix=controller_manager_prefix,
-        arguments=['spotarm_joint_trajectory_controller', '-c', '/controller_manager'] + controller_manager_timeout,
+        arguments=['joint_trajectory_controller', '-c', 'spotarm/controller_manager'] + controller_manager_timeout,
     )
-    joint_state_broadcaster_spawner = Node(
+    spotarm_joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
         output='screen',
         prefix=controller_manager_prefix,
-        arguments=['spotarm_joint_state_broadcaster', '-c', '/controller_manager'] + controller_manager_timeout,
+        arguments=['joint_state_broadcaster', '-c', 'spotarm/controller_manager'] + controller_manager_timeout,
     )
     tiago_gripper_joint_trajectory_controller_spawner = Node(
         package='controller_manager',
         executable='spawner',
         output='screen',
         prefix=controller_manager_prefix,
-        arguments=['tiago_gripper_joint_trajectory_controller', '-c', '/controller_manager'] + controller_manager_timeout,
+        arguments=['tiago_gripper_joint_trajectory_controller', '-c', 'spotarm/controller_manager'] + controller_manager_timeout,
     )
 
-    ros2_control_spawners = [trajectory_controller_spawner,
-                            joint_state_broadcaster_spawner,
-                            tiago_gripper_joint_trajectory_controller_spawner]
+    # Wait for the simulation to be ready to start RViz, the navigation and spawners
+    spot_waiting_nodes = WaitForControllerConnection(
+        target_driver=spot_driver,
+        nodes_to_start=[
+            spot_forward_command_controller_spawner,
+            spot_joint_state_broadcaster_spawner
+        ]
+    )
 
     # Wait for the simulation to be ready to start RViz, the navigation and spawners
-    waiting_nodes = WaitForControllerConnection(
+    spotarm_waiting_nodes = WaitForControllerConnection(
         target_driver=spotarm_driver,
-        nodes_to_start=ros2_control_spawners
+        nodes_to_start=[
+            spotarm_trajectory_controller_spawner,
+            spotarm_joint_state_broadcaster_spawner,
+            tiago_gripper_joint_trajectory_controller_spawner
+        ]
     )
 
     initial_manipulator_positioning = Node(
@@ -71,8 +118,10 @@ def get_ros2_nodes(*args):
     )
 
     return [
+        spot_driver,
         spotarm_driver,
-        waiting_nodes,
+        spot_waiting_nodes,
+        spotarm_waiting_nodes,
         initial_manipulator_positioning
     ]
 
@@ -85,19 +134,8 @@ def generate_launch_description():
     )
     ros2_supervisor = Ros2SupervisorLauncher()
 
-    spot_driver = WebotsController(
-        robot_name='Spot',
-        parameters=[{
-            'robot_description': os.path.join(package_dir, 'resource', 'spot_control.urdf'),
-            'use_sim_time': use_sim_time,
-            'set_robot_state_publisher': False, # foot positions are wrong with webot's urdf
-        }],
-        respawn=True
-    )
-
     with open(os.path.join(package_dir, 'resource', 'spot.urdf')) as f:
         robot_desc = f.read()
-
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -132,7 +170,7 @@ def generate_launch_description():
 
     pointcloud_to_laserscan_node = Node(
         package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
-        remappings=[('cloud_in', '/Spot/Velodyne_Puck/point_cloud'), ],
+        remappings=[('/cloud_in', '/spot/Spot/Velodyne_Puck/point_cloud'), ],
         parameters=[{
             'transform_tolerance': 0.01,
             'min_height': 0.0,
@@ -152,7 +190,6 @@ def generate_launch_description():
     return LaunchDescription([
         webots,
         ros2_supervisor,
-        spot_driver,
         robot_state_publisher,
         # spot_pointcloud2,
         webots_event_handler,

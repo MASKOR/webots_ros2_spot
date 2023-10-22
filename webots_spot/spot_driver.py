@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
+from std_msgs.msg import Float64MultiArray
 from builtin_interfaces.msg import Time
 from webots_spot_msgs.msg import GaitInput
 from webots_spot_msgs.srv import SpotMotion, SpotHeight, BlockPose
@@ -115,10 +116,8 @@ def shuffle_cubes(robot):
 
 
 class SpotDriver:
-    def init(self, webots_node, properties):
-        rclpy.init(args=None)
-
-        self.__node = Node('spot_driver')
+    def __init__(self, node):
+        self.__node = node
 
         self.tfb_ = TransformBroadcaster(self.__node)        
 
@@ -128,45 +127,15 @@ class SpotDriver:
             self.__node.declare_parameter('use_sim_time', self.use_sim_time)
         self.use_sim_time = self.__node.get_parameter('use_sim_time')
 
-        self.__robot = webots_node.robot
-        randomise_lane(self.__robot)
-        randomise_imgs(self.__robot)
-        set_rod(self.__robot)
-        self.cubes_loc = shuffle_cubes(self.__robot)
-
-        self.spot_node = self.__robot.getFromDef("Spot")
-
-        self.spot_translation = self.spot_node.getField('translation')
-        self.spot_translation_initial = self.spot_translation.getSFVec3f()
-        self.spot_rotation = self.spot_node.getField('rotation')
-        self.spot_rotation_initial = self.spot_rotation.getSFRotation()
-
-        self.__robot.timestep = 32
-
-        ### Init motors
-        self.motor_names = [
-            "front left shoulder abduction motor",  "front left shoulder rotation motor",  "front left elbow motor",
-            "front right shoulder abduction motor", "front right shoulder rotation motor", "front right elbow motor",
-            "rear left shoulder abduction motor",   "rear left shoulder rotation motor",   "rear left elbow motor",
-            "rear right shoulder abduction motor",  "rear right shoulder rotation motor",  "rear right elbow motor"
-        ]
-        self.motors = []
-        for motor_name in self.motor_names:
-            self.motors.append(self.__robot.getDevice(motor_name))
-
-        ## Positional Sensors
-        self.motor_sensor_names = [name.replace('motor', 'sensor') for name in self.motor_names]
-        self.motor_sensors = []
-        self.motors_pos = []
-        for idx, sensor_name in enumerate(self.motor_sensor_names):
-            self.motor_sensors.append(self.__robot.getDevice(sensor_name))
-            self.motor_sensors[idx].enable(self.__robot.timestep)
-            self.motors_pos.append(0.)
-
         ## Topics
         self.__node.create_subscription(GaitInput, '/Spot/inverse_gait_input', self.__gait_cb, 1)
         self.__node.create_subscription(Twist, '/cmd_vel', self.__cmd_vel, 1)
         self.joint_state_pub = self.__node.create_publisher(JointState, '/joint_states', 1)
+        self.joint_positions_pub = self.__node.create_publisher(
+            Float64MultiArray,
+            '/spot/spot_forward_command_controller/commands',
+            1
+        )
         self.odom_pub = self.__node.create_publisher(Odometry, '/Spot/odometry', 1)
 
         ## Services        
@@ -181,25 +150,13 @@ class SpotDriver:
         self.__node.create_service(Empty, '/red_rod', self.red_rod)
         self.__node.create_service(BlockPose, '/get_block_pose', self.gpp_block_pose)
 
-        ## Webots Touch Sensors
-        self.touch_fl = self.__robot.getDevice("front left touch sensor")
-        self.touch_fr = self.__robot.getDevice("front right touch sensor")
-        self.touch_rl = self.__robot.getDevice("rear left touch sensor")
-        self.touch_rr = self.__robot.getDevice("rear right touch sensor")
-
-        self.touch_fl.enable(self.__robot.timestep)
-        self.touch_fr.enable(self.__robot.timestep)
-        self.touch_rl.enable(self.__robot.timestep)
-        self.touch_rr.enable(self.__robot.timestep)
+        self.__node.create_timer(0.02, self.step)
 
         ## Spot Control
-        self.rate = self.__node.create_rate(100)
-        self.time_step = self.__robot.timestep
-
         self.spot = SpotModel()
         self.T_bf0 = self.spot.WorldToFoot
         self.T_bf = copy.deepcopy(self.T_bf0)
-        self.bzg = BezierGait(dt=0.032)
+        self.bzg = BezierGait(dt=0.02)
 
         # ------------------ Inputs for Bezier Gait control ----------------
         self.xd = 0.0
@@ -338,8 +295,14 @@ class SpotDriver:
 
     def __talker(self, motors_target_pos):
         motor_offsets = [0, 0.52, -1.182]
-        for idx, motor in enumerate(self.motors):
-            motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
+        # for idx, motor in enumerate(self.motors):
+        #     motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
+
+        msg = Float64MultiArray()
+        for idx in range(12):
+            msg.data.append(motor_offsets[idx % 3] + motors_target_pos[idx])
+
+        self.joint_positions_pub.publish(msg)
 
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
@@ -612,19 +575,29 @@ class SpotDriver:
         return response
 
     def step(self):
-        rclpy.spin_once(self.__node, timeout_sec=0)
+        # rclpy.spin_once(self.__node, timeout_sec=0)
 
-        self.front_left_lower_leg_contact = self.touch_fl.getValue()
-        self.front_right_lower_leg_contact = self.touch_fr.getValue()
-        self.rear_left_lower_leg_contact = self.touch_rl.getValue()
-        self.rear_right_lower_leg_contact = self.touch_rr.getValue()
+        # self.front_left_lower_leg_contact = self.touch_fl.getValue()
+        # self.front_right_lower_leg_contact = self.touch_fr.getValue()
+        # self.rear_left_lower_leg_contact = self.touch_rl.getValue()
+        # self.rear_right_lower_leg_contact = self.touch_rr.getValue()
 
-        if self.fixed_motion:
-            self.defined_motions()
-        else:
-            self.spot_inverse_control()
+        # if self.fixed_motion:
+        #     self.defined_motions()
+        # else:
+        self.spot_inverse_control()
 
-        self.handle_transforms_and_odometry()
+        # self.handle_transforms_and_odometry()
 
-        #Update Spot state
-        self.__model_cb()
+        # #Update Spot state
+        # self.__model_cb()
+
+def main():
+    rclpy.init()
+    node = Node("spot_driver")
+    SpotDriver(node)
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+if __name__ == "__main__":
+    main()

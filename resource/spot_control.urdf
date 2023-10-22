@@ -1,16 +1,100 @@
 <?xml version="1.0" ?>
 <robot name="Spot">
-    <webots>
-        <plugin type="webots_spot.spot_driver.SpotDriver" />
+  <webots>
+    <!-- <plugin type="webots_spot.spot_driver.SpotDriver" /> -->
+    <plugin type="webots_ros2_control::Ros2Control"/>
 
-        <plugin type="webots_ros2_driver::Ros2IMU">
-            <enabled>true</enabled>
-            <topicName>/Spot/imu</topicName>
-            <alwaysOn>true</alwaysOn>
-            <frameName>base_link</frameName>
-            <inertialUnitName>inertial unit</inertialUnitName>
-            <gyroName>gyro</gyroName>
-            <accelerometerName>accelerometer</accelerometerName>
-        </plugin>        
-    </webots>
+    <plugin type="webots_ros2_driver::Ros2IMU">
+      <enabled>true</enabled>
+      <topicName>/Spot/imu</topicName>
+      <alwaysOn>true</alwaysOn>
+      <frameName>base_link</frameName>
+      <inertialUnitName>inertial unit</inertialUnitName>
+      <gyroName>gyro</gyroName>
+      <accelerometerName>accelerometer</accelerometerName>
+    </plugin>
+  </webots>
+
+  <ros2_control name="WebotsControl" type="system">
+    <hardware>
+      <plugin>webots_ros2_control::Ros2ControlSystem</plugin>
+    </hardware>
+
+    <!-- Spot -->
+    <joint name="front left shoulder abduction motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front left shoulder rotation motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front left elbow motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="front right shoulder abduction motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front right shoulder rotation motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front right elbow motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rear left shoulder abduction motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear left shoulder rotation motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear left elbow motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rear right shoulder abduction motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear right shoulder rotation motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear right elbow motor">
+      <command_interface name="position">
+        </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
 </robot>

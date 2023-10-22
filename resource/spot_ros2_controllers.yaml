@@ -1,0 +1,27 @@
+# This config file is used by ros2_control
+spot/controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz
+
+    spot_forward_command_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    spot_joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+spot/spot_forward_command_controller:
+  ros__parameters:
+    joints:
+      - front left shoulder abduction motor
+      - front left shoulder rotation motor
+      - front left elbow motor
+      - front right shoulder abduction motor
+      - front right shoulder rotation motor
+      - front right elbow motor
+      - rear left shoulder abduction motor
+      - rear left shoulder rotation motor
+      - rear left elbow motor
+      - rear right shoulder abduction motor
+      - rear right shoulder rotation motor
+      - rear right elbow motor
+    interface_name: position
