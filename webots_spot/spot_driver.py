@@ -186,7 +186,7 @@ class SpotDriver:
         self.odom_frame = "odom"
         self.robot_frame = "base_link"
         self.publish_odom_msg = True
-        self.publish_odom_tf = True
+        self.publish_odom_tf = False
         self.publish_world_to_map_tf = True
         self.publish_map_to_odom_tf = True
 
