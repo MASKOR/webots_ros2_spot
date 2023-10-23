@@ -257,7 +257,7 @@
     <parent link="SpotArm"/>
     <child link="spotarm_link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="500" lower="-2.61799" upper="3.14159" velocity="0.5"/>
+    <limit effort="500" lower="-2.61799" upper="3.14159" velocity="2.5"/>
     <origin xyz="0 0 0.04" rpy="0 0 0"/>
   </joint>
   <link name="spotarm_link1">
@@ -314,7 +314,7 @@
     <parent link="spotarm_link1"/>
     <child link="spotarm_link2"/>
     <axis xyz="0 -1 0"/>
-    <limit effort="500" lower="-0.523599" upper="3.14159" velocity="0.5"/>
+    <limit effort="500" lower="-0.523599" upper="3.14159" velocity="2.5"/>
     <origin xyz="0 0.03 0.1" rpy="0 0 0"/>
   </joint>
   <link name="spotarm_link2">
@@ -347,7 +347,7 @@
     <parent link="spotarm_link2"/>
     <child link="spotarm_link3"/>
     <axis xyz="0 1 0"/>
-    <limit effort="500" lower="0" upper="3.0" velocity="0.5"/>
+    <limit effort="500" lower="0" upper="3.0" velocity="2.5"/>
     <origin xyz="0.3385 -0.02 0.000137" rpy="0 0 0"/>
   </joint>
   <link name="spotarm_link3">
@@ -380,7 +380,7 @@
     <parent link="spotarm_link3"/>
     <child link="spotarm_link4"/>
     <axis xyz="1 0 0"/>
-    <limit effort="500" lower="-4.3633" upper="1.22173" velocity="0.5"/>
+    <limit effort="500" lower="-4.3633" upper="1.22173" velocity="2.5"/>
     <origin xyz="0.107 -0.01 0.09734" rpy="0 0 0"/>
   </joint>
   <link name="spotarm_link4">
@@ -422,7 +422,7 @@
     <parent link="spotarm_link5"/>
     <child link="spotarm_link6"/>
     <axis xyz="0 1 0"/>
-    <limit effort="500" lower="-1.0472" upper="1.0472" velocity="0.5"/>
+    <limit effort="500" lower="-1.0472" upper="1.0472" velocity="2.5"/>
     <origin xyz="0.2413 0.01 0" rpy="0 0 0"/>
   </joint>
   <link name="spotarm_link6">
@@ -443,7 +443,7 @@
     <parent link="spotarm_link6"/>
     <child link="front"/>
     <axis xyz="0.000004 0 1"/>
-    <limit effort="500" lower="-4.45059" upper="1.30899" velocity="0.5"/>
+    <limit effort="500" lower="-4.45059" upper="1.30899" velocity="2.5"/>
     <origin xyz="0.1 -0.0105 0" rpy="3.141593 -1.570793 3.141593"/>
   </joint>
   <link name="front">

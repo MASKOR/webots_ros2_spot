@@ -37,7 +37,7 @@ setup(
             'spot_driver = ' + package_name + '.spot_driver:main',
             'spot_pointcloud2 = ' + package_name + '.spot_pointcloud2:main',
             'set_initial_pose = ' + package_name + '.set_initial_pose:main',
-            'gpp_blocksworld_server = ' + package_name + '.gpp_blocksworld_server:main',
+            'gpp_stacker = ' + package_name + '.gpp_stacker:main',
             'retract_manipulator = ' + package_name + '.retract_manipulator:main',
         ],
     },

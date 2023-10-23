@@ -9,36 +9,24 @@ initially:
 	(c) = t3;
 }
 
-location function str_to_loc(string s) =
-	if (s == "a")
-		a
-	else if (s == "b")
-		b
-	else if (s == "c")
-		c
-	else if (s == "t1")
-		t1
-	else if (s == "t2")
-		t2
-	else
-		t3
-
-string fluent loc_response_str() {
+symbol fluent loc_response() {
 initially:
-	() = "";
+	() = a;
 }
 
-string exog_function sense_result(string ros_action_name);
+location function sym_to_loc(symbol s) = s
+
+symbol exog_function sense_result(string ros_action_name);
 
 action update_block_pose(block x) {
 senses:
-	loc_response_str() = sense_result("/get_block_pose");
+	loc_response() = sense_result("/get_block_pose");
 mapping:
 	"/get_block_pose" {
 		block = x
 	}
 effect:
-	loc(x) = str_to_loc(loc_response_str());
+	loc(x) = sym_to_loc(loc_response());
 }
 
 action stack(block x, location y) {
@@ -56,10 +44,8 @@ effect:
 	loc(x) = y;
 }
 
-
 bool function goal() =
 	loc(b) == a & loc(c) == b
-
 
 number function reward() =
 	if (goal())

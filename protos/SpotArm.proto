@@ -47,7 +47,7 @@ PROTO SpotArm [
         device [
           RotationalMotor {
             name "spotarm_1_joint"
-            maxVelocity 0.5
+            maxVelocity 2.5
             minPosition -2.61799
             maxPosition 3.14159
             maxTorque 500.0
@@ -79,7 +79,7 @@ PROTO SpotArm [
               device [
                 RotationalMotor {
                   name "spotarm_2_joint"
-                  maxVelocity 0.5
+                  maxVelocity 2.5
                   minPosition -0.523599
                   maxPosition 3.14159
                   maxTorque 500.0
@@ -113,7 +113,7 @@ PROTO SpotArm [
                     device [
                       RotationalMotor {
                         name "spotarm_3_joint"
-                        maxVelocity 0.5
+                        maxVelocity 2.5
                         maxPosition 3.0
                         maxTorque 500.0
                       }
@@ -144,7 +144,7 @@ PROTO SpotArm [
                           device [
                             RotationalMotor {
                               name "spotarm_4_joint"
-                              maxVelocity 0.5
+                              maxVelocity 2.5
                               minPosition -4.3633
                               maxPosition 1.22173
                               maxTorque 500.0
@@ -206,7 +206,7 @@ PROTO SpotArm [
                                       device [
                                         RotationalMotor {
                                           name "spotarm_5_joint"
-                                          maxVelocity 0.5
+                                          maxVelocity 2.5
                                           minPosition -1.047198
                                           maxPosition 1.047198
                                           maxTorque 500.0
@@ -241,7 +241,7 @@ PROTO SpotArm [
                                             device [
                                               RotationalMotor {
                                                 name "spotarm_6_joint"
-                                                maxVelocity 0.5
+                                                maxVelocity 2.5
                                                 minPosition -4.45059
                                                 maxPosition 1.30899
                                                 maxTorque 500.0

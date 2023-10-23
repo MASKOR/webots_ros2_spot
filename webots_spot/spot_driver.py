@@ -429,16 +429,13 @@ class SpotDriver:
                          tf_odom_base_link.rotation.w])
         rotation = [r.as_euler('xyz')[0], r.as_euler('xyz')[1], r.as_euler('xyz')[2]]
 
-        current_time = self.__robot.getTime()
 
-        if not hasattr(self, 'previous_time'):
-            self.previous_time = current_time
+        if not hasattr(self, 'previous_rotation'):
             self.previous_rotation = rotation
             self.previous_translation = translation
         else:
-            time_delta = (current_time - self.previous_time)
-            rotation_twist = [(new - old) / time_delta for new, old in zip(rotation, self.previous_rotation)]
-            translation_twist = [(new - old) / time_delta for new, old in zip(translation, self.previous_translation)]
+            rotation_twist = [(new - old) / (self.time_step/1000) for new, old in zip(rotation, self.previous_rotation)]
+            translation_twist = [(new - old) / (self.time_step/1000) for new, old in zip(translation, self.previous_translation)]
 
             self.previous_time = current_time
             self.previous_rotation = rotation
@@ -494,7 +491,7 @@ class SpotDriver:
         self.m_target = []
 
     def blocksworld_pose(self, request, response):
-        self.spot_node.getField('translation').setSFVec3f([-7.2,-3.73,0.61])
+        self.spot_node.getField('translation').setSFVec3f([-7.28,-3.78,0.081])
         self.spot_node.getField('rotation').setSFRotation([0,0,-1,-3.14159])
 
         self.fixed_motion = True

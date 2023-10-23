@@ -4,7 +4,6 @@ from rclpy.action import ActionServer
 from rclpy.action import ActionClient
 from rclpy.executors import MultiThreadedExecutor
 
-from webots_spot_msgs.srv import SpotMotion
 from webots_spot_msgs.action import Stack
 
 from sensor_msgs.msg import JointState
@@ -13,6 +12,8 @@ from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 from moveit_msgs.srv import GetPositionIK
 
+from trajectory_msgs.msg import JointTrajectoryPoint
+from control_msgs.action import FollowJointTrajectory
 from moveit_msgs.msg import MotionPlanRequest
 from moveit_msgs.msg import JointConstraint
 from moveit_msgs.msg import Constraints
@@ -22,7 +23,6 @@ from moveit_msgs.action import MoveGroup
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 from copy import deepcopy
-import time
 
 target_angles = None
 global_joint_states = None
@@ -30,18 +30,65 @@ tf_base_link_block = None
 tf_base_link_location = None
 
 
-class MoveGroupActionClient():
-    def __init__(self, node):
-        self.node = node
-        self.logger = node.get_logger()
-        
-        self._action_client = ActionClient(node, MoveGroup, '/move_action')
+class GripperActionClient(Node):
+    def __init__(self):
+        super().__init__("GripperAC")
+        self.action_client = ActionClient(
+            self,
+            FollowJointTrajectory,
+            '/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory'
+        )
+
+    def send_goal(self, gripper_action):
+        self.goal_done = False
+
+        goal_msg = FollowJointTrajectory.Goal()
+
+        # Set your joint trajectory goal here
+        goal_msg.trajectory.joint_names = ["gripper_left_finger_joint", "gripper_right_finger_joint"]
+        point = JointTrajectoryPoint()
+        if gripper_action == "close":
+            point.positions = [0.02, 0.02]
+        elif gripper_action == "open":
+            point.positions = [0.045, 0.045]  # Replace with desired joint positions
+        point.time_from_start.sec = 1  # Duration in seconds
+
+        goal_msg.trajectory.points.append(point)
+
+        self.action_client.wait_for_server()
+        self._send_goal_future = self.action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
+        self._send_goal_future.add_done_callback(self.goal_response_callback)
+
+    def goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('Goal rejected :(')
+            self.goal_done = True
+            return
+
+        self.get_logger().info('Goal accepted :)')
+
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+
+    def get_result_callback(self, future):
+        # self.get_logger().info(str(future))
+        self.goal_done = True
+
+    def feedback_callback(self, feedback_msg):
+        # self.get_logger().info(str(feedback_msg))
+        pass
+
+class MoveGroupActionClient(Node):
+    def __init__(self):
+        super().__init__("MoveGroupAC")
+        self.action_client = ActionClient(self, MoveGroup, '/move_action')
 
     def send_goal(self, target_angles):
+        self.goal_done = False
         j = target_angles
 
         self.motion_plan_request = MotionPlanRequest()
-        self.motion_plan_request.workspace_parameters.header.stamp = self.node.get_clock().now().to_msg()
         self.motion_plan_request.workspace_parameters.header.frame_id = 'base_link'
         self.motion_plan_request.workspace_parameters.min_corner.x = -1.0
         self.motion_plan_request.workspace_parameters.min_corner.y = -1.0
@@ -61,8 +108,8 @@ class MoveGroupActionClient():
         joints['spotarm_6_joint'] = j[6]
 
         jc = JointConstraint()
-        jc.tolerance_above = 0.0001
-        jc.tolerance_below = 0.0001
+        jc.tolerance_above = 0.001
+        jc.tolerance_below = 0.001
         jc.weight = 1.0
 
         constraints = Constraints()
@@ -77,8 +124,8 @@ class MoveGroupActionClient():
         self.motion_plan_request.group_name = 'spot_arm'
         self.motion_plan_request.num_planning_attempts = 4
         self.motion_plan_request.allowed_planning_time = 4.0
-        self.motion_plan_request.max_velocity_scaling_factor = 0.1
-        self.motion_plan_request.max_acceleration_scaling_factor = 0.1
+        self.motion_plan_request.max_velocity_scaling_factor = 0.6
+        self.motion_plan_request.max_acceleration_scaling_factor = 0.6
         self.motion_plan_request.max_cartesian_speed = 0.0
 
         self.planning_options = PlanningOptions()
@@ -94,47 +141,62 @@ class MoveGroupActionClient():
         goal_msg.request = self.motion_plan_request
         goal_msg.planning_options = self.planning_options
 
-        self._action_client.wait_for_server()
-        self._send_goal_future = self._action_client.send_goal_async(goal_msg)
+        self.action_client.wait_for_server()
+        self._send_goal_future = self.action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
+        self._send_goal_future.add_done_callback(self.goal_response_callback)
+
+    def goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('Goal rejected :(')
+            self.goal_done = True
+            return
+
+        self.get_logger().info('Goal accepted :)')
+
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+
+    def get_result_callback(self, future):
+        # self.get_logger().info(str(future))
+        self.goal_done = True
+
+    def feedback_callback(self, feedback_msg):
+        # self.get_logger().info(str(feedback_msg))
+        pass
 
 
-class MinimalClientAsync():
-    def __init__(self, node):
-        self.logger = node.get_logger()
-        self.clock = node.get_clock()
-        self.node = node
+class MinimalClientAsync(Node):
+    def __init__(self):
+        super().__init__("IKAC")
 
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, node)
-        node.create_subscription(JointState, '/joint_states', self.joint_states_cb, 1)
+        self.tf_listener = TransformListener(self.tf_buffer, self)
+        self.create_subscription(JointState, '/joint_states', self.joint_states_cb, 1)
 
-        self.cli = node.create_client(GetPositionIK, '/compute_ik')
+        self.cli = self.create_client(GetPositionIK, '/compute_ik')
         while not self.cli.wait_for_service(timeout_sec=1.0):
-            self.logger.info('service not available, waiting again...')
+            self.get_logger().info('service not available, waiting again...')
 
     def on_timer(self, block, location):
         global tf_base_link_block, tf_base_link_location
-        # Look up for the transformation between target_frame and turtle2 frames
-        # and send velocity commands for turtle2 to reach target_frame
         try:
             t = self.tf_buffer.lookup_transform(
                 'base_link',
                 block,
-                rclpy.time.Time(),
-                rclpy.duration.Duration(seconds=1))
+                rclpy.time.Time())
             tf_base_link_block = [t.transform.translation.x,t.transform.translation.y,t.transform.translation.z,
                                   t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w]
             self.tf_base_link_block = tf_base_link_block
             t = self.tf_buffer.lookup_transform(
                 'base_link',
                 location,
-                rclpy.time.Time(),
-                rclpy.duration.Duration(seconds=1))
+                rclpy.time.Time())
             tf_base_link_location = [t.transform.translation.x,t.transform.translation.y,t.transform.translation.z,
                                      t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w]
             self.tf_base_link_location = tf_base_link_location
         except TransformException as ex:
-            self.logger.info(
+            self.get_logger().info(
                 f'Could not transform base_link to can: {ex}')
             return
 
@@ -149,7 +211,6 @@ class MinimalClientAsync():
         self.req.ik_request.robot_state.joint_state = self.joint_state
         self.req.ik_request.avoid_collisions = True
 
-        self.req.ik_request.pose_stamped.header.stamp = self.clock.now().to_msg()
         self.req.ik_request.pose_stamped.header.frame_id = 'base_link'
 
         if self.is_block:
@@ -168,7 +229,7 @@ class MinimalClientAsync():
                 xyz = [self.tf_base_link_location[0],self.tf_base_link_location[1],self.tf_base_link_location[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
                 self.req.ik_request.pose_stamped.pose.position.y = xyz[1]
-                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.14
+                self.req.ik_request.pose_stamped.pose.position.z = xyz[2] + 0.16
             else:
                 xyz = [self.tf_base_link_location[0],self.tf_base_link_location[1],self.tf_base_link_location[2]]
                 self.req.ik_request.pose_stamped.pose.position.x = xyz[0]
@@ -186,7 +247,7 @@ class MinimalClientAsync():
         self.req.ik_request = self.moveit_ik()
 
         self.future = self.cli.call_async(self.req)
-        rclpy.spin_until_future_complete(self.node, self.future)
+        rclpy.spin_until_future_complete(self, self.future)
         return self.future.result()
 
 
@@ -201,42 +262,51 @@ def reset_variables():
 def begin_stacking(stack_gh):
     global global_joint_states, tf_base_link_block, tf_base_link_location, target_angles
 
+    service_client = MinimalClientAsync()
+    moveitaction_client = MoveGroupActionClient()
+    gripperaction_client = GripperActionClient()
+
     reset_variables()
     
     block = stack_gh.request.block.upper()
     location = stack_gh.request.location.upper()
-    moveit_node._logger.info(block + ':' + location)
+    service_client.get_logger().info(block + ':' + location)
 
     # Open gripper
-    future = open_gripper_client.call_async(SpotMotion.Request())
-    rclpy.spin_until_future_complete(moveit_node, future)
+    gripperaction_client.send_goal("open")
+    while not gripperaction_client.goal_done:
+        rclpy.spin_once(gripperaction_client)
 
     while (global_joint_states is None or tf_base_link_block is None or tf_base_link_location is None) and rclpy.ok():
         service_client.on_timer(block, location)
-        rclpy.spin_once(moveit_node)
+        rclpy.spin_once(service_client)
 
     # Move above block
     response = service_client.send_request(is_block=True, is_above=True)
     target_angles = list(response.solution.joint_state.position)[:7]    
     if not len(target_angles):
-        moveit_node._logger.info('No IK solution found')
+        service_client._logger.info('No IK solution found')
         return
-    moveit_node._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
-    moveit_action_client.send_goal(target_angles)
+    service_client._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
+    moveitaction_client.send_goal(target_angles)
+    while not moveitaction_client.goal_done:
+        rclpy.spin_once(moveitaction_client)
     
     # Move to block
     response = service_client.send_request(is_block=True, is_above=False)
     target_angles = list(response.solution.joint_state.position)[:7]    
     if not len(target_angles):
-        moveit_node._logger.info('No IK solution found')
+        service_client._logger.info('No IK solution found')
         return
-    moveit_node._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
-    moveit_action_client.send_goal(target_angles)
-    time.sleep(4)
+    service_client._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
+    moveitaction_client.send_goal(target_angles)
+    while not moveitaction_client.goal_done:
+        rclpy.spin_once(moveitaction_client)
 
     # Close gripper
-    future = close_gripper_client.call_async(SpotMotion.Request())
-    rclpy.spin_until_future_complete(moveit_node, future)
+    gripperaction_client.send_goal("close")
+    while not gripperaction_client.goal_done:
+        rclpy.spin_once(gripperaction_client)
 
     reset_variables()
 
@@ -245,63 +315,59 @@ def begin_stacking(stack_gh):
     response = service_client.send_request(is_block=False, is_above=True)
     target_angles = list(response.solution.joint_state.position)[:7]
     if not len(target_angles):
-        moveit_node._logger.info('No IK solution found')
+        service_client._logger.info('No IK solution found')
         return
-    moveit_node._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
-    moveit_action_client.send_goal(target_angles)
+    service_client._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
+    moveitaction_client.send_goal(target_angles)
+    while not moveitaction_client.goal_done:
+        rclpy.spin_once(moveitaction_client)
 
     # Move to location
     target_angles = None
     response = service_client.send_request(is_block=False, is_above=False)
     target_angles = list(response.solution.joint_state.position)[:7]
     if not len(target_angles):
-        moveit_node._logger.info('No IK solution found')
+        service_client._logger.info('No IK solution found')
         return
-    moveit_node._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
-    moveit_action_client.send_goal(target_angles)
-    time.sleep(4)
+    service_client._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
+    moveitaction_client.send_goal(target_angles)
+    while not moveitaction_client.goal_done:
+        rclpy.spin_once(moveitaction_client)
+
+    # Open gripper
+    gripperaction_client.send_goal("open")
+    while not gripperaction_client.goal_done:
+        rclpy.spin_once(gripperaction_client)
 
     # Move above location
     target_angles = None
     response = service_client.send_request(is_block=False, is_above=True)
     target_angles = list(response.solution.joint_state.position)[:7]
     if not len(target_angles):
-        moveit_node._logger.info('No IK solution found')
+        service_client._logger.info('No IK solution found')
         return
-    moveit_node._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
-    moveit_action_client.send_goal(target_angles)
-    
-    # Open gripper
-    future = open_gripper_client.call_async(SpotMotion.Request())
-    rclpy.spin_until_future_complete(moveit_node, future)
+    service_client._logger.info(str([round(np.rad2deg(ta)) for ta in target_angles]))
+    moveitaction_client.send_goal(target_angles)
+    while not moveitaction_client.goal_done:
+        rclpy.spin_once(moveitaction_client)
 
     stack_gh.succeed()
     result = Stack.Result()
     result.stacked = True
     return result
 
-rclpy.init()
-
-moveit_node = Node('moveit_python')
-stacker_node = Node('stacker_python')
-
-from rclpy.executors import MultiThreadedExecutor
-
-executor = MultiThreadedExecutor(num_threads=2)
-executor.add_node(moveit_node)
-executor.add_node(stacker_node)
-
-service_client = MinimalClientAsync(moveit_node)
-moveit_action_client = MoveGroupActionClient(moveit_node)
-close_gripper_client = moveit_node.create_client(SpotMotion, '/Spot/close_gripper')
-open_gripper_client = moveit_node.create_client(SpotMotion, '/Spot/open_gripper')
 
 def main():
-    action_server = ActionServer(
-                stacker_node,
-                Stack,
-                'stack',
-                begin_stacking)
+    rclpy.init()
+
+    stacker_node = Node('stacker_python')
+
+    from rclpy.executors import MultiThreadedExecutor
+
+    executor = MultiThreadedExecutor(num_threads=2)
+    executor.add_node(stacker_node)
+
+    ActionServer(stacker_node, Stack, 'stack', begin_stacking)
 
     executor.spin()
     rclpy.shutdown()
