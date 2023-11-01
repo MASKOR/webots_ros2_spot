@@ -52,6 +52,7 @@ The world contains apriltags, a red line to test lane follower and objects for m
     chmod +x ~/ros2_ws/install/webots_ros2_driver/lib/webots_ros2_driver/ros2_supervisor.py
 
 ## Start
+
 Starting the simulation:
 
     ros2 launch webots_spot spot_launch.py

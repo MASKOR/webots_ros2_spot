@@ -9,8 +9,8 @@ SWING = 1
 # Rotation Logic from: http://www.inase.org/library/2014/santorini/bypaper/ROBCIRC/ROBCIRC-54.pdf
 
 
-class BezierGait():
-    def __init__(self, dSref=[0.0, 0.0, 0.5, 0.5], dt=0.01, Tswing=0.2):
+class BezierGait:
+    def __init__(self, dSref=None, dt=0.01, Tswing=0.2):
         # Phase Lag Per Leg: FL, FR, BL, BR
         # Reference Leg is FL, always 0
         self.dSref = dSref
@@ -44,8 +44,7 @@ class BezierGait():
         self.Phases = self.dSref
 
     def reset(self):
-        """Resets the parameters of the Bezier Gait Generator
-        """
+        """Resets the parameters of the Bezier Gait Generator"""
         self.ModulatedRotation = [0.0, 0.0, 0.0, 0.0]
 
         # Total Elapsed Time
@@ -159,8 +158,8 @@ class BezierGait():
 
     def CheckTouchDown(self):
         """Checks whether a reference leg touchdown
-           has occured, and whether this warrants
-           resetting the touchdown time
+        has occured, and whether this warrants
+        resetting the touchdown time
         """
         if self.SwRef >= 0.9 and self.TD:
             self.TD_time = self.time
@@ -169,32 +168,37 @@ class BezierGait():
 
     def BezierPoint(self, t, k, point):
         """Calculate the point on the bezier curve
-           based on phase (0->1), point number (0-11),
-           and the value of the point itself
-           :param t: phase
-           :param k: point number
-           :param point: point value
-           :return: Value through Bezier Curve
+        based on phase (0->1), point number (0-11),
+        and the value of the point itself
+        :param t: phase
+        :param k: point number
+        :param point: point value
+        :return: Value through Bezier Curve
         """
-        return point * self.Binomial(k) * np.power(t, k) * np.power(
-            1 - t, self.NumBezierPoints - k)
+        return (
+            point
+            * self.Binomial(k)
+            * np.power(t, k)
+            * np.power(1 - t, self.NumBezierPoints - k)
+        )
 
     def Binomial(self, k):
         """Solves the binomial theorem given a Bezier point number
-           relative to the total number of Bezier points.
-           :param k: Bezier point number
-           :returns: Binomial solution
+        relative to the total number of Bezier points.
+        :param k: Bezier point number
+        :returns: Binomial solution
         """
         return np.math.factorial(self.NumBezierPoints) / (
-            np.math.factorial(k) * np.math.factorial(self.NumBezierPoints - k))
+            np.math.factorial(k) * np.math.factorial(self.NumBezierPoints - k)
+        )
 
     def BezierSwing(self, phase, L, LateralFraction, clearance_height=0.04):
         """Calculates the step coordinates for the Bezier (swing) period
-           :param phase: current trajectory phase
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param clearance_height: foot clearance height during swing phase
-           :returns: X,Y,Z Foot Coordinates relative to unmodified body
+        :param phase: current trajectory phase
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param clearance_height: foot clearance height during swing phase
+        :returns: X,Y,Z Foot Coordinates relative to unmodified body
         """
 
         # Polar Leg Coords
@@ -204,20 +208,22 @@ class BezierGait():
         # Bezier Curve Points (12 pts)
         # NOTE: L is HALF of STEP LENGTH
         # Forward Component
-        STEP = np.array([
-            -L,  # Ctrl Point 0, half of stride len
-            -L * 1.4,  # Ctrl Point 1 diff btwn 1 and 0 = x Lift vel
-            -L * 1.5,  # Ctrl Pts 2, 3, 4 are overlapped for
-            -L * 1.5,  # Direction change after
-            -L * 1.5,  # Follow Through
-            0.0,  # Change acceleration during Protraction
-            0.0,  # So we include three
-            0.0,  # Overlapped Ctrl Pts: 5, 6, 7
-            L * 1.5,  # Changing direction for swing-leg retraction
-            L * 1.5,  # requires double overlapped Ctrl Pts: 8, 9
-            L * 1.4,  # Swing Leg Retraction Velocity = Ctrl 11 - 10
-            L
-        ])
+        STEP = np.array(
+            [
+                -L,  # Ctrl Point 0, half of stride len
+                -L * 1.4,  # Ctrl Point 1 diff btwn 1 and 0 = x Lift vel
+                -L * 1.5,  # Ctrl Pts 2, 3, 4 are overlapped for
+                -L * 1.5,  # Direction change after
+                -L * 1.5,  # Follow Through
+                0.0,  # Change acceleration during Protraction
+                0.0,  # So we include three
+                0.0,  # Overlapped Ctrl Pts: 5, 6, 7
+                L * 1.5,  # Changing direction for swing-leg retraction
+                L * 1.5,  # requires double overlapped Ctrl Pts: 8, 9
+                L * 1.4,  # Swing Leg Retraction Velocity = Ctrl 11 - 10
+                L,
+            ]
+        )
         # Account for lateral movements by multiplying with polar coord.
         # LateralFraction switches leg movements from X over to Y+ or Y-
         # As it tends away from zero
@@ -229,24 +235,26 @@ class BezierGait():
         Y = STEP * Y_POLAR
 
         # Vertical Component
-        Z = np.array([
-            0.0,  # Double Overlapped Ctrl Pts for zero Lift
-            0.0,  # Veloicty wrt hip (Pts 0 and 1)
-            clearance_height * 0.9,  # Triple overlapped control for change in
-            clearance_height * 0.9,  # Force direction during transition from
-            clearance_height * 0.9,  # follow-through to protraction (2, 3, 4)
-            clearance_height * 0.9,  # Double Overlapped Ctrl Pts for Traj
-            clearance_height * 0.9,  # Dirctn Change during Protraction (5, 6)
-            clearance_height * 1.1,  # Maximum Clearance at mid Traj, Pt 7
-            clearance_height * 1.1,  # Smooth Transition from Protraction
-            clearance_height * 1.1,  # To Retraction, Two Ctrl Pts (8, 9)
-            0.0,  # Double Overlap Ctrl Pts for 0 Touchdown
-            0.0,  # Veloicty wrt hip (Pts 10 and 11)
-        ])
+        Z = np.array(
+            [
+                0.0,  # Double Overlapped Ctrl Pts for zero Lift
+                0.0,  # Veloicty wrt hip (Pts 0 and 1)
+                clearance_height * 0.9,  # Triple overlapped control for change in
+                clearance_height * 0.9,  # Force direction during transition from
+                clearance_height * 0.9,  # follow-through to protraction (2, 3, 4)
+                clearance_height * 0.9,  # Double Overlapped Ctrl Pts for Traj
+                clearance_height * 0.9,  # Dirctn Change during Protraction (5, 6)
+                clearance_height * 1.1,  # Maximum Clearance at mid Traj, Pt 7
+                clearance_height * 1.1,  # Smooth Transition from Protraction
+                clearance_height * 1.1,  # To Retraction, Two Ctrl Pts (8, 9)
+                0.0,  # Double Overlap Ctrl Pts for 0 Touchdown
+                0.0,  # Veloicty wrt hip (Pts 10 and 11)
+            ]
+        )
 
-        stepX = 0.
-        stepY = 0.
-        stepZ = 0.
+        stepX = 0.0
+        stepY = 0.0
+        stepZ = 0.0
         for i in range(len(X)):
             stepX += self.BezierPoint(phase, i, X[i])
             stepY += self.BezierPoint(phase, i, Y[i])
@@ -256,11 +264,11 @@ class BezierGait():
 
     def SineStance(self, phase, L, LateralFraction, penetration_depth=0.00):
         """Calculates the step coordinates for the Sinusoidal stance period
-           :param phase: current trajectory phase
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param penetration_depth: foot penetration depth during stance phase
-           :returns: X,Y,Z Foot Coordinates relative to unmodified body
+        :param phase: current trajectory phase
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param penetration_depth: foot penetration depth during stance phase
+        :returns: X,Y,Z Foot Coordinates relative to unmodified body
         """
         X_POLAR = np.cos(LateralFraction)
         Y_POLAR = np.sin(LateralFraction)
@@ -269,125 +277,146 @@ class BezierGait():
         stepX = step * X_POLAR
         stepY = step * Y_POLAR
         if L != 0.0:
-            stepZ = -penetration_depth * np.cos(
-                (np.pi * (stepX + stepY)) / (2.0 * L))
+            stepZ = -penetration_depth * np.cos((np.pi * (stepX + stepY)) / (2.0 * L))
         else:
             stepZ = 0.0
         return stepX, stepY, stepZ
 
-    def SwingStep(self, phase, L, LateralFraction, YawRate, clearance_height,
-                  T_bf, key, index):
+    def SwingStep(
+        self, phase, L, LateralFraction, YawRate, clearance_height, T_bf, key, index
+    ):
         """Calculates the step coordinates for the Bezier (swing) period
-           using a combination of forward and rotational step coordinates
-           initially decomposed from user input of
-           L, LateralFraction and YawRate
-           :param phase: current trajectory phase
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param YawRate: the desired body yaw rate
-           :param clearance_height: foot clearance height during swing phase
-           :param T_bf: default body-to-foot Vector
-           :param key: indicates which foot is being processed
-           :param index: the foot index in the container
-           :returns: Foot Coordinates relative to unmodified body
+        using a combination of forward and rotational step coordinates
+        initially decomposed from user input of
+        L, LateralFraction and YawRate
+        :param phase: current trajectory phase
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param YawRate: the desired body yaw rate
+        :param clearance_height: foot clearance height during swing phase
+        :param T_bf: default body-to-foot Vector
+        :param key: indicates which foot is being processed
+        :param index: the foot index in the container
+        :returns: Foot Coordinates relative to unmodified body
         """
 
-        DefaultBodyToFoot_Magnitude = np.sqrt(T_bf[0]**2 + T_bf[1]**2)
+        DefaultBodyToFoot_Magnitude = np.sqrt(T_bf[0] ** 2 + T_bf[1] ** 2)
 
         # Rotation Angle depending on leg type
         DefaultBodyToFoot_Direction = np.arctan2(T_bf[1], T_bf[0])
 
         # Angle Traced by Foot for Rotation
-        FootArcAngle = np.pi / 2.0 + DefaultBodyToFoot_Direction + self.ModulatedRotation[
-            index]
+        FootArcAngle = (
+            np.pi / 2.0 + DefaultBodyToFoot_Direction + self.ModulatedRotation[index]
+        )
 
         # Get Foot Coordinates for Forward Motion
         X_delta_lin, Y_delta_lin, Z_delta_lin = self.BezierSwing(
-            phase, L, LateralFraction, clearance_height)
+            phase, L, LateralFraction, clearance_height
+        )
 
         X_delta_rot, Y_delta_rot, Z_delta_rot = self.BezierSwing(
-            phase, YawRate, FootArcAngle, clearance_height)
+            phase, YawRate, FootArcAngle, clearance_height
+        )
 
         # Modulate Magnitude to keep tracing circle
-        ModulatedBodyToFoot_Magnitude = np.sqrt((X_delta_rot +
-                                                 X_delta_lin)**2 +
-                                                (Y_delta_rot + Y_delta_lin)**2)
-        mod = np.arctan2(ModulatedBodyToFoot_Magnitude,
-                         DefaultBodyToFoot_Magnitude)
+        ModulatedBodyToFoot_Magnitude = np.sqrt(
+            (X_delta_rot + X_delta_lin) ** 2 + (Y_delta_rot + Y_delta_lin) ** 2
+        )
+        mod = np.arctan2(ModulatedBodyToFoot_Magnitude, DefaultBodyToFoot_Magnitude)
         # LEFT
         self.ModulatedRotation[index] = mod
 
-        coord = np.array([
-            X_delta_lin + X_delta_rot, Y_delta_lin + Y_delta_rot,
-            Z_delta_lin + Z_delta_rot
-        ])
+        coord = np.array(
+            [
+                X_delta_lin + X_delta_rot,
+                Y_delta_lin + Y_delta_rot,
+                Z_delta_lin + Z_delta_rot,
+            ]
+        )
 
         return coord
 
-    def StanceStep(self, phase, L, LateralFraction, YawRate, penetration_depth,
-                   T_bf, key, index):
+    def StanceStep(
+        self, phase, L, LateralFraction, YawRate, penetration_depth, T_bf, key, index
+    ):
         """Calculates the step coordinates for the Sine (stance) period
-           using a combination of forward and rotational step coordinates
-           initially decomposed from user input of
-           L, LateralFraction and YawRate
-           :param phase: current trajectory phase
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param YawRate: the desired body yaw rate
-           :param penetration_depth: foot penetration depth during stance phase
-           :param T_bf: default body-to-foot Vector
-           :param key: indicates which foot is being processed
-           :param index: the foot index in the container
-           :returns: Foot Coordinates relative to unmodified body
+        using a combination of forward and rotational step coordinates
+        initially decomposed from user input of
+        L, LateralFraction and YawRate
+        :param phase: current trajectory phase
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param YawRate: the desired body yaw rate
+        :param penetration_depth: foot penetration depth during stance phase
+        :param T_bf: default body-to-foot Vector
+        :param key: indicates which foot is being processed
+        :param index: the foot index in the container
+        :returns: Foot Coordinates relative to unmodified body
         """
 
-        DefaultBodyToFoot_Magnitude = np.sqrt(T_bf[0]**2 + T_bf[1]**2)
+        DefaultBodyToFoot_Magnitude = np.sqrt(T_bf[0] ** 2 + T_bf[1] ** 2)
 
         # Rotation Angle depending on leg type
         DefaultBodyToFoot_Direction = np.arctan2(T_bf[1], T_bf[0])
 
         # Angle Traced by Foot for Rotation
-        FootArcAngle = np.pi / 2.0 + DefaultBodyToFoot_Direction + self.ModulatedRotation[
-            index]
+        FootArcAngle = (
+            np.pi / 2.0 + DefaultBodyToFoot_Direction + self.ModulatedRotation[index]
+        )
 
         # Get Foot Coordinates for Forward Motion
         X_delta_lin, Y_delta_lin, Z_delta_lin = self.SineStance(
-            phase, L, LateralFraction, penetration_depth)
+            phase, L, LateralFraction, penetration_depth
+        )
 
         X_delta_rot, Y_delta_rot, Z_delta_rot = self.SineStance(
-            phase, YawRate, FootArcAngle, penetration_depth)
+            phase, YawRate, FootArcAngle, penetration_depth
+        )
 
         # Modulate Magnitude to keep tracing circle
-        ModulatedBodyToFoot_Magnitude = np.sqrt((X_delta_rot +
-                                                 X_delta_lin)**2 +
-                                                (Y_delta_rot + Y_delta_lin)**2)
-        mod = np.arctan2(ModulatedBodyToFoot_Magnitude,
-                         DefaultBodyToFoot_Magnitude)
+        ModulatedBodyToFoot_Magnitude = np.sqrt(
+            (X_delta_rot + X_delta_lin) ** 2 + (Y_delta_rot + Y_delta_lin) ** 2
+        )
+        mod = np.arctan2(ModulatedBodyToFoot_Magnitude, DefaultBodyToFoot_Magnitude)
         # LEFT
         self.ModulatedRotation[index] = mod
 
-        coord = np.array([
-            X_delta_lin + X_delta_rot, Y_delta_lin + Y_delta_rot,
-            Z_delta_lin + Z_delta_rot
-        ])
+        coord = np.array(
+            [
+                X_delta_lin + X_delta_rot,
+                Y_delta_lin + Y_delta_rot,
+                Z_delta_lin + Z_delta_rot,
+            ]
+        )
 
         return coord
 
-    def GetFootStep(self, L, LateralFraction, YawRate, clearance_height,
-                    penetration_depth, Tstance, T_bf, index, key):
+    def GetFootStep(
+        self,
+        L,
+        LateralFraction,
+        YawRate,
+        clearance_height,
+        penetration_depth,
+        Tstance,
+        T_bf,
+        index,
+        key,
+    ):
         """Calculates the step coordinates in either the Bezier or
-           Sine portion of the trajectory depending on the retrieved phase
-           :param phase: current trajectory phase
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param YawRate: the desired body yaw rate
-           :param clearance_height: foot clearance height during swing phase
-           :param penetration_depth: foot penetration depth during stance phase
-           :param Tstance: the current user-specified stance period
-           :param T_bf: default body-to-foot Vector
-           :param index: the foot index in the container
-           :param key: indicates which foot is being processed
-           :returns: Foot Coordinates relative to unmodified body
+        Sine portion of the trajectory depending on the retrieved phase
+        :param phase: current trajectory phase
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param YawRate: the desired body yaw rate
+        :param clearance_height: foot clearance height during swing phase
+        :param penetration_depth: foot penetration depth during stance phase
+        :param Tstance: the current user-specified stance period
+        :param T_bf: default body-to-foot Vector
+        :param index: the foot index in the container
+        :param key: indicates which foot is being processed
+        :returns: Foot Coordinates relative to unmodified body
         """
         phase, StanceSwing = self.GetPhase(index, Tstance, self.Tswing)
         if StanceSwing == SWING:
@@ -398,33 +427,37 @@ class BezierGait():
         self.Phases[index] = stored_phase
         # print("LEG: {} \t PHASE: {}".format(index, stored_phase))
         if StanceSwing == STANCE:
-            return self.StanceStep(phase, L, LateralFraction, YawRate,
-                                   penetration_depth, T_bf, key, index)
+            return self.StanceStep(
+                phase, L, LateralFraction, YawRate, penetration_depth, T_bf, key, index
+            )
         elif StanceSwing == SWING:
-            return self.SwingStep(phase, L, LateralFraction, YawRate,
-                                  clearance_height, T_bf, key, index)
+            return self.SwingStep(
+                phase, L, LateralFraction, YawRate, clearance_height, T_bf, key, index
+            )
 
-    def GenerateTrajectory(self,
-                           L,
-                           LateralFraction,
-                           YawRate,
-                           vel,
-                           T_bf_,
-                           T_bf_curr,
-                           clearance_height=0.06,
-                           penetration_depth=0.01,
-                           contacts=[0, 0, 0, 0],
-                           dt=None):
+    def GenerateTrajectory(
+        self,
+        L,
+        LateralFraction,
+        YawRate,
+        vel,
+        T_bf_,
+        T_bf_curr,
+        clearance_height=0.06,
+        penetration_depth=0.01,
+        contacts=None,
+        dt=None,
+    ):
         """Calculates the step coordinates for each foot
-           :param L: step length
-           :param LateralFraction: determines how lateral the movement is
-           :param YawRate: the desired body yaw rate
-           :param vel: the desired step velocity
-           :param clearance_height: foot clearance height during swing phase
-           :param penetration_depth: foot penetration depth during stance phase
-           :param contacts: array containing 1 for contact and 0 otherwise
-           :param dt: the time step
-           :returns: Foot Coordinates relative to unmodified body
+        :param L: step length
+        :param LateralFraction: determines how lateral the movement is
+        :param YawRate: the desired body yaw rate
+        :param vel: the desired step velocity
+        :param clearance_height: foot clearance height during swing phase
+        :param penetration_depth: foot penetration depth during stance phase
+        :param contacts: array containing 1 for contact and 0 otherwise
+        :param dt: the time step
+        :returns: Foot Coordinates relative to unmodified body
         """
         # First, get Tstance from desired speed and stride length
         # NOTE: L is HALF of stride length
@@ -475,10 +508,17 @@ class BezierGait():
                 self.dSref[i] = 0.0
             _, p_bf = TransToRp(Tbf_in)
             if Tstance > 0.0:
-                step_coord = self.GetFootStep(L, LateralFraction, YawRate,
-                                              clearance_height,
-                                              penetration_depth, Tstance, p_bf,
-                                              i, key)
+                step_coord = self.GetFootStep(
+                    L,
+                    LateralFraction,
+                    YawRate,
+                    clearance_height,
+                    penetration_depth,
+                    Tstance,
+                    p_bf,
+                    i,
+                    key,
+                )
             else:
                 step_coord = np.array([0.0, 0.0, 0.0])
             T_bf[key][0, 3] = Tbf_in[0, 3] + step_coord[0]

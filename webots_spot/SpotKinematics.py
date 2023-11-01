@@ -1,23 +1,25 @@
 import numpy as np
 from webots_spot.LegKinematics import LegIK
-from webots_spot.LieAlgebra import RpToTrans, TransToRp, TransInv, RPY, TransformVector
+from webots_spot.LieAlgebra import RpToTrans, TransToRp, TransInv, RPY
 from collections import OrderedDict
 
 
 class SpotModel:
-    def __init__(self,
-                 shoulder_length=0.113,
-                 elbow_length=0.368,
-                 wrist_length=0.352+0.035094,
-                 hip_x=(0.364+0.308),
-                 hip_y=2*0.053,
-                 foot_x=(0.364+0.308),
-                 foot_y=2*0.166,
-                 height=0.52,
-                 com_offset=-0.023,
-                 shoulder_lim=[-0.6, 0.5],
-                 elbow_lim=[-1.7, 1.7],
-                 wrist_lim=[-0.45, 1.6]):
+    def __init__(
+        self,
+        shoulder_length=0.113,
+        elbow_length=0.368,
+        wrist_length=0.352 + 0.035094,
+        hip_x=(0.364 + 0.308),
+        hip_y=2 * 0.053,
+        foot_x=(0.364 + 0.308),
+        foot_y=2 * 0.166,
+        height=0.52,
+        com_offset=-0.023,
+        shoulder_lim=None,
+        elbow_lim=None,
+        wrist_lim=None,
+    ):
         """
         Spot Micro Kinematics
         """
@@ -53,22 +55,42 @@ class SpotModel:
 
         # Dictionary to store Leg IK Solvers
         self.Legs = OrderedDict()
-        self.Legs["FL"] = LegIK("LEFT", self.shoulder_length,
-                                self.elbow_length, self.wrist_length,
-                                self.shoulder_lim, self.elbow_lim,
-                                self.wrist_lim)
-        self.Legs["FR"] = LegIK("RIGHT", self.shoulder_length,
-                                self.elbow_length, self.wrist_length,
-                                self.shoulder_lim, self.elbow_lim,
-                                self.wrist_lim)
-        self.Legs["BL"] = LegIK("LEFT", self.shoulder_length,
-                                self.elbow_length, self.wrist_length,
-                                self.shoulder_lim, self.elbow_lim,
-                                self.wrist_lim)
-        self.Legs["BR"] = LegIK("RIGHT", self.shoulder_length,
-                                self.elbow_length, self.wrist_length,
-                                self.shoulder_lim, self.elbow_lim,
-                                self.wrist_lim)
+        self.Legs["FL"] = LegIK(
+            "LEFT",
+            self.shoulder_length,
+            self.elbow_length,
+            self.wrist_length,
+            self.shoulder_lim,
+            self.elbow_lim,
+            self.wrist_lim,
+        )
+        self.Legs["FR"] = LegIK(
+            "RIGHT",
+            self.shoulder_length,
+            self.elbow_length,
+            self.wrist_length,
+            self.shoulder_lim,
+            self.elbow_lim,
+            self.wrist_lim,
+        )
+        self.Legs["BL"] = LegIK(
+            "LEFT",
+            self.shoulder_length,
+            self.elbow_length,
+            self.wrist_length,
+            self.shoulder_lim,
+            self.elbow_lim,
+            self.wrist_lim,
+        )
+        self.Legs["BR"] = LegIK(
+            "RIGHT",
+            self.shoulder_length,
+            self.elbow_length,
+            self.wrist_length,
+            self.shoulder_lim,
+            self.elbow_lim,
+            self.wrist_lim,
+        )
 
         # Dictionary to store Hip and Foot Transforms
 
@@ -93,20 +115,16 @@ class SpotModel:
         # With Body Centroid also in world frame
         self.WorldToFoot = OrderedDict()
 
-        self.pf_FL = np.array(
-            [self.foot_x / 2.0, self.foot_y / 2.0, -self.height])
+        self.pf_FL = np.array([self.foot_x / 2.0, self.foot_y / 2.0, -self.height])
         self.WorldToFoot["FL"] = RpToTrans(Rwb, self.pf_FL)
 
-        self.pf_FR = np.array(
-            [self.foot_x / 2.0, -self.foot_y / 2.0, -self.height])
+        self.pf_FR = np.array([self.foot_x / 2.0, -self.foot_y / 2.0, -self.height])
         self.WorldToFoot["FR"] = RpToTrans(Rwb, self.pf_FR)
 
-        self.pf_BL = np.array(
-            [-self.foot_x / 2.0, self.foot_y / 2.0, -self.height])
+        self.pf_BL = np.array([-self.foot_x / 2.0, self.foot_y / 2.0, -self.height])
         self.WorldToFoot["BL"] = RpToTrans(Rwb, self.pf_BL)
 
-        self.pf_BR = np.array(
-            [-self.foot_x / 2.0, -self.foot_y / 2.0, -self.height])
+        self.pf_BR = np.array([-self.foot_x / 2.0, -self.foot_y / 2.0, -self.height])
         self.WorldToFoot["BR"] = RpToTrans(Rwb, self.pf_BR)
 
     def HipToFoot(self, orn, pos, T_bf):
@@ -132,7 +150,7 @@ class SpotModel:
         # Dictionary to store vectors
         HipToFoot_List = OrderedDict()
 
-        for i, (key, T_wh) in enumerate(self.WorldToHip.items()):
+        for _i, (key, T_wh) in enumerate(self.WorldToHip.items()):
             # ORDER: FL, FR, FR, BL, BR
 
             # Extract vector component
