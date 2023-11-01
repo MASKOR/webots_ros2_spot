@@ -16,7 +16,7 @@ The world contains apriltags, a red line to test lane follower and objects for m
 
 ### Install dependencies
 
-    sudo apt install ros-$ROS_DISTRO-nav2* -y
+    sudo apt install ros-$ROS_DISTRO-nav* -y
     sudo apt install ros-$ROS_DISTRO-pointcloud-to-laserscan -y
     sudo apt install ros-$ROS_DISTRO-moveit* -y
     sudo apt install ros-$ROS_DISTRO-vision-msgs* -y
