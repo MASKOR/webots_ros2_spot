@@ -5,15 +5,24 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 import math
 import time
 
+
 def main():
     rclpy.init()
-    node = rclpy.create_node('action_client_node')
+    node = rclpy.create_node("action_client_node")
 
     # Create an action client for the spotarm_joint_trajectory_controller
-    arm_client = ActionClient(node, FollowJointTrajectory, '/spotarm_joint_trajectory_controller/follow_joint_trajectory')
+    arm_client = ActionClient(
+        node,
+        FollowJointTrajectory,
+        "/spotarm_joint_trajectory_controller/follow_joint_trajectory",
+    )
 
     # Create an action client for the tiago_gripper_joint_trajectory_controller
-    gripper_client = ActionClient(node, FollowJointTrajectory, '/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory')
+    gripper_client = ActionClient(
+        node,
+        FollowJointTrajectory,
+        "/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory",
+    )
 
     arm_client.wait_for_server()
     gripper_client.wait_for_server()
@@ -22,14 +31,33 @@ def main():
 
     # Create a goal request to set arm joint positions
     arm_goal_msg = FollowJointTrajectory.Goal()
-    arm_goal_msg.trajectory.joint_names = ["spotarm_1_joint", "spotarm_2_joint", "spotarm_3_joint", "spotarm_4_joint", "Slider11", "spotarm_5_joint", "spotarm_6_joint"]
+    arm_goal_msg.trajectory.joint_names = [
+        "spotarm_1_joint",
+        "spotarm_2_joint",
+        "spotarm_3_joint",
+        "spotarm_4_joint",
+        "Slider11",
+        "spotarm_5_joint",
+        "spotarm_6_joint",
+    ]
     arm_point = JointTrajectoryPoint()
-    arm_point.positions = [0.0, math.radians(179), math.radians(170), 0.0, 0.0, math.radians(11), 0.0]
+    arm_point.positions = [
+        0.0,
+        math.radians(179),
+        math.radians(170),
+        0.0,
+        0.0,
+        math.radians(11),
+        0.0,
+    ]
     arm_goal_msg.trajectory.points.append(arm_point)
 
     # Create a goal request to set gripper joint positions
     gripper_goal_msg = FollowJointTrajectory.Goal()
-    gripper_goal_msg.trajectory.joint_names = ["gripper_left_finger_joint", "gripper_right_finger_joint"]
+    gripper_goal_msg.trajectory.joint_names = [
+        "gripper_left_finger_joint",
+        "gripper_right_finger_joint",
+    ]
     gripper_point = JointTrajectoryPoint()
     gripper_point.positions = [0.045, 0.045]
     gripper_goal_msg.trajectory.points.append(gripper_point)
@@ -44,5 +72,6 @@ def main():
 
     rclpy.shutdown()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

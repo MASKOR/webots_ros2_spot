@@ -106,8 +106,7 @@ def VecToso3(omg):
                   [ 3,  0, -1],
                   [-2,  1,  0]])
     """
-    return np.array([[0, -omg[2], omg[1]], [omg[2], 0, -omg[0]],
-                     [-omg[1], omg[0], 0]])
+    return np.array([[0, -omg[2], omg[1]], [omg[2], 0, -omg[0]], [-omg[1], omg[0], 0]])
 
 
 def RPY(roll, pitch, yaw):
@@ -127,13 +126,30 @@ def RPY(roll, pitch, yaw):
                   [0, 0, 1, 0],
                   [0, 0, 0, 1]])
     """
-    Roll = np.array([[1, 0, 0, 0], [0, np.cos(roll), -np.sin(roll), 0],
-                     [0, np.sin(roll), np.cos(roll), 0], [0, 0, 0, 1]])
-    Pitch = np.array([[np.cos(pitch), 0, np.sin(pitch), 0], [0, 1, 0, 0],
-                      [-np.sin(pitch), 0, np.cos(pitch), 0], [0, 0, 0, 1]])
-    Yaw = np.array([[np.cos(yaw), -np.sin(yaw), 0, 0],
-                    [np.sin(yaw), np.cos(yaw), 0, 0], [0, 0, 1, 0],
-                    [0, 0, 0, 1]])
+    Roll = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, np.cos(roll), -np.sin(roll), 0],
+            [0, np.sin(roll), np.cos(roll), 0],
+            [0, 0, 0, 1],
+        ]
+    )
+    Pitch = np.array(
+        [
+            [np.cos(pitch), 0, np.sin(pitch), 0],
+            [0, 1, 0, 0],
+            [-np.sin(pitch), 0, np.cos(pitch), 0],
+            [0, 0, 0, 1],
+        ]
+    )
+    Yaw = np.array(
+        [
+            [np.cos(yaw), -np.sin(yaw), 0, 0],
+            [np.sin(yaw), np.cos(yaw), 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ]
+    )
     return np.matmul(np.matmul(Roll, Pitch), Yaw)
 
 
