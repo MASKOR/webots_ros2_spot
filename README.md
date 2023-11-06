@@ -60,10 +60,6 @@ Starting MoveIt:
 
     ros2 launch webots_spot moveit_launch.py
 
-Starting apriltag detection:
-
-    ros2 run webots_spot apriltag_ros
-
 To launch navigation with Rviz2:
 
     ros2 launch webots_spot nav_launch.py set_initial_pose:=true
