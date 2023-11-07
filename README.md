@@ -7,72 +7,62 @@ The world contains apriltags, a red line to test lane follower and objects for m
 
 ## Prerequisites
 
-    - Tested for ubuntu 22.04
-    - ROS 2 Humble
-    - Webots R2023b
-    - Webots ROS 2 interface
+    - Ubuntu 22.04
+    - ROS2 Humble https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+    - Webots 2023b https://github.com/cyberbotics/webots/releases/tag/R2023b
 
 ## Install
 
-### Install dependencies
+1. Make sure that `colcon`, its extensions, and `vcs` are installed:
+    ```
+    sudo apt install python3-colcon-common-extensions python3-vcstool
+    ```
 
-    sudo apt install ros-$ROS_DISTRO-nav* -y
-    sudo apt install ros-$ROS_DISTRO-pointcloud-to-laserscan -y
-    sudo apt install ros-$ROS_DISTRO-moveit* -y
-    sudo apt install ros-$ROS_DISTRO-vision-msgs* -y
-    sudo apt install python3-open3d -y # for Ubuntu 22.04
-    pip3 install scipy pupil-apriltags
-    pip3 install open3d # for Ubuntu 20.04
+    Also, rosdep is installed https://docs.ros.org/en/humble/Tutorials/Intermediate/Rosdep.html#rosdep-installation.
 
-### webots_ros2_spot
+2. Create a new ROS2 workspace:
+    ```
+    export COLCON_WS=~/ros2_ws
+    mkdir -p $COLCON_WS/src
+    ```
 
-    # Source ROS2
-    . /opt/ros/$ROS_DISTRO/setup.bash
+3. Pull relevant packages, install dependencies, compile, and source the workspace by using:
+    ```
+    cd $COLCON_WS
+    git clone https://github.com/MASKOR/webots_ros2_spot src/webots_ros2_spot
+    vcs import src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
+    rosdep install --ignore-src --from-paths src -y -r
+    ```
 
-    mkdir ~/ros2_ws
-    cd ~/ros2_ws
-
-    # webots_ros2
-    git clone https://github.com/cyberbotics/webots_ros2 -b 2023.1.1 --recursive src/webots_ros2
-
-    # webots_spot
-    git clone https://github.com/MASKOR/webots_ros2_spot src/webots_spot
-
-    # webots_spot_msgs
-    git clone https://github.com/MASKOR/webots_spot_msgs src/webots_spot_msgs
-
-    # webots_spot_teleop (optional)
-    git clone https://github.com/MASKOR/webots_spot_teleop src/webots_spot_teleop
-
-    # Build everything
+4. Build packages and source the workspace
+    ```
     colcon build --symlink-install
-    . install/setup.bash
-
-    # With '--symlink-install', following python file isn't marked as an executable, do it manually
-    chmod +x ~/ros2_ws/install/webots_ros2_driver/lib/webots_ros2_driver/ros2_supervisor.py
+    source install/setup.bash
+    ```
 
 ## Start
 Starting the simulation:
-
-    ros2 launch webots_spot spot_launch.py
-
-Starting MoveIt:
-
-    ros2 launch webots_spot moveit_launch.py
+```
+ros2 launch webots_spot spot_launch.py
+```
 
 To launch navigation with Rviz2:
-
-    ros2 launch webots_spot nav_launch.py set_initial_pose:=true
+```
+ros2 launch webots_spot nav_launch.py set_initial_pose:=true
+```
 
 To launch mapping with Slamtoolbox:
+```
+ros2 launch webots_spot slam_launch.py
+```
 
-    ros2 launch webots_spot slam_launch.py
-
-To launch mapping with RTABMAP: #https://github.com/introlab/rtabmap_ros
-
-    ros2 launch webots_spot rtabmap_launch.py
+Starting MoveIt:
+```
+ros2 launch webots_spot moveit_launch.py
+```
 
 Teleop keyboard:
-
-    ros2 run teleop_twist_keyboard teleop_twist_keyboard
-    # OR ros2 run spot_teleop spot_teleop_keyboard for body_pose control as well
+```
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+# OR ros2 run spot_teleop spot_teleop_keyboard for body_pose control as well
+```

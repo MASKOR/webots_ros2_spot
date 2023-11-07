@@ -10,7 +10,6 @@ from nav_msgs.msg import Odometry
 from tf2_ros.transform_broadcaster import TransformBroadcaster
 from std_srvs.srv import Empty
 
-from scipy.spatial.transform import Rotation as R
 import numpy as np
 import copy
 
@@ -104,12 +103,69 @@ def set_rod(robot, red=False):
         )
 
 
-def quat_from_aa(aa):
-    return R.from_rotvec(aa[3] * np.array(aa[:3])).as_quat()
+def quaternion_to_euler(q):
+    x, y, z, w = q
+
+    roll = np.arctan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))
+    pitch = np.arcsin(2 * (w * y - z * x))
+    yaw = np.arctan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+
+    return roll, pitch, yaw
+
+
+def quaternion_from_euler(a):
+    ai, aj, ak = a
+    ai /= 2.0
+    aj /= 2.0
+    ak /= 2.0
+    ci = np.cos(ai)
+    si = np.sin(ai)
+    cj = np.cos(aj)
+    sj = np.sin(aj)
+    ck = np.cos(ak)
+    sk = np.sin(ak)
+    cc = ci * ck
+    cs = ci * sk
+    sc = si * ck
+    ss = si * sk
+
+    q = np.empty((4,))
+    q[0] = cj * sc - sj * cs
+    q[1] = cj * ss + sj * cc
+    q[2] = cj * cs - sj * sc
+    q[3] = cj * cc + sj * ss
+
+    return q
+
+
+def quat_from_angle_axis(aa):
+    angle = aa[3]
+    axis = np.array(aa[:3])
+    norm_axis = axis / np.linalg.norm(axis)
+    half_angle = 0.5 * angle
+    sin_half_angle = np.sin(half_angle)
+
+    x = sin_half_angle * norm_axis[0]
+    y = sin_half_angle * norm_axis[1]
+    z = sin_half_angle * norm_axis[2]
+    w = np.cos(half_angle)
+
+    return [x, y, z, w]
 
 
 def diff_quat(q2, q1):
-    return (R.from_quat(q2) * R.from_quat(q1).inv()).as_quat()
+    # Calculate the product of q2 and the inverse of q1
+    q1_inv = [-q1[0], -q1[1], -q1[2], q1[3]]
+
+    x1, y1, z1, w1 = q1_inv
+    x2, y2, z2, w2 = q2
+
+    x = x2 * w1 + y2 * z1 - z2 * y1 + w2 * x1
+    y = -x2 * z1 + y2 * w1 + z2 * x1 + w2 * y1
+    z = x2 * y1 - y2 * x1 + z2 * w1 + w2 * z1
+    w = w2 * w1 - x2 * x1 - y2 * y1 - z2 * z1
+
+    return [x, y, z, w]
 
 
 def shuffle_cubes(robot):
@@ -521,8 +577,8 @@ class SpotDriver:
             tf.transform.translation.z += HEIGHT + 0.095  # BASE_LINK To Ground at Rest
 
             r = diff_quat(
-                quat_from_aa(part.getField("rotation").getSFRotation()),
-                quat_from_aa(self.spot_rotation_initial),
+                quat_from_angle_axis(part.getField("rotation").getSFRotation()),
+                quat_from_angle_axis(self.spot_rotation_initial),
             )
             tf.transform.rotation.x = -r[0]
             tf.transform.rotation.y = -r[1]
@@ -548,7 +604,7 @@ class SpotDriver:
             tf_odom_base_link.translation.z,
         ]
 
-        r = R.from_quat(
+        rotation = quaternion_to_euler(
             [
                 tf_odom_base_link.rotation.x,
                 tf_odom_base_link.rotation.y,
@@ -556,7 +612,6 @@ class SpotDriver:
                 tf_odom_base_link.rotation.w,
             ]
         )
-        rotation = [r.as_euler("xyz")[0], r.as_euler("xyz")[1], r.as_euler("xyz")[2]]
 
         if not hasattr(self, "previous_rotation"):
             self.previous_rotation = rotation
@@ -582,11 +637,11 @@ class SpotDriver:
             odom.pose.pose.position.x = translation[0]
             odom.pose.pose.position.y = translation[1]
             odom.pose.pose.position.z = translation[2]
-            r = R.from_euler("xyz", [rotation[0], rotation[1], rotation[2]])
-            odom.pose.pose.orientation.x = r.as_quat()[0]
-            odom.pose.pose.orientation.y = r.as_quat()[1]
-            odom.pose.pose.orientation.z = r.as_quat()[2]
-            odom.pose.pose.orientation.w = r.as_quat()[3]
+            quat = quaternion_from_euler([rotation[0], rotation[1], rotation[2]])
+            odom.pose.pose.orientation.x = quat[0]
+            odom.pose.pose.orientation.y = quat[1]
+            odom.pose.pose.orientation.z = quat[2]
+            odom.pose.pose.orientation.w = quat[3]
             odom.twist.twist.linear.x = translation_twist[0]
             odom.twist.twist.linear.y = translation_twist[1]
             odom.twist.twist.linear.z = translation_twist[2]
