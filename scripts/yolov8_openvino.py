@@ -22,8 +22,7 @@ with open(CLASSES_YAML) as f:
 parsed_list = yaml.safe_load(yaml_content)
 
 # Extract class names from the parsed YAML data
-coco_classes = list(parsed_list["names"].values())
-CLASSES = coco_classes
+CLASSES = list(parsed_list["names"].values())
 
 # Generate random colors for each class for bounding box visualization
 colors = np.random.uniform(0, 255, size=(len(CLASSES), 3))
@@ -43,7 +42,9 @@ class ObjectDetector(Node):
         super().__init__("yolov8_node")
 
         # Create a subscription to the "/image_raw" topic
-        self.yolo_sub = self.create_subscription(Image, "/image_raw", self.image_cb, 1)
+        self.yolo_sub = self.create_subscription(
+            Image, "/SpotArm/gripper_camera/image_color", self.image_cb, 1
+        )
 
         # Initialize OpenVINO Core and load the YOLOv8 model
         core = Core()
@@ -120,8 +121,8 @@ class ObjectDetector(Node):
                 scores[index],
                 round(box[0] * scale),
                 round(box[1] * scale),
-                round((box[2]) * scale),
-                round((box[3]) * scale),
+                round(box[2] * scale),
+                round(box[3] * scale),
             )
 
         # Display the annotated image
