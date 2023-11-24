@@ -512,3 +512,8 @@ Solid {
   ]
   name "aruco"
 }
+Robot {
+  name "ArenaModifier"
+  controller "<extern>"
+  supervisor TRUE
+}
