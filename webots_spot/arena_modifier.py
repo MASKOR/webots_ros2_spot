@@ -121,25 +121,95 @@ class ArenaModifier(Node):
 
         self.create_timer(1 / 1000, self.step_callback)
 
-        # self.create_timer(1, self.timer_cb)
+        self.create_timer(1, self.timer_cb)
 
         self.create_service(Empty, "/hazmat_signs", self.hazmat_signs)
         self.create_service(Empty, "/red_rod", self.red_rod)
         self.create_service(BlockPose, "/get_block_pose", self.gpp_block_pose)
 
         self.i = 0
-
-        randomise_lane(self.__robot)
-        randomise_imgs(self.__robot)
-        set_rod(self.__robot)
-        self.cubes_loc = shuffle_cubes(self.__robot)
+        self.first_time = True
+        self.connected = False
 
     def step_callback(self):
         if self.__robot.step(self.__timestep) < 0:
             self.get_logger().info("ArenaModifier is shutting down...")
+        self.connected = True
+
+        if self.first_time:
+            self.first_time = False
+            randomise_lane(self.__robot)
+            randomise_imgs(self.__robot)
+            set_rod(self.__robot)
+            self.cubes_loc = shuffle_cubes(self.__robot)
 
     def timer_cb(self):
-        pass
+        if not self.connected:
+            return
+
+        if not hasattr(self, "box_positions"):
+            self.box_colors = ["red", "green", "blue"]
+            self.box_positions_list = [0, 1, 2]
+            random.shuffle(self.box_positions_list)
+            self.box_positions = {
+                k: v + 1 for k, v in zip(self.box_colors, self.box_positions_list)
+            }
+
+            new_box_positions = []
+            for num in self.box_positions_list:
+                door_name = f"DropBox{self.box_colors[num].capitalize()}"
+                door_tr_def = self.__robot.getFromDef(door_name).getField("translation")
+                new_box_positions.append(door_tr_def.getSFVec3f())
+            for idx, position in enumerate(new_box_positions):
+                door_name = f"DropBox{self.box_colors[idx].capitalize()}"
+                door_tr_def = self.__robot.getFromDef(door_name).getField("translation")
+                door_tr_def.setSFVec3f(position)
+
+        for color in self.box_colors:
+            if self.check_bucket_and_cube(color):
+                self.open_door(f"Door{self.box_positions[color]}", "open")
+
+    def open_door(self, door, action):
+        door_tr_vec = self.__robot.getFromDef(f"{door}").getField("translation")
+        door_tr = door_tr_vec.getSFVec3f()
+        door_tr_vec.setSFVec3f([door_tr[0], 20 if action == "open" else 4, door_tr[2]])
+        return False
+
+    def check_bucket_and_cube(self, cube):
+        if not hasattr(self, "initial_cube_positions"):
+            self.initial_cube_positions = {}
+
+        box_tr = (
+            self.__robot.getFromDef(f"DropBox{cube.capitalize()}")
+            .getField("translation")
+            .getSFVec3f()
+        )
+
+        for i in range(3):
+            current_cube_name = f"{cube.upper()}_{i+1}"
+
+            cube_tr_def = self.__robot.getFromDef(current_cube_name).getField(
+                "translation"
+            )
+
+            cube_tr = cube_tr_def.getSFVec3f()
+
+            if current_cube_name not in self.initial_cube_positions.keys():
+                self.initial_cube_positions[current_cube_name] = cube_tr
+
+            if (
+                abs(box_tr[0] - cube_tr[0]) < 0.3
+                and abs(box_tr[1] - cube_tr[1]) < 0.3
+                and cube_tr[2] < 0.1
+            ):
+                return True
+            elif cube_tr[2] < 0.1:
+                self.__robot.getFromDef(current_cube_name).getField(
+                    "rotation"
+                ).setSFRotation([0.707, -0.707, 0, 0])
+                cube_tr_def.setSFVec3f(self.initial_cube_positions[current_cube_name])
+
+        return False
 
     def hazmat_signs(self, request, response):
         randomise_imgs(self.__robot, True)

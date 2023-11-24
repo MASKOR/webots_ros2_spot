@@ -25,9 +25,9 @@ TexturedBackground {
   skybox FALSE
 }
 RectangleArena {
-  translation 0.59 5 0
+  translation 0.59 9 0
   rotation 0 1 0 0
-  floorSize 18 20
+  floorSize 18 28
   floorTileSize 1 1
   floorAppearance ThreadMetalPlate {
   }
@@ -516,4 +516,261 @@ Robot {
   name "ArenaModifier"
   controller "<extern>"
   supervisor TRUE
+}
+# Third Arena
+SolidBox {
+  translation 0.589985 16.28 0.85
+  rotation 0 0 1 1.5708
+  name "arena_seperator_wall_2"
+  size 0.03 18 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door1 SolidBox {
+  translation 4.88 18.31 0.85
+  name "door_1"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door2 SolidBox {
+  translation 0.08 18.31 0.85
+  name "door_2"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door3 SolidBox {
+  translation -4.31 18.31 0.85
+  name "door_3"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 4.91 20.5 0.85
+  name "black_wall_1"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 0.11 20.5 0.85
+  name "black_wall_2"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -4.29 20.5 0.85
+  name "black_wall_3"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+ImageBox {
+  translation 9.29 20.22 0.500001
+  rotation 0 1 0 3.14159
+  name "cubes_stand_1"
+}
+ImageBox {
+  translation 4.57 20.22 0.499991
+  rotation 0 1 0 3.14159
+  name "cubes_stand_2"
+}
+ImageBox {
+  translation -0.24 20.22 0.499983
+  rotation 0 1 0 3.14159
+  name "cubes_stand_3"
+}
+DEF DropBoxRed ImageBox {
+  translation 5.23 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_red"
+  legAppearance PBRAppearance {baseColor 1 0 0 roughness 0.5 metalness 0}
+}
+DEF DropBoxGreen ImageBox {
+  translation 0.43 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_green"
+  legAppearance PBRAppearance {baseColor 0 1 0 roughness 0.5 metalness 0}
+}
+DEF DropBoxBlue ImageBox {
+  translation -3.97 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_blue"
+  legAppearance PBRAppearance {baseColor 0 0 1 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_1 ImageBox {
+  translation 7.23 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_1"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_2 ImageBox {
+  translation 2.47 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_2"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_3 ImageBox {
+  translation -2.07 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_3"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF RED_1 SolidBox {
+  translation 9.04 20.4 0.535
+  rotation 0 0 1 1.5708
+  name "RED_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_1 SolidBox {
+  translation 9.04 20.21 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_1 SolidBox {
+  translation 9.04 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF RED_2 SolidBox {
+  translation 4.37 20.41 0.535
+  rotation 0 0 1 1.5708
+  name "RED_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_2 SolidBox {
+  translation 4.37 20.22 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_2 SolidBox {
+  translation 4.37 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF RED_3 SolidBox {
+  translation -0.44 20.42 0.535
+  rotation 0 0 1 1.5708
+  name "RED_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_3 SolidBox {
+  translation -0.44 20.23 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_3 SolidBox {
+  translation -0.44 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
 }

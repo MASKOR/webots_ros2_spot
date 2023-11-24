@@ -125,15 +125,26 @@ class SpotDriver:
         self.tfb_ = TransformBroadcaster(self.__node)
 
         self.__node.get_logger().info("Init SpotDriver")
+
+        # ROS2 Parameters
         self.use_sim_time = True
         if not self.__node.has_parameter("use_sim_time"):
             self.__node.declare_parameter("use_sim_time", self.use_sim_time)
         self.use_sim_time = self.__node.get_parameter("use_sim_time")
 
+        self.arena3 = False
+        if not self.__node.has_parameter("arena3"):
+            self.__node.declare_parameter("arena3", self.arena3)
+        self.arena3 = self.__node.get_parameter("arena3")
+
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
 
         self.spot_translation = self.spot_node.getField("translation")
+
+        if self.arena3:
+            self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
+
         self.spot_translation_initial = self.spot_translation.getSFVec3f()
         self.spot_rotation = self.spot_node.getField("rotation")
         self.spot_rotation_initial = self.spot_rotation.getSFRotation()
@@ -436,22 +447,33 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
+        if not self.arena3:
+            transforms_to_publish = [
+                "Spot",
+                "A",
+                "B",
+                "C",
+                "T1",
+                "T2",
+                "T3",
+                "P",
+                "Image1",
+                "Image2",
+                "Image3",
+                "PlaceBox",
+            ]
+        else:
+            transforms_to_publish = ["Spot", "DropBoxRed"]
+            for color in ["Red", "Green", "Blue"]:
+                transforms_to_publish.append(f"DropBox{color}")
+                for idx in range(3):
+                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
+            for idx in range(3):
+                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
+
         ## Odom to following:
         tfs = []
-        for x in [
-            "Spot",
-            "A",
-            "B",
-            "C",
-            "T1",
-            "T2",
-            "T3",
-            "P",
-            "Image1",
-            "Image2",
-            "Image3",
-            "PlaceBox",
-        ]:
+        for x in transforms_to_publish:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
             tf.header.frame_id = "odom"
