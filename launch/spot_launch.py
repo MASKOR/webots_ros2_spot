@@ -2,7 +2,6 @@
 
 import os
 import launch
-from launch.substitutions import LaunchConfiguration
 from launch import LaunchDescription
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
@@ -91,9 +90,6 @@ def get_ros2_nodes(*args):
 
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration("use_sim_time", default=True)
-    arena3 = LaunchConfiguration("arena3", default=False)
-
     webots = WebotsLauncher(
         world=PathJoinSubstitution([package_dir, "worlds", "spot.wbt"])
     )
@@ -106,9 +102,8 @@ def generate_launch_description():
                 "robot_description": os.path.join(
                     package_dir, "resource", "spot_control.urdf"
                 ),
-                "use_sim_time": use_sim_time,
+                "use_sim_time": True,
                 "set_robot_state_publisher": False,  # foot positions are wrong with webot's urdf
-                "arena3": arena3,
             }
         ],
         respawn=True,
@@ -124,7 +119,7 @@ def generate_launch_description():
         parameters=[
             {
                 "robot_description": robot_desc,
-                "use_sim_time": use_sim_time,
+                "use_sim_time": True,
             }
         ],
     )
@@ -183,7 +178,6 @@ def generate_launch_description():
             "WEBOTS_CONTROLLER_URL": controller_url_prefix("1234") + "ArenaModifier",
             "WEBOTS_HOME": get_package_prefix("webots_ros2_driver"),
         },
-        parameters=[{"arena3": arena3}],
         respawn=True,
     )
 

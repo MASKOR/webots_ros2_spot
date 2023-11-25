@@ -73,7 +73,7 @@ def shuffle_cubes(robot):
     for c, location in zip("ABC", locations):
         cube_locations[c] = location
 
-    cube_locations_aphabets = {}
+    cube_locations_alphabets = {}
     for cube, location in cube_locations.items():
         on_top_of_cube = False
         for c, l in cube_locations.items():
@@ -85,7 +85,7 @@ def shuffle_cubes(robot):
                 and location[2] == round(l[2] + 0.05, 3)
             ):  # 0.05 becomes 0.050...01
                 on_top_of_cube = True
-                cube_locations_aphabets[cube] = c
+                cube_locations_alphabets[cube] = c
                 break
             if (
                 location[0] == l[0]
@@ -93,14 +93,14 @@ def shuffle_cubes(robot):
                 and location[2] == l[2] + 0.1
             ):
                 on_top_of_cube = True
-                cube_locations_aphabets[cube] = c
+                cube_locations_alphabets[cube] = c
         if not on_top_of_cube:
             if location[1] == -4:
-                cube_locations_aphabets[cube] = "t1"
+                cube_locations_alphabets[cube] = "t1"
             elif location[1] == -3.8:
-                cube_locations_aphabets[cube] = "t2"
+                cube_locations_alphabets[cube] = "t2"
             else:
-                cube_locations_aphabets[cube] = "t3"
+                cube_locations_alphabets[cube] = "t3"
             robot.getFromDef(cube).getField("translation").setSFVec3f(
                 [location[0], location[1], 0.025]
             )  # prevent abrupt fall on floor
@@ -109,7 +109,7 @@ def shuffle_cubes(robot):
                 [location[0], location[1], location[2]]
             )
 
-    return cube_locations_aphabets
+    return cube_locations_alphabets
 
 
 class ArenaModifier(Node):

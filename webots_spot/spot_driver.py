@@ -126,16 +126,8 @@ class SpotDriver:
 
         self.__node.get_logger().info("Init SpotDriver")
 
-        # ROS2 Parameters
-        self.use_sim_time = True
-        if not self.__node.has_parameter("use_sim_time"):
-            self.__node.declare_parameter("use_sim_time", self.use_sim_time)
-        self.use_sim_time = self.__node.get_parameter("use_sim_time")
-
-        self.arena3 = False
-        if not self.__node.has_parameter("arena3"):
-            self.__node.declare_parameter("arena3", self.arena3)
-        self.arena3 = self.__node.get_parameter("arena3")
+        # Parameters
+        self.arena3 = properties["arena3"] == "true"
 
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
@@ -442,13 +434,10 @@ class SpotDriver:
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
-        if not self.use_sim_time:
-            time_stamp = self.__node.get_clock().now().to_msg()
-        else:
-            current_time = self.__robot.getTime()
-            time_stamp = Time()
-            time_stamp.sec = int(current_time)
-            time_stamp.nanosec = int((current_time % 1) * 1e9)
+        current_time = self.__robot.getTime()
+        time_stamp = Time()
+        time_stamp.sec = int(current_time)
+        time_stamp.nanosec = int((current_time % 1) * 1e9)
 
         base_link_from_ground = HEIGHT - self.zd
 

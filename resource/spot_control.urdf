@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <robot name="Spot">
     <webots>
-        <plugin type="webots_spot.spot_driver.SpotDriver" />
+        <plugin type="webots_spot.spot_driver.SpotDriver" >
+            <arena3>false</arena3>
+        </plugin>
 
         <plugin type="webots_ros2_driver::Ros2IMU">
             <enabled>true</enabled>
@@ -11,6 +13,6 @@
             <inertialUnitName>inertial unit</inertialUnitName>
             <gyroName>gyro</gyroName>
             <accelerometerName>accelerometer</accelerometerName>
-        </plugin>        
+        </plugin>
     </webots>
 </robot>
