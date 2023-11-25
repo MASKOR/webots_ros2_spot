@@ -327,6 +327,7 @@ class SpotDriver:
             self.rolld = 0.0
             self.pitchd = 0.0
             self.yawd = 0.0
+
             self.StepLength = StepLength * msg.linear.x
 
             # Rotation along vertical axis
@@ -351,6 +352,10 @@ class SpotDriver:
                     # for sideway motion
                     self.StepLength = StepLength * abs(msg.linear.y)
 
+            if 0.001 < self.StepLength < 0.05:
+                self.StepLength = max(0.015, self.StepLength)
+            elif -0.001 > self.StepLength > -0.05:
+                self.StepLength = min(-0.02, self.StepLength)
             self.StepVelocity = StepVelocity
             self.ClearanceHeight = ClearanceHeight
             self.PenetrationDepth = PenetrationDepth
