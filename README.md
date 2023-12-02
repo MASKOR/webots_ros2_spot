@@ -69,6 +69,6 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 ## To switch to Arena 3
 
-1) Change false to true in https://github.com/MASKOR/webots_ros2_spot/blob/main/resource/spot_control.urdf#L9
+1) Change false to true in https://github.com/MASKOR/webots_ros2_spot/blob/main/resource/spot_control.urdf#L5
 
 2) Change map.yaml to map_arena3.yaml https://github.com/MASKOR/webots_ros2_spot/blob/main/launch/nav_launch.py#L15
