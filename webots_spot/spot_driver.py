@@ -125,15 +125,21 @@ class SpotDriver:
         self.tfb_ = TransformBroadcaster(self.__node)
 
         self.__node.get_logger().info("Init SpotDriver")
-        self.use_sim_time = True
-        if not self.__node.has_parameter("use_sim_time"):
-            self.__node.declare_parameter("use_sim_time", self.use_sim_time)
-        self.use_sim_time = self.__node.get_parameter("use_sim_time")
+
+        # Parameters
+        self.arena3 = properties["arena3"] == "true"
 
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
 
         self.spot_translation = self.spot_node.getField("translation")
+
+        if self.arena3:
+            self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
+            viewpoint = self.__robot.getFromDef("Viewpoint")
+            viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
+            viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])
+
         self.spot_translation_initial = self.spot_translation.getSFVec3f()
         self.spot_rotation = self.spot_node.getField("rotation")
         self.spot_rotation_initial = self.spot_rotation.getSFRotation()
@@ -316,6 +322,7 @@ class SpotDriver:
             self.rolld = 0.0
             self.pitchd = 0.0
             self.yawd = 0.0
+
             self.StepLength = StepLength * msg.linear.x
 
             # Rotation along vertical axis
@@ -340,6 +347,10 @@ class SpotDriver:
                     # for sideway motion
                     self.StepLength = StepLength * abs(msg.linear.y)
 
+            if 0.001 < self.StepLength < 0.05:
+                self.StepLength = max(0.015, self.StepLength)
+            elif -0.001 > self.StepLength > -0.05:
+                self.StepLength = min(-0.02, self.StepLength)
             self.StepVelocity = StepVelocity
             self.ClearanceHeight = ClearanceHeight
             self.PenetrationDepth = PenetrationDepth
@@ -426,32 +437,40 @@ class SpotDriver:
         for idx, motor_sensor in enumerate(self.motor_sensors):
             self.motors_pos[idx] = motor_sensor.getValue()
 
-        if not self.use_sim_time:
-            time_stamp = self.__node.get_clock().now().to_msg()
-        else:
-            current_time = self.__robot.getTime()
-            time_stamp = Time()
-            time_stamp.sec = int(current_time)
-            time_stamp.nanosec = int((current_time % 1) * 1e9)
+        current_time = self.__robot.getTime()
+        time_stamp = Time()
+        time_stamp.sec = int(current_time)
+        time_stamp.nanosec = int((current_time % 1) * 1e9)
 
         base_link_from_ground = HEIGHT - self.zd
 
+        if not self.arena3:
+            transforms_to_publish = [
+                "Spot",
+                "A",
+                "B",
+                "C",
+                "T1",
+                "T2",
+                "T3",
+                "P",
+                "Image1",
+                "Image2",
+                "Image3",
+                "PlaceBox",
+            ]
+        else:
+            transforms_to_publish = ["Spot"]
+            for i, color in enumerate(["Red", "Green", "Blue"]):
+                transforms_to_publish.append(f"DropBox{i+1}")
+                for idx in range(3):
+                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
+            for idx in range(3):
+                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
+
         ## Odom to following:
         tfs = []
-        for x in [
-            "Spot",
-            "A",
-            "B",
-            "C",
-            "T1",
-            "T2",
-            "T3",
-            "P",
-            "Image1",
-            "Image2",
-            "Image3",
-            "PlaceBox",
-        ]:
+        for x in transforms_to_publish:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
             tf.header.frame_id = "odom"

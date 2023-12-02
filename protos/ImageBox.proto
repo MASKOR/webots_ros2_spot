@@ -1,12 +1,14 @@
 #VRML_SIM R2023a utf8
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/tables/protos/Table.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/VarnishedPine.proto"
 
 PROTO ImageBox [
-  field SFVec3f translation 0 0 0
+  field SFVec3f    translation 0 0 0
   field SFRotation rotation 0 0 1 0
-  field SFString name "imagebox"
-  field MFString url "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+  field SFString   name "imagebox"
+  field MFString   url "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/default/worlds/textures/tagged_wall.jpg"
+  field SFNode     legAppearance VarnishedPine { textureTransform TextureTransform { scale 4 5 } } # Defines the imagebox color.
 ]
 {
   Solid {
@@ -20,6 +22,8 @@ PROTO ImageBox [
         name "t1"
         size 0.6 0.6 0.5
         feetSize 0.3 0.05
+        legAppearance IS legAppearance
+        #legAppearance PBRAppearance {baseColor 1 1 1 roughness 0.5 metalness 0}
       }
       Table {
         translation 0 0 0.5
@@ -27,6 +31,8 @@ PROTO ImageBox [
         name "t2"
         size 0.6 0.6 0.5
         feetSize 0.05 0.3
+        legAppearance IS legAppearance
+        #legAppearance PBRAppearance {baseColor 1 1 1 roughness 0.5 metalness 0}
       }
       Solid {
         translation 0 0 0.05

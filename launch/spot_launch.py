@@ -2,7 +2,6 @@
 
 import os
 import launch
-from launch.substitutions import LaunchConfiguration
 from launch import LaunchDescription
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
@@ -91,8 +90,6 @@ def get_ros2_nodes(*args):
 
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration("use_sim_time", default=True)
-
     webots = WebotsLauncher(
         world=PathJoinSubstitution([package_dir, "worlds", "spot.wbt"])
     )
@@ -105,7 +102,7 @@ def generate_launch_description():
                 "robot_description": os.path.join(
                     package_dir, "resource", "spot_control.urdf"
                 ),
-                "use_sim_time": use_sim_time,
+                "use_sim_time": True,
                 "set_robot_state_publisher": False,  # foot positions are wrong with webot's urdf
             }
         ],
@@ -122,7 +119,7 @@ def generate_launch_description():
         parameters=[
             {
                 "robot_description": robot_desc,
-                "use_sim_time": use_sim_time,
+                "use_sim_time": True,
             }
         ],
     )
