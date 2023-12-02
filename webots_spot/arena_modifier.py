@@ -13,6 +13,8 @@ import random
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.utils import is_wsl
 
+BOX_COLOR = {"red": [1, 0, 0], "green": [0, 1, 0], "blue": [0, 0, 1]}
+
 
 def randomise_lane(robot):
     if random.random() < 0.5:  # 50% probability for a rightside lane
@@ -147,56 +149,57 @@ class ArenaModifier(Node):
         if not self.connected:
             return
 
-        if not hasattr(self, "box_positions"):
-            self.box_colors = ["red", "green", "blue"]
-            self.box_positions_list = [0, 1, 2]
-            random.shuffle(self.box_positions_list)
-            self.box_positions = {
-                k: v + 1 for k, v in zip(self.box_colors, self.box_positions_list)
-            }
+        # Stuffs for Arena 3
+        if not hasattr(self, "box_colors"):
+            # Randomise Drop Box colors
+            self.box_colors = list(BOX_COLOR.keys())
+            random.shuffle(self.box_colors)
 
-            new_box_positions = []
-            for num in self.box_positions_list:
-                door_name = f"DropBox{self.box_colors[num].capitalize()}"
-                door_tr_def = self.__robot.getFromDef(door_name).getField("translation")
-                new_box_positions.append(door_tr_def.getSFVec3f())
-            for idx, position in enumerate(new_box_positions):
-                door_name = f"DropBox{self.box_colors[idx].capitalize()}"
-                door_tr_def = self.__robot.getFromDef(door_name).getField("translation")
-                door_tr_def.setSFVec3f(position)
+            # Change Drop Box colors with above random sequence
+            for idx, color in enumerate(self.box_colors):
+                self.__robot.getFromDef(f"DropBox{idx+1}").getField(
+                    "legAppearance"
+                ).getSFNode().getField("baseColor").setSFColor(BOX_COLOR[color])
 
-        for color in self.box_colors:
-            if self.check_bucket_and_cube(color):
-                self.open_door(f"Door{self.box_positions[color]}", "open")
+            # Save Drop Box positions by color: position pair
+            self.box_positions = {}
+            for idx, color in enumerate(self.box_colors):
+                self.box_positions[color] = (
+                    self.__robot.getFromDef(f"DropBox{idx+1}")
+                    .getField("translation")
+                    .getSFVec3f()
+                )
 
-    def open_door(self, door, action):
+        # Open respective doors where box and cube match
+        for idx, color in enumerate(self.box_colors):
+            if self.check_dropbox_and_cubes(color):
+                self.open_door(f"Door{idx+1}")
+
+    def open_door(self, door):
         door_tr_vec = self.__robot.getFromDef(f"{door}").getField("translation")
         door_tr = door_tr_vec.getSFVec3f()
-        door_tr_vec.setSFVec3f([door_tr[0], 20 if action == "open" else 4, door_tr[2]])
+        door_tr_vec.setSFVec3f([door_tr[0], 20, door_tr[2]])
         return False
 
-    def check_bucket_and_cube(self, cube):
+    def check_dropbox_and_cubes(self, color):
         if not hasattr(self, "initial_cube_positions"):
             self.initial_cube_positions = {}
 
-        box_tr = (
-            self.__robot.getFromDef(f"DropBox{cube.capitalize()}")
-            .getField("translation")
-            .getSFVec3f()
-        )
+        box_tr = self.box_positions[color]
 
+        # Check with single color all 3 cubes one by one
         for i in range(3):
-            current_cube_name = f"{cube.upper()}_{i+1}"
-
+            current_cube_name = f"{color.upper()}_{i+1}"
             cube_tr_def = self.__robot.getFromDef(current_cube_name).getField(
                 "translation"
             )
-
             cube_tr = cube_tr_def.getSFVec3f()
 
+            # Saves initial cube positions
             if current_cube_name not in self.initial_cube_positions.keys():
                 self.initial_cube_positions[current_cube_name] = cube_tr
 
+            # If any of the 3 same colored cubes in Drop Box, return true
             if (
                 abs(box_tr[0] - cube_tr[0]) < 0.3
                 and abs(box_tr[1] - cube_tr[1]) < 0.3

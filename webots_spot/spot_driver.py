@@ -136,6 +136,9 @@ class SpotDriver:
 
         if self.arena3:
             self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
+            viewpoint = self.__robot.getFromDef("Viewpoint")
+            viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
+            viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])
 
         self.spot_translation_initial = self.spot_translation.getSFVec3f()
         self.spot_rotation = self.spot_node.getField("rotation")
@@ -457,9 +460,9 @@ class SpotDriver:
                 "PlaceBox",
             ]
         else:
-            transforms_to_publish = ["Spot", "DropBoxRed"]
-            for color in ["Red", "Green", "Blue"]:
-                transforms_to_publish.append(f"DropBox{color}")
+            transforms_to_publish = ["Spot"]
+            for i, color in enumerate(["Red", "Green", "Blue"]):
+                transforms_to_publish.append(f"DropBox{i+1}")
                 for idx in range(3):
                     transforms_to_publish.append(f"{color.upper()}_{idx+1}")
             for idx in range(3):

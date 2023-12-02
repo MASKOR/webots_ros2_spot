@@ -16,7 +16,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
   title "Spot_Maze"
 }
-Viewpoint {
+DEF Viewpoint Viewpoint {
   orientation -0.3514025745846757 -0.08398531544295117 0.9324498363800645 3.580145909966252
   position 20.0206486298158 10.533063907228222 19.231879117926756
 }
@@ -621,22 +621,22 @@ ImageBox {
   rotation 0 1 0 3.14159
   name "cubes_stand_3"
 }
-DEF DropBoxRed ImageBox {
+DEF DropBox1 ImageBox {
   translation 5.23 18.87 0
   rotation 0 0 1 1.5708
-  name "cube_drop_box_red"
+  name "cube_drop_box_1"
   legAppearance PBRAppearance {baseColor 1 0 0 roughness 0.5 metalness 0}
 }
-DEF DropBoxGreen ImageBox {
+DEF DropBox2 ImageBox {
   translation 0.43 18.87 0
   rotation 0 0 1 1.5708
-  name "cube_drop_box_green"
+  name "cube_drop_box_2"
   legAppearance PBRAppearance {baseColor 0 1 0 roughness 0.5 metalness 0}
 }
-DEF DropBoxBlue ImageBox {
+DEF DropBox3 ImageBox {
   translation -3.97 18.87 0
   rotation 0 0 1 1.5708
-  name "cube_drop_box_blue"
+  name "cube_drop_box_3"
   legAppearance PBRAppearance {baseColor 0 0 1 roughness 0.5 metalness 0}
 }
 DEF YellowDropBox_1 ImageBox {
