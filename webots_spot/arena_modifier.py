@@ -3,6 +3,7 @@
 import rclpy
 from rclpy.node import Node
 
+from example_interfaces.msg import Int32
 from webots_spot_msgs.srv import BlockPose
 from std_srvs.srv import Empty
 
@@ -121,9 +122,11 @@ class ArenaModifier(Node):
         self.__robot = Supervisor()
         self.__timestep = int(self.__robot.getBasicTimeStep())
 
-        self.create_timer(1 / 1000, self.step_callback)
+        self.exog_pub = self.create_publisher(Int32, "/arena3_exog", 1)
 
+        self.create_timer(1 / 1000, self.step_callback)
         self.create_timer(1, self.timer_cb)
+        self.create_timer(10, self.yellow_box_exog_timer_cb)
 
         self.create_service(Empty, "/hazmat_signs", self.hazmat_signs)
         self.create_service(Empty, "/red_rod", self.red_rod)
@@ -144,6 +147,14 @@ class ArenaModifier(Node):
             randomise_imgs(self.__robot)
             set_rod(self.__robot)
             self.cubes_loc = shuffle_cubes(self.__robot)
+
+    def yellow_box_exog_timer_cb(self):
+        if not hasattr(self, "chosen_yellow_box"):
+            return
+
+        msg = Int32()
+        msg.data = self.chosen_yellow_box
+        self.exog_pub.publish(msg)
 
     def timer_cb(self):
         if not self.connected:
@@ -170,15 +181,47 @@ class ArenaModifier(Node):
                     .getSFVec3f()
                 )
 
+            self.chosen_yellow_box = random.randint(1, 3)
+            self.chosen_yellow_box_position = (
+                self.__robot.getFromDef(f"YellowDropBox_{self.chosen_yellow_box}")
+                .getField("translation")
+                .getSFVec3f()
+            )
+
         # Open respective doors where box and cube match
         for idx, color in enumerate(self.box_colors):
-            if self.check_dropbox_and_cubes(color):
+            if self.check_dropbox_and_cubes(
+                color
+            ) and self.check_yellow_dropbox_and_cubes(idx + 1):
                 self.open_door(f"Door{idx+1}")
 
     def open_door(self, door):
         door_tr_vec = self.__robot.getFromDef(f"{door}").getField("translation")
         door_tr = door_tr_vec.getSFVec3f()
         door_tr_vec.setSFVec3f([door_tr[0], 20, door_tr[2]])
+        return False
+
+    def check_yellow_dropbox_and_cubes(self, checking_door_number):
+        # We check only for the Chosen Yellow Box, otherwise the door may open
+        if self.chosen_yellow_box != checking_door_number:
+            return True
+
+        for color in BOX_COLOR.keys():
+            for idx in range(3):
+                current_cube_name = f"{color.upper()}_{idx+1}"
+                cube_tr_def = self.__robot.getFromDef(current_cube_name).getField(
+                    "translation"
+                )
+                cube_tr = cube_tr_def.getSFVec3f()
+
+                # If any of the 9 cubes in the chosen yellow Drop Box, return true
+                if (
+                    abs(self.chosen_yellow_box_position[0] - cube_tr[0]) < 0.3
+                    and abs(self.chosen_yellow_box_position[1] - cube_tr[1]) < 0.3
+                    and cube_tr[2] < 0.1
+                ):
+                    return True
+
         return False
 
     def check_dropbox_and_cubes(self, color):
