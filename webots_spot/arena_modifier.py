@@ -123,6 +123,7 @@ class ArenaModifier(Node):
         self.__timestep = int(self.__robot.getBasicTimeStep())
 
         self.exog_pub = self.create_publisher(Int32, "/arena3_exog", 1)
+        self.arena3_score_pub = self.create_publisher(Int32, "/arena3_score", 1)
 
         self.create_timer(1 / 1000, self.step_callback)
         self.create_timer(1, self.timer_cb)
@@ -188,12 +189,29 @@ class ArenaModifier(Node):
                 .getSFVec3f()
             )
 
+            # Initial Arena 3 Score
+            self.current_score = 500
+
         # Open respective doors where box and cube match
         for idx, color in enumerate(self.box_colors):
             if self.check_dropbox_and_cubes(
                 color
             ) and self.check_yellow_dropbox_and_cubes(idx + 1):
                 self.open_door(f"Door{idx+1}")
+
+        # Scoring in Arena 3
+        if not self.spot_has_passed_door3():
+            self.current_score = 500 - int(self.__robot.getTime())
+        score_msg = Int32()
+        score_msg.data = self.current_score
+        self.arena3_score_pub.publish(score_msg)
+
+    def spot_has_passed_door3(self):
+        tr_x = self.__robot.getFromDef("Spot").getField("translation").getSFVec3f()[0]
+        DOOR3_TRANSLATION_X = -4.3
+        if tr_x < DOOR3_TRANSLATION_X:
+            return True
+        return False
 
     def open_door(self, door):
         door_tr_vec = self.__robot.getFromDef(f"{door}").getField("translation")
