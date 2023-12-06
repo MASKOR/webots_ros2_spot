@@ -207,14 +207,17 @@ class ArenaModifier(Node):
         self.arena3_score_pub.publish(score_msg)
 
     def spot_has_passed_door3(self):
-        tr_x = self.__robot.getFromDef("Spot").getField("translation").getSFVec3f()[0]
-        DOOR3_TRANSLATION_X = -4.3
-        if tr_x < DOOR3_TRANSLATION_X:
+        spot_x = self.__robot.getFromDef("Spot").getField("translation").getSFVec3f()[0]
+        door3_x = (
+            self.__robot.getFromDef("Door3").getField("translation").getSFVec3f()[0]
+        )
+
+        if spot_x < door3_x:
             return True
         return False
 
     def open_door(self, door):
-        door_tr_vec = self.__robot.getFromDef(f"{door}").getField("translation")
+        door_tr_vec = self.__robot.getFromDef(door).getField("translation")
         door_tr = door_tr_vec.getSFVec3f()
         door_tr_vec.setSFVec3f([door_tr[0], 20, door_tr[2]])
         return False
