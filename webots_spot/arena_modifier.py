@@ -271,10 +271,17 @@ class ArenaModifier(Node):
             ):
                 return True
             elif cube_tr[2] < 0.1:
-                self.__robot.getFromDef(current_cube_name).getField(
-                    "rotation"
-                ).setSFRotation([0.707, -0.707, 0, 0])
-                cube_tr_def.setSFVec3f(self.initial_cube_positions[current_cube_name])
+                if not (
+                    abs(self.chosen_yellow_box_position[0] - cube_tr[0]) < 0.3
+                    and abs(self.chosen_yellow_box_position[1] - cube_tr[1]) < 0.3
+                    and cube_tr[2] < 0.1
+                ):
+                    self.__robot.getFromDef(current_cube_name).getField(
+                        "rotation"
+                    ).setSFRotation([0.707, -0.707, 0, 0])
+                    cube_tr_def.setSFVec3f(
+                        self.initial_cube_positions[current_cube_name]
+                    )
 
         return False
 
