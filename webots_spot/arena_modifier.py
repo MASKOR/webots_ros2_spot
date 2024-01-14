@@ -30,7 +30,7 @@ def randomise_lane(robot):
         l3.getField("rotation").setSFRotation([0, 0, -1, 0])
 
 
-def randomise_imgs(robot, hazmat=False):
+def randomise_imgs(robot, simpler_imagebox, hazmat=False):
     if hazmat:
         img_path = os.path.join(
             get_package_share_directory("webots_spot"), "hazmat_signs/"
@@ -47,6 +47,15 @@ def randomise_imgs(robot, hazmat=False):
         robot.getFromDef("Image" + str(idx + 1)).getField("url").setMFString(
             0, img_path + img
         )
+
+    if simpler_imagebox:
+        for idx in range(len(three_imgs)):
+            robot.getFromDef("Image" + str(idx + 1)).getField(
+                "image_translation"
+            ).setSFVec3f([0, -0.3, 0.25])
+            robot.getFromDef("Image" + str(idx + 1)).getField(
+                "image_rotation"
+            ).setSFRotation([1, 0, 0, 1.57081])
 
 
 def set_rod(robot, red=False):
@@ -145,7 +154,12 @@ class ArenaModifier(Node):
         if self.first_time:
             self.first_time = False
             randomise_lane(self.__robot)
-            randomise_imgs(self.__robot)
+
+            if not self.has_parameter("simpler_imagebox"):
+                self.declare_parameter("simpler_imagebox", False)
+            self.simpler_imagebox = self.get_parameter("simpler_imagebox").value
+            randomise_imgs(self.__robot, self.simpler_imagebox)
+
             set_rod(self.__robot)
             self.cubes_loc = shuffle_cubes(self.__robot)
 
@@ -286,7 +300,7 @@ class ArenaModifier(Node):
         return False
 
     def hazmat_signs(self, request, response):
-        randomise_imgs(self.__robot, True)
+        randomise_imgs(self.__robot, self.simpler_imagebox, True)
         return response
 
     def red_rod(self, request, response):

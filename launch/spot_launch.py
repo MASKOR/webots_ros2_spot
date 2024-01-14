@@ -174,6 +174,7 @@ def generate_launch_description():
         package="webots_spot",
         executable="arena_modifier",
         output="screen",
+        parameters=[{"simpler_imagebox": False}],
         additional_env={
             "WEBOTS_CONTROLLER_URL": controller_url_prefix("1234") + "ArenaModifier",
             "WEBOTS_HOME": get_package_prefix("webots_ros2_driver"),
