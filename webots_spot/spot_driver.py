@@ -474,7 +474,7 @@ class SpotDriver:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
             tf.header.frame_id = "odom"
-            tf._child_frame_id = x if x != "Spot" else "base_link"
+            tf._child_frame_id = x if x != "Spot" else "virtual_base_link"
 
             part = self.__robot.getFromDef(x)
             di = part.getField("translation").getSFVec3f()

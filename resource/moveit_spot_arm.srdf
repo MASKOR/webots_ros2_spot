@@ -12,6 +12,14 @@
     <group name="spot_arm">
         <joint name="gripper_centre_joint"/>
         <chain base_link="SpotArm" tip_link="front"/>
+        <!-- <chain base_link="SpotArm" tip_link="front"/> -->
+    </group>
+    <group name="spot_pitch">
+        <joint name="virtual_base_link_base_link"/>
+    </group>
+    <group name="spot">
+        <group name="spot_arm" />
+        <group name="spot_pitch" />
     </group>
     <group name="tiago_gripper">
         <joint name="gripper_left_finger_joint"/>

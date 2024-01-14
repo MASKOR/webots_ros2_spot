@@ -10,6 +10,7 @@ from moveit_msgs.msg import PlanningOptions
 from moveit_msgs.action import MoveGroup
 
 from copy import deepcopy
+import math
 
 global_joint_states = None
 
@@ -32,18 +33,32 @@ class MoveGroupActionClient(Node):
         self.motion_plan_request.start_state.is_diff = True
 
         jc = JointConstraint()
-        jc.tolerance_above = 0.0001
-        jc.tolerance_below = 0.0001
+        jc.tolerance_above = 0.001
+        jc.tolerance_below = 0.001
         jc.weight = 1.0
 
+        ja = [-7, 39, 70, -176, 4, -40, -81]
+
+        ja = [math.radians(j) for j in ja]
+
+        ja = [
+            -0.10102147744029068,
+            -0.09448051180794691,
+            0.2851646562498328,
+            -3.111537690569486,
+            0.06832981504355824,
+            -0.9369031145441675,
+            -1.460579828582183,
+        ]
+
         joints = {}
-        joints["Slider11"] = 0
-        joints["spotarm_1_joint"] = 0
-        joints["spotarm_2_joint"] = 3.1415
-        joints["spotarm_3_joint"] = 3
-        joints["spotarm_4_joint"] = 0
-        joints["spotarm_5_joint"] = 0.2
-        joints["spotarm_6_joint"] = 0
+        joints["spotarm_1_joint"] = ja[0]
+        joints["spotarm_2_joint"] = ja[1]
+        joints["spotarm_3_joint"] = ja[2]
+        joints["spotarm_4_joint"] = ja[3]
+        joints["Slider11"] = ja[4]
+        joints["spotarm_5_joint"] = ja[5]
+        joints["spotarm_6_joint"] = ja[6]
 
         constraints = Constraints()
         for joint, angle in joints.items():

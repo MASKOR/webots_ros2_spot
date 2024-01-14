@@ -248,11 +248,32 @@
       </geometry>
     </collision>
   </link>
+  <link name="virtual_base_link">
+  </link>
+  <joint name="virtual_base_link_base_link" type="revolute">
+    <parent link="virtual_base_link"/>
+    <child link="base_link"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="500" lower="-0.3" upper="0.3" velocity="2.5"/>
+  </joint>
   <joint name="base_link_SpotArm_joint" type="fixed">
     <parent link="base_link"/>
     <child link="SpotArm"/>
     <origin xyz="0.35 0 0.1118" rpy="-0.000017 -0.000003 0.000005"/>
   </joint>
+  <!-- <link name="SpotArm_fake">
+  </link>
+  <joint name="base_link_manipulator_fakejoint" type="revolute">
+    <parent link="base_link"/>
+    <child link="SpotArm_fake"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="500" lower="-1.57" upper="1.57" velocity="2.5"/>
+  </joint>
+  <joint name="base_link_SpotArm_joint" type="fixed">
+    <parent link="SpotArm_fake"/>
+    <child link="SpotArm"/>
+    <origin xyz="0.35 0 0.1118" rpy="-0.000017 -0.000003 0.000005"/>
+  </joint> -->
   <joint name="spotarm_1_joint" type="revolute">
     <parent link="SpotArm"/>
     <child link="spotarm_link1"/>
