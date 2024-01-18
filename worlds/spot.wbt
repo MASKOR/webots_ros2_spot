@@ -512,11 +512,6 @@ Solid {
   ]
   name "aruco"
 }
-Robot {
-  name "ArenaModifier"
-  controller "<extern>"
-  supervisor TRUE
-}
 # Third Arena
 SolidBox {
   translation 0.589985 16.28 0.85
