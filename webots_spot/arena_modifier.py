@@ -1,13 +1,6 @@
-#!/usr/bin/env python3
-
-import rclpy
-from rclpy.node import Node
-
 from example_interfaces.msg import Int32
 from webots_spot_msgs.srv import BlockPose
 from std_srvs.srv import Empty
-
-from controller import Supervisor
 
 import os
 import random
@@ -124,44 +117,30 @@ def shuffle_cubes(robot):
     return cube_locations_alphabets
 
 
-class ArenaModifier(Node):
-    def __init__(self):
-        super().__init__("ArenaModifier")
+class ArenaModifier:
+    def __init__(self, node, robot):
+        self.node = node
+        self.__robot = robot
 
-        self.__robot = Supervisor()
-        self.__timestep = int(self.__robot.getBasicTimeStep())
+        self.exog_pub = self.node.create_publisher(Int32, "/arena3_exog", 1)
+        self.arena3_score_pub = self.node.create_publisher(Int32, "/arena3_score", 1)
 
-        self.exog_pub = self.create_publisher(Int32, "/arena3_exog", 1)
-        self.arena3_score_pub = self.create_publisher(Int32, "/arena3_score", 1)
+        self.node.create_timer(1, self.timer_cb)
+        self.node.create_timer(10, self.yellow_box_exog_timer_cb)
 
-        self.create_timer(1 / 1000, self.step_callback)
-        self.create_timer(1, self.timer_cb)
-        self.create_timer(10, self.yellow_box_exog_timer_cb)
+        self.node.create_service(Empty, "/hazmat_signs", self.hazmat_signs)
+        self.node.create_service(Empty, "/red_rod", self.red_rod)
+        self.node.create_service(BlockPose, "/get_block_pose", self.gpp_block_pose)
 
-        self.create_service(Empty, "/hazmat_signs", self.hazmat_signs)
-        self.create_service(Empty, "/red_rod", self.red_rod)
-        self.create_service(BlockPose, "/get_block_pose", self.gpp_block_pose)
+        if not self.node.has_parameter("simpler_imagebox"):
+            self.node.declare_parameter("simpler_imagebox", False)
+        self.simpler_imagebox = self.node.get_parameter("simpler_imagebox").value
 
-        self.i = 0
-        self.first_time = True
-        self.connected = False
-
-    def step_callback(self):
-        if self.__robot.step(self.__timestep) < 0:
-            self.get_logger().info("ArenaModifier is shutting down...")
-        self.connected = True
-
-        if self.first_time:
-            self.first_time = False
-            randomise_lane(self.__robot)
-
-            if not self.has_parameter("simpler_imagebox"):
-                self.declare_parameter("simpler_imagebox", False)
-            self.simpler_imagebox = self.get_parameter("simpler_imagebox").value
-            randomise_imgs(self.__robot, self.simpler_imagebox)
-
-            set_rod(self.__robot)
-            self.cubes_loc = shuffle_cubes(self.__robot)
+        # Start randomising stuffs
+        randomise_lane(self.__robot)
+        randomise_imgs(self.__robot, self.simpler_imagebox)
+        set_rod(self.__robot)
+        self.cubes_loc = shuffle_cubes(self.__robot)
 
     def yellow_box_exog_timer_cb(self):
         if not hasattr(self, "chosen_yellow_box"):
@@ -172,9 +151,6 @@ class ArenaModifier(Node):
         self.exog_pub.publish(msg)
 
     def timer_cb(self):
-        if not self.connected:
-            return
-
         # Stuffs for Arena 3
         if not hasattr(self, "box_colors"):
             # Randomise Drop Box colors
@@ -310,14 +286,3 @@ class ArenaModifier(Node):
     def gpp_block_pose(self, request, response):
         response.location = self.cubes_loc[request.block.upper()].lower()
         return response
-
-
-def main(args=None):
-    rclpy.init(args=args)
-    node = ArenaModifier()
-    rclpy.spin(node)
-    rclpy.shutdown()
-
-
-if __name__ == "__main__":
-    main()

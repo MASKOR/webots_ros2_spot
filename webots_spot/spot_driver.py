@@ -15,6 +15,8 @@ import copy
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
 
+from webots_spot.arena_modifier import ArenaModifier
+
 NUMBER_OF_JOINTS = 12
 HEIGHT = 0.52  # From spot kinematics
 
@@ -281,6 +283,9 @@ class SpotDriver:
         self.paw2 = False
         self.paw_time = 0.0
         self.previous_cmd = False
+
+        # Initialise arena modifier
+        ArenaModifier(self.__node, self.__robot)
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
