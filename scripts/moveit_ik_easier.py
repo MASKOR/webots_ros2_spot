@@ -77,34 +77,41 @@ class MoveitIKClient(Node):
     def joint_states_cb(self, joint_state):
         self.joint_state = joint_state
 
-    def moveit_ik(self):
-        group_name = "spot_arm"
-        self.req.ik_request.group_name = group_name
-        self.req.ik_request.robot_state.joint_state = self.joint_state
-        self.req.ik_request.avoid_collisions = True
+    def send_request(self):
+        request = GetPositionIK.Request()
 
-        self.req.ik_request.pose_stamped.header.stamp = self.get_clock().now().to_msg()
-        self.req.ik_request.pose_stamped.header.frame_id = "base_link"
+        group_name = "spot_arm"
+        request.ik_request.group_name = group_name
+        request.ik_request.robot_state.joint_state = self.joint_state
+        request.ik_request.avoid_collisions = True
+
+        request.ik_request.pose_stamped.header.stamp = self.get_clock().now().to_msg()
+        request.ik_request.pose_stamped.header.frame_id = "base_link"
 
         self.tf_base_link_P.position.z += 0.05
 
-        transform = TransformStamped()
-        transform.transform.rotation = quaternion_from_euler(0, -0.3, 0)
-        pose = do_transform_pose(self.tf_base_link_P, transform)
+        request.ik_request.timeout.nanosec = 500000000
 
-        self.req.ik_request.pose_stamped.pose = pose
+        joint_angles = []
+        pitch_angles = [-0.1, 0.1, -0.2, 0.2, -0.3, 0.3, -0.4, 0.4]
+        for pitch_angle in pitch_angles:
+            if len(joint_angles) > 0:
+                break
 
-        self.req.ik_request.timeout.sec = 1
+            transform = TransformStamped()
+            transform.transform.rotation = quaternion_from_euler(0, pitch_angle, 0)
+            pose = do_transform_pose(self.tf_base_link_P, transform)
 
-        return self.req.ik_request
+            request.ik_request.pose_stamped.pose = pose
 
-    def send_request(self):
-        self.req = GetPositionIK.Request()
-        self.req.ik_request = self.moveit_ik()
+            future = self.cli.call_async(request)
+            rclpy.spin_until_future_complete(self, future)
 
-        self.future = self.cli.call_async(self.req)
-        rclpy.spin_until_future_complete(self, self.future)
-        return self.future.result()
+            # print(future.result().solution.joint_state.name[:8])
+            joint_angles = list(future.result().solution.joint_state.position)[1:8]
+            print(pitch_angle, joint_angles)
+
+        return pitch_angle, joint_angles
 
 
 def main():
@@ -115,12 +122,9 @@ def main():
     moveit_ik.tf_base_link_P = None
     while moveit_ik.joint_state is None or moveit_ik.tf_base_link_P is None:
         rclpy.spin_once(moveit_ik)
-    response = moveit_ik.send_request()
-    print(response.solution.joint_state.name[:8])
-    target_angles = list(response.solution.joint_state.position)[:8]
-    print(target_angles)
+    pitch_angle, target_angles = moveit_ik.send_request()
 
-    if not len(target_angles):
+    if target_angles is None:
         print("No IK solution found")
         moveit_ik.destroy_node()
 
