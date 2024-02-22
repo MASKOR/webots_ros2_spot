@@ -5,8 +5,7 @@ import launch
 from launch import LaunchDescription
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory, get_package_prefix
-from webots_ros2_driver.utils import controller_url_prefix
+from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher, Ros2SupervisorLauncher
 from webots_ros2_driver.webots_controller import WebotsController
 from webots_ros2_driver.wait_for_controller_connection import (
@@ -170,18 +169,6 @@ def generate_launch_description():
         name="pointcloud_to_laserscan",
     )
 
-    arena_modifier = Node(
-        package="webots_spot",
-        executable="arena_modifier",
-        output="screen",
-        parameters=[{"simpler_imagebox": False}],
-        additional_env={
-            "WEBOTS_CONTROLLER_URL": controller_url_prefix("1234") + "ArenaModifier",
-            "WEBOTS_HOME": get_package_prefix("webots_ros2_driver"),
-        },
-        respawn=True,
-    )
-
     return LaunchDescription(
         [
             webots,
@@ -192,7 +179,6 @@ def generate_launch_description():
             webots_event_handler,
             reset_handler,
             pointcloud_to_laserscan_node,
-            arena_modifier,
         ]
         + get_ros2_nodes()
     )
