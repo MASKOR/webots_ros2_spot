@@ -1,0 +1,84 @@
+name: Test-Humble
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  schedule:
+    - cron:  '0 02 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code_quality:
+    name: Black Formatting
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - run: pip install --upgrade pip
+      - run: pip install "black<23" pylint==v3.0.0a3 mypy==v0.902
+      - run: black --diff --check $(git ls-files '*.py')
+  webots_spot:
+    name: Webots Spot with Nav2 and Moveit2
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install ROS2 Humble
+        run: >
+          sudo apt update
+
+          sudo apt install -y software-properties-common
+
+          sudo add-apt-repository universe
+
+          curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc
+          | sudo apt-key add -
+
+          sudo sh -c 'echo "deb [arch=amd64,arm64]
+          http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" >
+          /etc/apt/sources.list.d/ros2-latest.list'
+
+          sudo apt update
+
+          sudo apt install -y ros-humble-ros-base
+          python3-colcon-common-extensions ros-dev-tools
+      - name: Install Webots 2023b
+        run: |
+          sudo apt update
+          sudo apt install -y wget dialog apt-utils psmisc lsb-release git
+          sudo wget https://github.com/cyberbotics/webots/releases/download/R2023b/webots_2023b_amd64.deb -O /tmp/webots.deb
+          sudo apt install -y /tmp/webots.deb xvfb
+      - name: Create Workspace
+        run: |
+          mkdir -p ~/ros2_ws/src
+          cp -r $GITHUB_WORKSPACE/. ~/ros2_ws/src/webots_ros2_spot
+      - name: Install Webots Spot Dependencies
+        run: |
+          cd ~/ros2_ws
+          source /opt/ros/humble/setup.bash
+          sudo rosdep init
+          rosdep update
+          sudo apt install -y libunwind-dev # Nav2 dependency
+          rosdep install --from-paths ./ --ignore-src -y
+      - name: Build Packages
+        run: |
+          cd ~/ros2_ws
+          source /opt/ros/humble/setup.bash
+          vcs import src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
+          git clone https://github.com/cyberbotics/webots_ros2 --recursive src/webots_ros2
+          colcon build
+          source install/setup.bash
+      - name: Test
+        run: |
+          export WEBOTS_RELEASE_VERSION=2023b-rev1
+          export WEBOTS_OFFSCREEN=1
+          export CI=1
+          export DEBIAN_FRONTEND=noninteractive
+          cd ~/ros2_ws
+          source install/setup.bash
+          colcon test --ctest-args tests --packages-select webots_spot --event-handlers console_direct+ --return-code-on-test-failure

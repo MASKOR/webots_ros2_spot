@@ -36,7 +36,7 @@ def main():
     gripper_client.wait_for_server()
 
     # Wait for simulation clock to initiate
-    while clock_msg_count < 20:
+    while clock_msg_count < 40:
         rclpy.spin_once(node)
 
     # Create a goal request to set arm joint positions
