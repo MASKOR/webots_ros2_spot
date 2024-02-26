@@ -1,4 +1,4 @@
-from example_interfaces.msg import Int32
+from webots_spot_msgs.msg import Int32
 from webots_spot_msgs.srv import BlockPose
 from std_srvs.srv import Empty
 
