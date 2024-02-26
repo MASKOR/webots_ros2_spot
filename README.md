@@ -32,9 +32,8 @@ The world contains apriltags, a red line to test lane follower and objects for m
     ```
     cd $COLCON_WS
     git clone https://github.com/MASKOR/webots_ros2_spot src/webots_ros2_spot
+    vcs import src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
     rosdep install --ignore-src --from-paths src -y -r
-    vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
-    chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
     ```
 
 4. Build packages and source the workspace
