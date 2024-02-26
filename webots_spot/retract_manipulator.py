@@ -1,14 +1,22 @@
 import rclpy
 from rclpy.action import ActionClient
+from rosgraph_msgs.msg import Clock
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 import math
-import time
 
 
 def main():
     rclpy.init()
-    node = rclpy.create_node("action_client_node")
+    node = rclpy.create_node("retract_manipulator_node")
+
+    def increment_count(_):
+        nonlocal clock_msg_count
+        clock_msg_count += 1
+
+    clock_msg_count = 0
+
+    node.create_subscription(Clock, "/clock", increment_count, 1)
 
     # Create an action client for the spotarm_joint_trajectory_controller
     arm_client = ActionClient(
@@ -27,7 +35,9 @@ def main():
     arm_client.wait_for_server()
     gripper_client.wait_for_server()
 
-    time.sleep(1)
+    # Wait for simulation clock to initiate
+    while clock_msg_count < 40:
+        rclpy.spin_once(node)
 
     # Create a goal request to set arm joint positions
     arm_goal_msg = FollowJointTrajectory.Goal()
@@ -62,10 +72,8 @@ def main():
     gripper_point.positions = [0.045, 0.045]
     gripper_goal_msg.trajectory.points.append(gripper_point)
 
-    # Send the arm goal
+    # Send action goals
     arm_client.send_goal_async(arm_goal_msg)
-
-    # Send the gripper goal
     gripper_client.send_goal_async(gripper_goal_msg)
 
     node.destroy_node()

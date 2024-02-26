@@ -11,7 +11,6 @@
   <exec_depend>geometry_msgs</exec_depend>
 
   <exec_depend>builtin_interfaces</exec_depend>
-  <exec_depend>webots_spot_msgs</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>rviz_common</exec_depend>
   <exec_depend>rviz_default_plugins</exec_depend>
@@ -46,6 +45,7 @@
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
+  <test_depend>webots_ros2_tests</test_depend>
 
   <export>
     <build_type>ament_python</build_type>

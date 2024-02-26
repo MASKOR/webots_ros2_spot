@@ -15,6 +15,7 @@ def generate_launch_description():
     nav2_map = os.path.join(package_dir, "map", "map.yaml")
     nav2_params = os.path.join(package_dir, "params", "nav2_params.yaml")
 
+    use_rviz = LaunchConfiguration("rviz", default=True)
     rviz_config = os.path.join(package_dir, "resource", "nav2.rviz")
     rviz = Node(
         package="rviz2",
@@ -22,6 +23,7 @@ def generate_launch_description():
         output="screen",
         arguments=["--display-config=" + rviz_config],
         parameters=[{"use_sim_time": use_sim_time}],
+        condition=launch.conditions.IfCondition(use_rviz),
     )
 
     initial_pose = LaunchConfiguration("set_initial_pose", default=False)
