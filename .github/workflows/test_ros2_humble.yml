@@ -70,7 +70,6 @@ jobs:
           cd ~/ros2_ws
           source /opt/ros/humble/setup.bash
           vcs import src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
-          git clone https://github.com/cyberbotics/webots_ros2 --recursive src/webots_ros2
           colcon build
           source install/setup.bash
       - name: Test
