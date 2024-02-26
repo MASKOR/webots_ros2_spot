@@ -65,12 +65,13 @@ jobs:
           rosdep update
           sudo apt install -y libunwind-dev # Nav2 dependency
           rosdep install --from-paths ./ --ignore-src -y
+          vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
+          chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
       - name: Build Packages
         run: |
           cd ~/ros2_ws
           source /opt/ros/humble/setup.bash
-          vcs import src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
-          colcon build
+          colcon build --symlink-install
           source install/setup.bash
       - name: Test
         run: |
