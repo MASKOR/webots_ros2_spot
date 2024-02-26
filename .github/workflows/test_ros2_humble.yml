@@ -1,4 +1,4 @@
-name: Test-Humble
+name: ROS2 Humble
 
 on:
   pull_request:
