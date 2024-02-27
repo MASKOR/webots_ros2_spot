@@ -3,31 +3,40 @@ name: ROS2 Humble
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
+  push:
+    branches:
+      - main
   schedule:
-    - cron:  '0 02 * * *'
+    - cron:  '0 10 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  code_quality:
-    name: Black Formatting
-    runs-on: ubuntu-22.04
+  lint:
+    name: Lint package
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+        - { python: "3.10" }
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-      - run: pip install --upgrade pip
-      - run: pip install "black<23" pylint==v3.0.0a3 mypy==v0.902
-      - run: black --diff --check $(git ls-files '*.py')
+          python-version: ${{ matrix.config.python }}
+
+      - name: Lint sources
+        uses: pre-commit/action@v3.0.1
   webots_spot:
     name: Webots Spot with Nav2 and Moveit2
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install ROS2 Humble
         run: >
           sudo apt update
