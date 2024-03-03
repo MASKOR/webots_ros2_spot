@@ -329,28 +329,18 @@ class SpotDriver:
             self.yawd = 0.0
 
             self.StepLength = StepLength * msg.linear.x
+            if self.StepLength == 0.0:
+                self.StepLength = StepLength * abs(msg.linear.y)
 
             # Rotation along vertical axis
             self.YawRate = msg.angular.z
             if self.YawRate != 0 and self.StepLength == 0:
                 self.StepLength = StepLength * 0.1
 
-            # Holonomic motions
-            self.LateralFraction = np.arctan2(msg.linear.y, msg.linear.x)
-            # forcefully set 0, as output is never 0 if second term in arctan2 is -ve
-            if msg.linear.y == 0:
-                self.LateralFraction = 0
-            if self.LateralFraction != 0:
-                if msg.linear.x != 0:
-                    # change lateral fraction for 2nd and 4th quadrants
-                    if msg.linear.x > 0 and self.LateralFraction < 0:
-                        self.LateralFraction += np.pi
-                    elif msg.linear.x < 0 and self.LateralFraction > 0:
-                        self.LateralFraction -= np.pi
-                    self.StepLength = StepLength * msg.linear.y * np.sign(msg.linear.x)
-                else:
-                    # for sideway motion
-                    self.StepLength = StepLength * abs(msg.linear.y)
+            # Lateral motion
+            self.LateralFraction = np.arctan2(msg.linear.y, abs(msg.linear.x))
+            if msg.linear.x < 0:
+                self.LateralFraction *= -1
 
             if 0.001 < self.StepLength < 0.05:
                 self.StepLength = max(0.015, self.StepLength)
