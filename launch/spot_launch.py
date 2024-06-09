@@ -27,7 +27,7 @@ def get_ros2_nodes(*args):
         parameters=[
             {
                 "robot_description": os.path.join(
-                    package_dir, "resource", "spotarm_control.urdf"
+                    package_dir, "resource", "spotarm.urdf"
                 )
             },
             {"use_sim_time": True},
@@ -37,7 +37,7 @@ def get_ros2_nodes(*args):
     )
 
     # ROS2 control spawners for SpotArm
-    controller_manager_timeout = ["--controller-manager-timeout", "500"]
+    controller_manager_timeout = ["--controller-manager-timeout", "50"]
     controller_manager_prefix = "python.exe" if os.name == "nt" else ""
     trajectory_controller_spawner = Node(
         package="controller_manager",
@@ -98,9 +98,7 @@ def generate_launch_description():
         robot_name="Spot",
         parameters=[
             {
-                "robot_description": os.path.join(
-                    package_dir, "resource", "spot_control.urdf"
-                ),
+                "robot_description": os.path.join(package_dir, "resource", "spot.urdf"),
                 "use_sim_time": True,
                 "set_robot_state_publisher": False,  # foot positions are wrong with webot's urdf
             }
@@ -108,7 +106,7 @@ def generate_launch_description():
         respawn=True,
     )
 
-    with open(os.path.join(package_dir, "resource", "spot.urdf")) as f:
+    with open(os.path.join(package_dir, "resource", "spotarm.urdf")) as f:
         robot_desc = f.read()
 
     robot_state_publisher = Node(
