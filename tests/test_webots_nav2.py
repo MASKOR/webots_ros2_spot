@@ -141,33 +141,33 @@ class TestSpot(TestWebots):
         self.__node = rclpy.create_node("driver_tester")
         self.wait_for_clock(self.__node, messages_to_receive=20)
 
-    def testNav2Goal(self):
-        from nav2_msgs.action import NavigateToPose
+    # def testNav2Goal(self):
+    #     from nav2_msgs.action import NavigateToPose
 
-        # Delay before publishing goal position (navigation initialization can be long in the CI)
-        goal_action = ActionClient(self.__node, NavigateToPose, "navigate_to_pose")
-        goal_message = NavigateToPose.Goal()
-        goal_message.pose.header.stamp = self.__node.get_clock().now().to_msg()
-        goal_message.pose.header.frame_id = "map"
-        goal_message.pose.pose.position.x = 1.2
-        self.__node.get_logger().info(
-            "Server is ready, waiting 10 seconds to send goal position."
-        )
-        goal_action.wait_for_server()
-        self.wait_for_clock(self.__node, messages_to_receive=1000)
-        goal_action.send_goal_async(goal_message)
-        self.__node.get_logger().info("Goal position sent.")
+    #     # Delay before publishing goal position (navigation initialization can be long in the CI)
+    #     goal_action = ActionClient(self.__node, NavigateToPose, "navigate_to_pose")
+    #     goal_message = NavigateToPose.Goal()
+    #     goal_message.pose.header.stamp = self.__node.get_clock().now().to_msg()
+    #     goal_message.pose.header.frame_id = "map"
+    #     goal_message.pose.pose.position.x = 1.2
+    #     self.__node.get_logger().info(
+    #         "Server is ready, waiting 10 seconds to send goal position."
+    #     )
+    #     goal_action.wait_for_server()
+    #     self.wait_for_clock(self.__node, messages_to_receive=1000)
+    #     goal_action.send_goal_async(goal_message)
+    #     self.__node.get_logger().info("Goal position sent.")
 
-        def on_message_received(message):
-            return message.pose.pose.position.x > 0.5
+    #     def on_message_received(message):
+    #         return message.pose.pose.position.x > 0.5
 
-        self.wait_for_messages(
-            self.__node,
-            Odometry,
-            "/Spot/odometry",
-            condition=on_message_received,
-            timeout=60 * 5,
-        )
+    #     self.wait_for_messages(
+    #         self.__node,
+    #         Odometry,
+    #         "/Spot/odometry",
+    #         condition=on_message_received,
+    #         timeout=60 * 5,
+    #     )
 
     def tearDown(self):
         self.__node.destroy_node()

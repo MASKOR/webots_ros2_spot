@@ -73,9 +73,18 @@ jobs:
           sudo rosdep init
           rosdep update
           sudo apt install -y libunwind-dev # Nav2 dependency
-          rosdep install --from-paths src --ignore-src -r -y
+          sudo apt install -y ros-jazzy-vision-msgs
+          rosdep install -r --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y --skip-keys webots_ros2 --skip-keys moveit
           vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
           chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
+      - name: MoveIt2 Dependencies
+        run: |
+          cd ~/ros2_ws/src
+          mkdir moveit
+          cd moveit
+          git clone https://github.com/moveit/moveit2.git -b main
+          for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
+          rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
       - name: Build Packages
         run: |
           cd ~/ros2_ws

@@ -56,7 +56,7 @@ def main():
         math.radians(179),
         math.radians(170),
         0.0,
-        0.0,
+        0.01,
         math.radians(11),
         0.0,
     ]
