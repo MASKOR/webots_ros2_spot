@@ -68,8 +68,8 @@ jobs:
           cp -r $GITHUB_WORKSPACE/. ~/ros2_ws/src/webots_ros2_spot
       - name: Install Webots Spot Dependencies
         run: |
-          cd ~/ros2_ws
           source /opt/ros/jazzy/setup.bash
+          cd ~/ros2_ws
           sudo rosdep init
           rosdep update
           sudo apt install -y libunwind-dev # Nav2 dependency
@@ -79,6 +79,7 @@ jobs:
           chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
       - name: MoveIt2 Dependencies
         run: |
+          source /opt/ros/jazzy/setup.bash
           cd ~/ros2_ws/src
           mkdir moveit
           cd moveit
@@ -87,7 +88,9 @@ jobs:
           rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
       - name: Build Packages
         run: |
-          cd ~/ros2_ws
+          cd ~/ros2_ws/src/webots_ros2
+          git checkout skpawar1305/jazzy
+          cd ../..
           source /opt/ros/jazzy/setup.bash
           colcon build --symlink-install
           source install/setup.bash
