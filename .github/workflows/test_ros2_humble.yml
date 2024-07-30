@@ -72,7 +72,8 @@ jobs:
           source /opt/ros/humble/setup.bash
           sudo rosdep init
           rosdep update
-          sudo apt install -y libunwind-dev # Nav2 dependency
+          sudo apt remove -y libmagickcore-dev
+          sudo apt install -y libunwind-dev graphicsmagick-libmagick-dev-compat # Nav2 dependency
           rosdep install --from-paths ./ --ignore-src -y
           vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
           chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
@@ -84,7 +85,8 @@ jobs:
           source install/setup.bash
       - name: Test
         run: |
-          export WEBOTS_RELEASE_VERSION=2023b-rev1
+          export TEST_WITH_WEBOTS_NIGTHLY=0
+          export WEBOTS_RELEASE_VERSION=2023b
           export WEBOTS_OFFSCREEN=1
           export CI=1
           export DEBIAN_FRONTEND=noninteractive
