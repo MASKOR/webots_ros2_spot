@@ -15,12 +15,15 @@ The world contains apriltags, a red line to test lane follower and objects for m
 
 ## Install
 
-1. Make sure that `colcon`, its extensions, and `vcs` are installed:
+1. Install ROS2 Development tools and initialise and update rosdep:
     ```
-    sudo apt install python3-colcon-common-extensions python3-vcstool
+    sudo apt install -y ros-dev-tools
     ```
-
-    Also, rosdep is installed https://docs.ros.org/en/humble/Tutorials/Intermediate/Rosdep.html#rosdep-installation.
+    ```
+    source /opt/ros/humble/setup.bash
+    sudo rosdep init
+    rosdep update
+    ```
 
 2. Create a new ROS2 workspace:
     ```
