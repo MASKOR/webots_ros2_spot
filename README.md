@@ -75,3 +75,12 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 1) Change false to true in https://github.com/MASKOR/webots_ros2_spot/blob/main/resource/spot_control.urdf#L5
 
 2) Change map.yaml to map_arena3.yaml https://github.com/MASKOR/webots_ros2_spot/blob/main/launch/nav_launch.py#L15
+
+
+## Mesh Navigation
+We recommend to create an separate workspace for mesh navigation.
+Installation Instructions for mesh navigation can be found here: https://github.com/naturerobots/mesh_navigation?tab=readme-ov-file#installation
+
+### Launch
+
+Start the spot.launch and mesh_nav_launch.py
