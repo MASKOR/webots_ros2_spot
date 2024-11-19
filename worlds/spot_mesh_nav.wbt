@@ -1,0 +1,72 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "../protos/Spot.proto"
+EXTERNPROTO "../protos/SpotArm.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
+
+WorldInfo {
+  title "Spot_Maze"
+}
+DEF Viewpoint Viewpoint {
+  orientation -0.2642937418037654 0.9264486424998751 -0.26803307790924397 0.13485159920707643
+  position -49.15661904161659 3.714494723269663 11.620789229750201
+}
+TexturedBackground {
+  texture "factory"
+  skybox FALSE
+}
+Robot {
+  name "Ros2Supervisor"
+  controller "<extern>"
+  supervisor TRUE
+}
+DEF Spot Spot {
+  translation 0 0 0.66
+  rotation 0 0 1 7.33682e-06
+  controller "<extern>"
+  supervisor TRUE
+  frontExtension [
+    SpotArm {
+      translation 0 0 -0.094
+      rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
+      controller "<extern>"
+      gripperCam [
+        Camera {
+          translation 0.19 0 0
+          name "gripper camera"
+          width 1280
+          height 720
+        }
+      ]
+    }
+    Kinect {
+      translation 0 -0.007 -0.240831
+      rotation 1 0 0 -0.35
+      foot FALSE
+    }
+  ]
+  middleExtension [
+    VelodynePuck {
+      translation 0 0.04 0.09
+      rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "Velodyne_Puck"
+    }
+  ]
+}
+Solid {
+  rotation 1 0 0 1.01503e-06
+  children [
+    CadShape {
+      url [
+        "parking_garage_s4.dae"
+      ]
+    }
+  ]
+  boundingObject Mesh {
+    url [
+      "parking_garage_s4.dae"
+    ]
+  }
+}

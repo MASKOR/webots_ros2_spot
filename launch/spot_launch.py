@@ -11,7 +11,8 @@ from webots_ros2_driver.webots_controller import WebotsController
 from webots_ros2_driver.wait_for_controller_connection import (
     WaitForControllerConnection,
 )
-
+from launch_ros.descriptions import ComposableNode
+from launch_ros.actions import ComposableNodeContainer, Node
 
 package_dir = get_package_share_directory("webots_spot")
 
@@ -90,7 +91,7 @@ def get_ros2_nodes(*args):
 
 def generate_launch_description():
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, "worlds", "spot.wbt"])
+        world=PathJoinSubstitution([package_dir, "worlds", "spot_mesh_nav.wbt"])
     )
     ros2_supervisor = Ros2SupervisorLauncher()
 
@@ -145,6 +146,30 @@ def generate_launch_description():
         )
     )
 
+    composable_node_container = ComposableNodeContainer(
+        name="kinect_container",
+        namespace="Spot",
+        package="rclcpp_components",
+        executable="component_container",
+        composable_node_descriptions=[
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_kinect",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/kinect_color/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/kinect_color/image_color"),
+                    ("depth_registered/image_rect", "/Spot/kinect_range/image"),
+                    ("points", "kinect_points"),
+                ],
+                parameters=[
+                    {"frame_id": "kinect_color"}  # Ensure both depth and RGB use the same frame ID
+                ],
+            ),
+        ],
+        output="screen",
+    )
+
     pointcloud_to_laserscan_node = Node(
         package="pointcloud_to_laserscan",
         executable="pointcloud_to_laserscan_node",
@@ -160,7 +185,7 @@ def generate_launch_description():
                 "angle_max": 3.14,
                 "angle_increment": 0.00872,
                 "scan_time": 0.1,
-                "range_min": 0.9,
+                "range_min": 0.1,
                 "range_max": 100.0,
                 "use_inf": True,
                 "inf_epsilon": 1.0,

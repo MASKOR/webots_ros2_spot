@@ -6,7 +6,7 @@ from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
-    use_sim_time = LaunchConfiguration("use_sim_time", default=False)
+    use_sim_time = LaunchConfiguration("use_sim_time", default=True)
 
     slam_toolbox = Node(
         parameters=[
@@ -33,6 +33,6 @@ def generate_launch_description():
     return LaunchDescription(
         [
             slam_toolbox,
-            slam_rviz,
+            #slam_rviz,
         ]
     )

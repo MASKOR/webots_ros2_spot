@@ -8,7 +8,7 @@ Panels:
         - /Status1
         - /LaserScan1/Topic1
       Splitter Ratio: 0.5
-    Tree Height: 667
+    Tree Height: 465
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -26,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -86,10 +86,80 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
+        A:
+          Value: true
         All Enabled: true
+        B:
+          Value: true
+        C:
+          Value: true
+        Image1:
+          Value: true
+        Image2:
+          Value: true
+        Image3:
+          Value: true
+        P:
+          Value: true
+        PlaceBox:
+          Value: true
+        SpotArm:
+          Value: true
+        T1:
+          Value: true
+        T2:
+          Value: true
+        T3:
+          Value: true
+        Velodyne_Puck:
+          Value: true
         accelerometer:
           Value: true
+        base_footprint:
+          Value: true
         base_link:
+          Value: true
+        cap screw:
+          Value: true
+        cap screw(1):
+          Value: true
+        cap screw(10):
+          Value: true
+        cap screw(11):
+          Value: true
+        cap screw(12):
+          Value: true
+        cap screw(13):
+          Value: true
+        cap screw(14):
+          Value: true
+        cap screw(15):
+          Value: true
+        cap screw(16):
+          Value: true
+        cap screw(17):
+          Value: true
+        cap screw(18):
+          Value: true
+        cap screw(19):
+          Value: true
+        cap screw(2):
+          Value: true
+        cap screw(3):
+          Value: true
+        cap screw(4):
+          Value: true
+        cap screw(5):
+          Value: true
+        cap screw(6):
+          Value: true
+        cap screw(7):
+          Value: true
+        cap screw(8):
+          Value: true
+        cap screw(9):
+          Value: true
+        front:
           Value: true
         front left forearm:
           Value: true
@@ -109,9 +179,19 @@ Visualization Manager:
           Value: true
         gps:
           Value: true
+        gripper_centre:
+          Value: true
+        gripper_left_finger_link:
+          Value: true
+        gripper_right_finger_link:
+          Value: true
         gyro:
           Value: true
         inertial unit:
+          Value: true
+        kinect color:
+          Value: true
+        kinect range:
           Value: true
         left bottom led:
           Value: true
@@ -177,6 +257,20 @@ Visualization Manager:
           Value: true
         solid_2:
           Value: true
+        solid_3:
+          Value: true
+        spotarm_link1:
+          Value: true
+        spotarm_link2:
+          Value: true
+        spotarm_link3:
+          Value: true
+        spotarm_link4:
+          Value: true
+        spotarm_link5:
+          Value: true
+        spotarm_link6:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -185,9 +279,103 @@ Visualization Manager:
       Tree:
         map:
           odom:
+            A:
+              {}
+            B:
+              {}
+            C:
+              {}
+            Image1:
+              {}
+            Image2:
+              {}
+            Image3:
+              {}
+            P:
+              {}
+            PlaceBox:
+              {}
+            T1:
+              {}
+            T2:
+              {}
+            T3:
+              {}
             base_link:
+              SpotArm:
+                spotarm_link1:
+                  spotarm_link2:
+                    spotarm_link3:
+                      spotarm_link4:
+                        spotarm_link5:
+                          spotarm_link6:
+                            front:
+                              cap screw:
+                                {}
+                              cap screw(1):
+                                {}
+                              cap screw(10):
+                                {}
+                              cap screw(11):
+                                {}
+                              cap screw(12):
+                                {}
+                              cap screw(13):
+                                {}
+                              cap screw(14):
+                                {}
+                              cap screw(15):
+                                {}
+                              cap screw(16):
+                                {}
+                              cap screw(17):
+                                {}
+                              cap screw(18):
+                                {}
+                              cap screw(19):
+                                {}
+                              cap screw(2):
+                                {}
+                              cap screw(3):
+                                {}
+                              cap screw(4):
+                                {}
+                              cap screw(5):
+                                {}
+                              cap screw(6):
+                                {}
+                              cap screw(7):
+                                {}
+                              cap screw(8):
+                                {}
+                              cap screw(9):
+                                {}
+                              gripper_centre:
+                                {}
+                              gripper_left_finger_link:
+                                {}
+                              gripper_right_finger_link:
+                                {}
+              Velodyne_Puck:
+                {}
               accelerometer:
                 {}
+              base_footprint:
+                {}
+              front left shoulder:
+                front left upperarm:
+                  front left forearm:
+                    front left touch sensor:
+                      {}
+                  solid_3:
+                    {}
+              front right shoulder:
+                front right upperarm:
+                  front right forearm:
+                    front right touch sensor:
+                      {}
+                  solid_2:
+                    {}
               gps:
                 {}
               gyro:
@@ -214,6 +402,20 @@ Visualization Manager:
                 {}
               rear depth:
                 {}
+              rear left shoulder:
+                rear left upperarm:
+                  rear left forearm:
+                    rear left touch sensor:
+                      {}
+                  solid_1:
+                    {}
+              rear right shoulder:
+                rear right upperarm:
+                  rear right forearm:
+                    rear right touch sensor:
+                      {}
+                  solid_0:
+                    {}
               right bottom led:
                 {}
               right flank camera:
@@ -231,29 +433,10 @@ Visualization Manager:
               right top led:
                 {}
               solid:
-                front left shoulder:
-                  front left upperarm:
-                    front left forearm:
-                      front left touch sensor:
-                        {}
-              solid_0:
-                front right shoulder:
-                  front right upperarm:
-                    front right forearm:
-                      front right touch sensor:
-                        {}
-              solid_1:
-                rear left shoulder:
-                  rear left upperarm:
-                    rear left forearm:
-                      rear left touch sensor:
-                        {}
-              solid_2:
-                rear right shoulder:
-                  rear right upperarm:
-                    rear right forearm:
-                      rear right touch sensor:
-                        {}
+                kinect color:
+                  {}
+                kinect range:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -274,11 +457,106 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        SpotArm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Velodyne_Puck:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         accelerometer:
           Alpha: 1
           Show Axes: false
           Show Trail: false
         base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        cap screw:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(1):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(10):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(11):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(12):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(13):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(14):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(15):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(16):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(17):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(18):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(19):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(2):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(3):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(4):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(5):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(6):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(7):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(8):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        cap screw(9):
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        front:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -325,11 +603,34 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        gripper_centre:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_left_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_right_finger_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         gyro:
           Alpha: 1
           Show Axes: false
           Show Trail: false
         inertial unit:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect color:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        kinect range:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -459,6 +760,39 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        solid_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        spotarm_link1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spotarm_link2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spotarm_link3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spotarm_link4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        spotarm_link5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spotarm_link6:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -487,6 +821,91 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /map_updates
       Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: Intensity
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /Spot/Velodyne_Puck/point_cloud
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Class: octomap_rviz_plugins/OccupancyGrid
+      Enabled: true
+      Max. Height Display: 3.4028234663852886e+38
+      Max. Octree Depth: 16
+      Min. Height Display: -3.4028234663852886e+38
+      Name: OccupancyGrid
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /octomap_binary
+      Value: true
+      Voxel Alpha: 1
+      Voxel Coloring: Z-Axis
+      Voxel Rendering: Occupied Voxels
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: ""
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: ""
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /Spot/kinect_range/point_cloud
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -549,18 +968,18 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.11479651927948
+      Pitch: 0.7147968411445618
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.0254071950912476
+      Yaw: 0.9654072523117065
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
-  Height: 964
-  Hide Left Dock: false
+    collapsed: true
+  Height: 1016
+  Hide Left Dock: true
   Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd00000004000000000000015600000326fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d00000326000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000326fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000326000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000003c00000003efc0100000002fb0000000800540069006d00650100000000000003c0000002fb00fffffffb0000000800540069006d00650100000000000004500000000000000000000002640000032600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001560000025cfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003d0000025c000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000326fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000326000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000039d0000003efc0100000002fb0000000800540069006d006501000000000000039d000002fb00fffffffb0000000800540069006d006501000000000000045000000000000000000000039d0000035a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -569,6 +988,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 960
-  X: 0
+  Width: 925
+  X: 995
   Y: 27

@@ -12,6 +12,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         (os.path.join("share", package_name, "launch"), glob("launch/*_launch.py")),
         (os.path.join("share", package_name, "worlds"), glob("worlds/*.wbt")),
+        (os.path.join("share", package_name, "worlds"), glob("worlds/*.dae")),
         (os.path.join("share", package_name, "worlds"), glob("worlds/tags/*.png")),
         (os.path.join("share", package_name, "resource"), glob("resource/*")),
         (os.path.join("share", package_name, "yolo_images"), glob("yolo_images/*")),
