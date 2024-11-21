@@ -20,8 +20,8 @@ move_base_flex:
     controllers: ['mesh_controller']
     mesh_controller:
       type: 'mesh_controller/MeshController'
-      ang_vel_factor: 7.0
-      lin_vel_factor: 1.0
+      ang_vel_factor: 0.8
+      lin_vel_factor: .9
 
     controller_patience: 2.0
     controller_max_retries: 4
