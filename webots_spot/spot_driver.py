@@ -439,38 +439,13 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
-        if not self.arena3:
-            transforms_to_publish = [
-                "Spot",
-                "A",
-                "B",
-                "C",
-                "T1",
-                "T2",
-                "T3",
-                "P",
-                "Image1",
-                "Image2",
-                "Image3",
-                "PlaceBox",
-            ]
-        else:
-            transforms_to_publish = ["Spot"]
-            for i, color in enumerate(["Red", "Green", "Blue"]):
-                transforms_to_publish.append(f"DropBox{i+1}")
-                for idx in range(3):
-                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
-            for idx in range(3):
-                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
-
         ## Odom to following:
         tfs = []
         tf = TransformStamped()
         tf.header.stamp = time_stamp
         tf.header.frame_id = "odom"
-        x = "Spot"
-        tf._child_frame_id = x if x != "Spot" else "base_link"
-        part = self.__robot.getFromDef(x)
+        tf._child_frame_id = "base_link"
+        part = self.__robot.getFromDef("Spot")
         di = part.getField("translation").getSFVec3f()
         tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
         tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
