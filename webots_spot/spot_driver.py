@@ -447,8 +447,9 @@ class SpotDriver:
         tf._child_frame_id = "base_link"
         part = self.__robot.getFromDef("Spot")
         di = part.getField("translation").getSFVec3f()
-        tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
-        tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+
+        tf.transform.translation.x = (di[0] - self.spot_translation_initial[0])
+        tf.transform.translation.y = (di[1] - self.spot_translation_initial[1])
         tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
         tf.transform.translation.z += HEIGHT + 0.095  # BASE_LINK To Ground at Rest
 
