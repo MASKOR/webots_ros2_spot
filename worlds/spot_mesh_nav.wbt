@@ -10,8 +10,8 @@ WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.2642937418037654 0.9264486424998751 -0.26803307790924397 0.13485159920707643
-  position -49.15661904161659 3.714494723269663 11.620789229750201
+  orientation 0.01529296181940058 0.06255393511113348 0.9979244112260721 1.4100191309801213
+  position -1.272284604615158 -35.445583092692495 4.735218497302838
 }
 TexturedBackground {
   texture "factory"
@@ -23,8 +23,8 @@ Robot {
   supervisor TRUE
 }
 DEF Spot Spot {
-  translation 0 0 0.66
-  rotation 0 0 1 7.33682e-06
+  translation 8.39 0.11 0.6
+  rotation 0 0 1 -3.14159
   controller "<extern>"
   supervisor TRUE
   frontExtension [
@@ -56,7 +56,6 @@ DEF Spot Spot {
   ]
 }
 Solid {
-  rotation 1 0 0 1.01503e-06
   children [
     CadShape {
       url [
