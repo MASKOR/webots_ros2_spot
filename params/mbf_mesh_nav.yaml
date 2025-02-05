@@ -17,11 +17,11 @@ move_base_flex:
     planner_max_retries: 2
     project_path_onto_mesh: false
 
-    controllers: ['mesh_controller']
-    mesh_controller:
-      type: 'mesh_controller/MeshController'
-      ang_vel_factor: 0.8
-      lin_vel_factor: .9
+    controllers: ['rl_mesh_controller']
+    rl_mesh_controller:
+      type: 'rl_mesh_controller/RLMeshController'
+      ang_vel_factor: 0.3
+      lin_vel_factor: 0.6
 
     controller_patience: 2.0
     controller_max_retries: 4
