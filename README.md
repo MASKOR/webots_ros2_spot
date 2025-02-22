@@ -11,7 +11,7 @@ The world contains apriltags, a red line to test lane follower and objects for m
 
     - Ubuntu 22.04
     - ROS2 Humble https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
-    - Webots 2023b https://github.com/cyberbotics/webots/releases/tag/R2023b
+    - Webots 2025a https://github.com/cyberbotics/webots/releases/tag/R2025a
 
 ## Install
 
