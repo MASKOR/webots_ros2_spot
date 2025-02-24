@@ -1,17 +1,17 @@
 import rclpy
 from rclpy.node import Node
-
+from controller import Supervisor
 from builtin_interfaces.msg import Time
 from webots_spot_msgs.msg import GaitInput
 from webots_spot_msgs.srv import SpotMotion, SpotHeight
-from geometry_msgs.msg import Twist, TwistStamped, TransformStamped
+from geometry_msgs.msg import Twist, TwistStamped, TransformStamped, PoseStamped
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 from tf2_ros.transform_broadcaster import TransformBroadcaster
-
+from tf_transformations import quaternion_from_euler as qfe
 import numpy as np
 import copy
-
+import math
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
 
@@ -117,8 +117,57 @@ def diff_quat(q2, q1):
 
     return [x, y, z, w]
 
+class GoalPublisher(Node):
+    def __init__(self):
+        super().__init__('goal_publisher')
+        self.publisher_ = self.create_publisher(PoseStamped, '/rviz/goal_pose', 10)
+        self.timer = self.create_timer(15.0, self.publish_goal)  # Publish every second
 
-class SpotDriver:
+        self.poses = [
+            (3.0, 0.0, 0.0),  # 3 meters front
+            # (-3.0, 0.0, 0.0),  # 3 meters back
+            # (0.0, 3.0, 0.0),  # 3 meters left
+            # (0.0, -3.0, 0.0),  # 3 meters right
+            # (3.0, 3.0, 0.0),  # 3 meters front-left
+            # (3.0, -3.0, 0.0),  # 3 meters front-right
+            # (-3.0, 3.0, 0.0),  # 3 meters back-left
+            # (-3.0, -3.0, 0.0),  # 3 meters back-right
+        ]
+        self.current_pose_index = 0
+
+    def calculate_yaw(self, goal_x, goal_y):
+        return math.atan2(goal_y, goal_x)
+
+    def publish_goal(self):
+        # Get the current pose from the list
+        pose = self.poses[self.current_pose_index]
+
+        # Create a PoseStamped message
+        goal_msg = PoseStamped()
+        goal_msg.header.frame_id = 'base_footprint'  # Assuming the robot's base frame
+        goal_msg.header.stamp = self.get_clock().now().to_msg()
+
+        # Set the position
+        goal_msg.pose.position.x = pose[0]
+        goal_msg.pose.position.y = pose[1]
+        goal_msg.pose.position.z = pose[2]
+        yaw = self.calculate_yaw(pose[0], pose[1])
+
+        # Set the orientation (facing forward)
+        quaternion = qfe(0, 0, yaw)  # Roll, pitch, yaw
+        goal_msg.pose.orientation.x = quaternion[0]
+        goal_msg.pose.orientation.y = quaternion[1]
+        goal_msg.pose.orientation.z = quaternion[2]
+        goal_msg.pose.orientation.w = quaternion[3]
+
+        # Publish the goal
+        self.publisher_.publish(goal_msg)
+        self.get_logger().info(f'Published goal: {pose}')
+
+        # Update the pose index for the next publication
+        self.current_pose_index = (self.current_pose_index + 1) % len(self.poses)
+
+class SpotDriver():
     def init(self, webots_node, properties):
         rclpy.init(args=None)
 
@@ -147,6 +196,9 @@ class SpotDriver:
         self.spot_rotation_initial = self.spot_rotation.getSFRotation()
 
         self.__robot.timestep = 32
+        self.timer = 0
+        self.timer_reset = 0
+        self.reset_duration = 300.0
 
         ### Init motors
         self.motor_names = [
@@ -202,7 +254,7 @@ class SpotDriver:
         self.__node.create_service(
             SpotMotion, "/Spot/blocksworld_pose", self.blocksworld_pose
         )
-
+        self.goal_publisher = GoalPublisher()
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -457,8 +509,8 @@ class SpotDriver:
             quat_from_angle_axis(part.getField("rotation").getSFRotation()),
             quat_from_angle_axis(self.spot_rotation_initial),
         )
-        tf.transform.rotation.x = -r[0]
-        tf.transform.rotation.y = -r[1]
+        tf.transform.rotation.x = r[0]
+        tf.transform.rotation.y = r[1]
         tf.transform.rotation.z = r[2]
         tf.transform.rotation.w = r[3]
         tfs.append(tf)
@@ -700,13 +752,40 @@ class SpotDriver:
         self.zd = -request.height
         return response
 
+    def check_and_reset_position(self):
+        # Get the current translation of the robot
+        current_translation = self.spot_translation.getSFVec3f()
+        x, y, z = current_translation
+
+        # Check if the robot is outside the specified boundaries
+        #if x > 9.3 or x < -4.0  or abs(y) > 10.0 or abs(z) < .35:
+        if x > 3.3 or x < -3.3  or abs(y) > 3.3 or abs(z) < .35:
+            # Reset the position of the robot to [0, 0, 0]
+            self.spot_translation.setSFVec3f([0.0, 0.0, 0.6])
+            self.spot_rotation.setSFRotation(self.spot_rotation_initial)
+            self.goal_publisher.publish_goal()
+            print("Robot position reset to [0, 0, 0.7]")
+
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
 
-        self.front_left_lower_leg_contact = self.touch_fl.getValue()
-        self.front_right_lower_leg_contact = self.touch_fr.getValue()
-        self.rear_left_lower_leg_contact = self.touch_rl.getValue()
-        self.rear_right_lower_leg_contact = self.touch_rr.getValue()
+        # self.front_left_lower_leg_contact = self.touch_fl.getValue()
+        # self.front_right_lower_leg_contact = self.touch_fr.getValue()
+        # self.rear_left_lower_leg_contact = self.touch_rl.getValue()
+        # self.rear_right_lower_leg_contact = self.touch_rr.getValue()
+
+        self.timer += self.time_step / 1000.0
+        self.timer_reset += self.time_step / 1000.0
+        if self.timer >= 3.0:
+                self.check_and_reset_position()
+                self.goal_publisher.publish_goal()
+                self.timer = 0
+
+        if self.timer_reset >= self.reset_duration:
+            self.spot_node.resetPhysics()
+            self.timer_reset = 0
+            print("Simulation physics reset")
+
 
         if self.fixed_motion:
             self.defined_motions()
