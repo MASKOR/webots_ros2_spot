@@ -4,6 +4,7 @@ from controller import Supervisor
 from builtin_interfaces.msg import Time
 from webots_spot_msgs.msg import GaitInput
 from webots_spot_msgs.srv import SpotMotion, SpotHeight
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist, TwistStamped, TransformStamped, PoseStamped
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
@@ -238,6 +239,10 @@ class SpotDriver():
         self.joint_state_pub = self.__node.create_publisher(
             JointState, "/joint_states", 1
         )
+
+        self.__node.create_subscription(
+            Bool, "/terminal_state", self.__terminal_state_cb, 1
+        )
         self.odom_pub = self.__node.create_publisher(Odometry, "/Spot/odometry", 1)
 
         ## Services
@@ -338,6 +343,12 @@ class SpotDriver():
 
         # Initialise arena modifier
         #ArenaModifier(self.__node, self.__robot)
+    def __terminal_state_cb(self, msg):
+        # Reset the position of the robot to [0, 0, 0]
+        self.spot_translation.setSFVec3f([0.0, 0.0, 0.6])
+        self.spot_rotation.setSFRotation(self.spot_rotation_initial)
+        self.goal_publisher.publish_goal()
+        print("Robot position reset to [0, 0, 0.7]")
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
