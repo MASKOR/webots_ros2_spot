@@ -1,0 +1,29 @@
+move_base_flex:
+  ros__parameters:
+    global_frame: 'odom'
+    robot_frame: 'base_footprint'
+    odom_topic: '/Spot/odometry'
+
+    use_sim_time: true
+    force_stop_at_goal: true
+    force_stop_on_cancel: true
+
+    planners: ['octo_planner']
+    octo_planner:
+      type: 'astar_octo_planner/AstarOctoPlanner'
+      cost_limit: 0.8
+      publish_vector_field: true
+    planner_patience: 10.0
+    planner_max_retries: 2
+
+    controllers: ['octo_controller']
+    octo_controller:
+      type: 'octo_controller/OctoController'
+      ang_vel_factor: 0.25
+      lin_vel_factor: 0.5
+
+    controller_patience: 2.0
+    controller_max_retries: 4
+    dist_tolerance: 0.2
+    angle_tolerance: 0.8
+    cmd_vel_ignored_tolerance: 10.0
