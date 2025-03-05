@@ -25,27 +25,6 @@ def generate_launch_description():
         if f.endswith(".h5")
     ]
 
-    launch_args = [
-        DeclareLaunchArgument(
-            "map_name",
-            description="Name of the map to be used for navigation"
-            + '(see mesh_navigation_tutorials\' "map" directory).',
-            default_value="parking_garage_s4",
-            choices=available_map_names,
-        ),
-        DeclareLaunchArgument(
-            "localization_type",
-            description="How the robot shall localize itself",
-            default_value="ground_truth",
-            choices=["ground_truth", "rmcl_micpl"],
-        ),
-        DeclareLaunchArgument(
-            "start_rviz",
-            description="Whether rviz shall be started.",
-            default_value="True",
-            choices=["True", "False"],
-        ),
-    ]
     map_name = LaunchConfiguration("map_name")
     start_rviz = LaunchConfiguration("start_rviz")
 
@@ -80,8 +59,8 @@ def generate_launch_description():
     )
 
     return LaunchDescription(
-        launch_args
-        + [
+
+        [
             map_odom,
             move_base_flex,
         ]
