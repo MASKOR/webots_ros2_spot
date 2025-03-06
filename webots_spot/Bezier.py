@@ -1,6 +1,8 @@
 import numpy as np
 from webots_spot.LieAlgebra import TransToRp
 import copy
+import math
+np.math = math
 
 STANCE = 0
 SWING = 1
