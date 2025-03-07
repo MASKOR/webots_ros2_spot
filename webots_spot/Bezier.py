@@ -1,8 +1,6 @@
 import numpy as np
 from webots_spot.LieAlgebra import TransToRp
 import copy
-import math
-np.math = math
 
 STANCE = 0
 SWING = 1
@@ -190,8 +188,8 @@ class BezierGait:
         :param k: Bezier point number
         :returns: Binomial solution
         """
-        return np.math.factorial(self.NumBezierPoints) / (
-            np.math.factorial(k) * np.math.factorial(self.NumBezierPoints - k)
+        return np.factorial(self.NumBezierPoints) / (
+            np.factorial(k) * np.factorial(self.NumBezierPoints - k)
         )
 
     def BezierSwing(self, phase, L, LateralFraction, clearance_height=0.04):
