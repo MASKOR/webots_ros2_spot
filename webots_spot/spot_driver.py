@@ -122,7 +122,7 @@ class GoalPublisher(Node):
     def __init__(self):
         super().__init__('goal_publisher')
         self.publisher_ = self.create_publisher(PoseStamped, '/rviz/goal_pose', 10)
-        self.timer = self.create_timer(15.0, self.publish_goal)  # Publish every second
+        #self.timer = self.create_timer(15.0, self.publish_goal)  # Publish every second
 
         self.poses = [
             (3.0, 0.0, 0.0),  # 3 meters front
@@ -343,12 +343,30 @@ class SpotDriver():
 
         # Initialise arena modifier
         #ArenaModifier(self.__node, self.__robot)
+    def create_terminal_subscription(self):
+        self.terminal_state_sub = self.create_subscription(
+            Bool,                  # change to your message type
+            'terminal_state_topic',# change to your topic name
+            self.__terminal_state_cb,
+            10)
     def __terminal_state_cb(self, msg):
         # Reset the position of the robot to [0, 0, 0]
         self.spot_translation.setSFVec3f([0.0, 0.0, 0.6])
         self.spot_rotation.setSFRotation(self.spot_rotation_initial)
         self.goal_publisher.publish_goal()
         print("Robot position reset to [0, 0, 0.7]")
+
+        # Disconnect (destroy) the current subscription
+        #self.terminal_state_sub.destroy()
+        #self.get_logger().info("Terminal state subscription destroyed.")
+
+        # Create a timer to re-subscribe after 5 seconds
+        #self.create_timer(3.0, self.resubscribe_terminal_state, callback_group=None)
+
+    def resubscribe_terminal_state(self):
+        # Re-create subscription
+        self.create_terminal_subscription()
+        self.get_logger().info("Terminal state subscription re-established.")
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
@@ -787,10 +805,10 @@ class SpotDriver():
 
         self.timer += self.time_step / 1000.0
         self.timer_reset += self.time_step / 1000.0
-        if self.timer >= 3.0:
-                self.check_and_reset_position()
-                self.goal_publisher.publish_goal()
-                self.timer = 0
+        # if self.timer >= 3.0:
+        #         self.check_and_reset_position()
+        #         self.goal_publisher.publish_goal()
+        #         self.timer = 0
 
         if self.timer_reset >= self.reset_duration:
             self.spot_node.resetPhysics()

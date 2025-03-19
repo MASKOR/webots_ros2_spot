@@ -10,8 +10,9 @@ WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation 0.01529296181940058 0.06255393511113348 0.9979244112260721 1.4100191309801213
-  position -1.272284604615158 -35.445583092692495 4.735218497302838
+  orientation 0.04388301738660566 -0.029140800323640473 -0.9986115834204731 1.4035459706062776
+  position -0.27308574875848757 13.233348821610557 0.7756798170260983
+  follow "Spot"
 }
 TexturedBackground {
   texture "factory"
@@ -23,8 +24,7 @@ Robot {
   supervisor TRUE
 }
 DEF Spot Spot {
-  translation 0.0 0.0 0.7
-  rotation 0.0 0.0 1.0 0.0
+  translation 0 0 0.67
   controller "<extern>"
   supervisor TRUE
   frontExtension [
