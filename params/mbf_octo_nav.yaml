@@ -1,6 +1,6 @@
 move_base_flex:
   ros__parameters:
-    global_frame: 'odom'
+    global_frame: 'map'
     robot_frame: 'base_footprint'
     odom_topic: '/Spot/odometry'
 
