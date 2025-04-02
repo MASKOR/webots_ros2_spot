@@ -28,6 +28,7 @@ move_base_flex:
     dist_tolerance: 0.2
     angle_tolerance: 0.8
     cmd_vel_ignored_tolerance: 10.0
+    controller_frequency: 10.0
 
     mesh_map:
       mesh_part: 'mesh'
