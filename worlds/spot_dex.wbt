@@ -1,0 +1,1160 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/ThreadMetalPlate.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/humans/pedestrian/protos/Pedestrian.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/factory/pipes/protos/PipeSection.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
+EXTERNPROTO "../protos/Spot.proto"
+EXTERNPROTO "../protos/SpotArm.proto"
+EXTERNPROTO "../protos/ImageBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
+
+WorldInfo {
+  title "Spot_Maze"
+}
+DEF Viewpoint Viewpoint {
+  orientation -0.3514025745846757 -0.08398531544295117 0.9324498363800645 3.580145909966252
+  position 20.0206486298158 10.533063907228222 19.231879117926756
+}
+TexturedBackground {
+  texture "factory"
+  skybox FALSE
+}
+RectangleArena {
+  translation 0.59 9 0
+  rotation 0 1 0 0
+  floorSize 18 28
+  floorTileSize 1 1
+  floorAppearance ThreadMetalPlate {
+  }
+  wallHeight 1.7
+  wallAppearance Roughcast {
+    colorOverride 0.533333 0.541176 0.521569
+    textureTransform TextureTransform {
+      scale 5 1.75
+    }
+  }
+}
+Pedestrian {
+  translation -7.2 -1.2 1.28
+  name "Pedestrian"
+  controllerArgs [
+    "--trajectory=-7.2 -1.2, -7.2 3.8"
+    "--speed=0.25"
+  ]
+  enableBoundingObject TRUE
+}
+DEF Pipe PipeSection {
+  translation -1.84 4.01 0.85
+  rotation 0.5773509358560258 0.577349935856137 0.577349935856137 -2.0944
+  height 2
+  appearance PBRAppearance {
+    baseColor 1 1 0
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 3.63 0.21 0.85
+  name "arena_wall_1"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 0.92 -3.49 0.85
+  name "arena_wall_2"
+  size 0.03 3 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -1.84 -1.51 0.85
+  name "arena_wall_3"
+  size 0.03 3 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -4.65 -3.5 0.85
+  name "arena_wall_4"
+  size 0.03 3 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -4.65 3.51 0.85
+  name "arena_wall_5"
+  size 0.03 3 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -1.84 1.5 0.85
+  name "arena_wall_6"
+  size 0.03 3 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 0.92 2.49 0.85
+  name "arena_wall_7"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -2.59 0 0.85
+  rotation 0 0 1 1.5708
+  name "arena_wall_8"
+  size 0.03 7 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 0.590027 4.98 0.85
+  rotation 0 0 1 1.5708
+  name "arena_seperator_wall"
+  size 0.03 18 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -5.16 8.14 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_1"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -2.045 10.0296 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_2"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -0.13642 13.1397 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_3"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 1.76401 10.0319 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_4"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 4.88401 8.14189 0.1
+  rotation 0 0 1 1.5708
+  name "avoid_holes_5"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 6.76401 11.2719 0.1
+  rotation 0 0 1 -3.1415853071795863
+  name "avoid_holes_6"
+  size 1.2 5 0.2
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF A SolidBox {
+  translation -8 -4 0.025
+  name "A"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "A.png"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF B SolidBox {
+  translation -8 -3.8 0.025
+  name "B"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "B.png"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF C SolidBox {
+  translation -8 -3.6 0.025
+  name "C"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "C.png"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF T1 Solid {
+  translation -8 -4 0.025
+  name "T1"
+}
+DEF T2 Solid {
+  translation -8 -3.8 0.025
+  name "T2"
+}
+DEF T3 Solid {
+  translation -8 -3.6 0.025
+  name "T3"
+}
+Robot {
+  name "Ros2Supervisor"
+  controller "<extern>"
+  supervisor TRUE
+}
+DEF Spot Spot {
+  translation 8.39 0.11 0.6
+  rotation 0 0 1 -3.14159
+  controller "<extern>"
+  supervisor TRUE
+  frontExtension [
+    SpotArm {
+      translation 0 0 -0.094
+      rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
+      controller "<extern>"
+      gripperCam [
+        Camera {
+          translation 0.19 0 0
+          name "gripper camera"
+          width 1280
+          height 720
+        }
+      ]
+    }
+    Kinect {
+      translation 0 -0.007 -0.240831
+      rotation 1 0 0 -0.35
+      foot FALSE
+    }
+  ]
+  middleExtension [
+    VelodynePuck {
+      translation 0 0.04 0.09
+      rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "Velodyne_Puck"
+    }
+  ]
+}
+DEF Lane1 Solid {
+  translation 6.70814 -1.56573 0.001
+  rotation 0 0 -1 -2.09441
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 4
+      }
+    }
+  ]
+  name "Lane1"
+}
+DEF Lane2 Solid {
+  translation 3.48652 -2.56567 0.001
+  rotation 0 0 -1 -1.57081
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 3
+      }
+    }
+  ]
+  name "Lane2"
+}
+DEF Lane3 Solid {
+  translation 2.02652 -1.33567 0.001
+  rotation 0 0 -1 0
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.993332 0.00662242 0.00662242
+        metalness 0
+      }
+      geometry Plane {
+        size 0.08 2.5
+      }
+    }
+  ]
+  name "Lane3"
+}
+DEF Image1 ImageBox {
+  translation -2.52 -0.67 0.001
+  name "image_bucket1"
+}
+DEF Image2 ImageBox {
+  translation -5.36 -4.31 0.001
+  rotation 0 0 1 3.14159
+  name "image_bucket2"
+}
+DEF Image3 ImageBox {
+  translation 0.15 0.72 0.001
+  rotation 0 0 1 3.14159
+  name "image_bucket3"
+}
+ImageBox {
+  translation 8.45 -4 0.5
+  rotation 0 1 0 3.14159
+  name "image_bucket_pick"
+}
+DEF PlaceBox ImageBox {
+  translation 7.5 -4 0
+  name "image_bucket_place"
+}
+DEF P SolidBox {
+  translation 8.3 -3.85 0.525
+  name "P"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "P.png"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+Solid {
+  translation 9.59 0 0.6
+  rotation 0.5773509358560258 -0.577349935856137 0.577349935856137 -2.0944
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "../yolo_images/clock.jpeg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.4 0.4 0.01
+      }
+    }
+  ]
+  name "clock"
+}
+Solid {
+  translation 3.65 0 0.6
+  rotation 0.5773509358560258 0.577349935856137 0.577349935856137 2.0944
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "aruco.png"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+      geometry Box {
+        size 0.3 0.3 0.01
+      }
+    }
+  ]
+  name "aruco"
+}
+# Third Arena
+SolidBox {
+  translation 0.589985 16.28 0.85
+  rotation 0 0 1 1.5708
+  name "arena_seperator_wall_2"
+  size 0.03 18 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door1 SolidBox {
+  translation 4.88 18.31 0.85
+  name "door_1"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door2 SolidBox {
+  translation 0.08 18.31 0.85
+  name "door_2"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+DEF Door3 SolidBox {
+  translation -4.31 18.31 0.85
+  name "door_3"
+  size 0.03 4 1.7
+  appearance PBRAppearance {
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 4.91 20.5 0.85
+  name "black_wall_1"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation 0.11 20.5 0.85
+  name "black_wall_2"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+SolidBox {
+  translation -4.29 20.5 0.85
+  name "black_wall_3"
+  size 0.03 5 1.7
+  appearance PBRAppearance {
+    baseColor 0 0 0
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+      ]
+    }
+    roughness 0.5
+    metalness 0
+  }
+}
+ImageBox {
+  translation 9.29 20.22 0.500001
+  rotation 0 1 0 3.14159
+  name "cubes_stand_1"
+}
+ImageBox {
+  translation 4.57 20.22 0.499991
+  rotation 0 1 0 3.14159
+  name "cubes_stand_2"
+}
+ImageBox {
+  translation -0.24 20.22 0.499983
+  rotation 0 1 0 3.14159
+  name "cubes_stand_3"
+}
+DEF DropBox1 ImageBox {
+  translation 5.23 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_1"
+  legAppearance PBRAppearance {baseColor 1 0 0 roughness 0.5 metalness 0}
+}
+DEF DropBox2 ImageBox {
+  translation 0.43 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_2"
+  legAppearance PBRAppearance {baseColor 0 1 0 roughness 0.5 metalness 0}
+}
+DEF DropBox3 ImageBox {
+  translation -3.97 18.87 0
+  rotation 0 0 1 1.5708
+  name "cube_drop_box_3"
+  legAppearance PBRAppearance {baseColor 0 0 1 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_1 ImageBox {
+  translation 7.23 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_1"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_2 ImageBox {
+  translation 2.47 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_2"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF YellowDropBox_3 ImageBox {
+  translation -2.07 22.7 0
+  rotation 0 0 -1 -5.307179586466759e-06
+  name "yellow_cube_drop_box_3"
+  legAppearance PBRAppearance {baseColor 1 1 0 roughness 0.5 metalness 0}
+}
+DEF RED_1 SolidBox {
+  translation 9.04 20.4 0.535
+  rotation 0 0 1 1.5708
+  name "RED_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_1 SolidBox {
+  translation 9.04 20.21 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_1 SolidBox {
+  translation 9.04 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_1"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF RED_2 SolidBox {
+  translation 4.37 20.41 0.535
+  rotation 0 0 1 1.5708
+  name "RED_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_2 SolidBox {
+  translation 4.37 20.22 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_2 SolidBox {
+  translation 4.37 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_2"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF RED_3 SolidBox {
+  translation -0.44 20.42 0.535
+  rotation 0 0 1 1.5708
+  name "RED_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 1 0 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF GREEN_3 SolidBox {
+  translation -0.44 20.23 0.535
+  rotation 0 0 1 1.5708
+  name "GREEN_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 1 0
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+DEF BLUE_3 SolidBox {
+  translation -0.44 20.03 0.535
+  rotation 0 0 1 1.5708
+  name "BLUE_3"
+  size 0.05 0.05 0.05
+  appearance PBRAppearance {
+    baseColor 0 0 1
+    roughness 0.5
+    metalness 0
+  }
+  physics Physics {
+  }
+}
+Solid {
+  translation -1.79 -1.1 0.68
+  rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
+  children [
+    Solid {
+      translation 0.17 0.0400012 0.04
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe"
+    }
+    Solid {
+      translation 0.268787 0.0400012 0.0187867
+      rotation -0.8628565621288802 -0.35740681862788 0.3574058186283875 -1.7177753071795863
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(4)"
+    }
+    Solid {
+      translation 0.16 0.155001 0.0140191
+      rotation -1 0 0 -1.0472053071795866
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(3)"
+    }
+    Solid {
+      translation 0.16 -0.0799988 0.04
+      rotation 1 0 0 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(2)"
+    }
+    Solid {
+      translation 0.0470711 0.0400012 0.0187867
+      rotation 0.8628565621288802 -0.35740681862788 0.3574058186283875 1.71777
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(1)"
+    }
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.803922 0.670588 0.560784
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "Omniboard.stl"
+        ]
+        name "omniboard"
+      }
+    }
+  ]
+  name "omni_pipes"
+}
+Solid {
+  translation -4.59 -3.8 0.78
+  rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.803922 0.670588 0.560784
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "Omniboard.stl"
+        ]
+      }
+    }
+    Solid {
+      translation 0.16 0.0400012 0.04
+      rotation 1 0 0 1.5708
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop"
+    }
+    Solid {
+      translation 0.16 -0.0699988 0.0117153
+      rotation 1 0 0 2.3562
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(4)"
+    }
+    Solid {
+      translation 0.27 0.0400012 -0.00242654
+      rotation -0.8628565621288802 -0.35740681862788 0.3574058186283875 -1.7177753071795863
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(3)"
+    }
+    Solid {
+      translation 0.16 0.131717 0.0117156
+      rotation -1 0 0 -0.7854053071795866
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(2)"
+    }
+    Solid {
+      translation 0.0538927 0.0400012 0.000502356
+      rotation 0.8628563066501258 -0.3574071270187627 0.35740612701840735 1.71777
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(1)"
+    }
+  ]
+  name "omni_estop"
+}

@@ -137,7 +137,8 @@ class SpotDriver:
         self.spot_translation = self.spot_node.getField("translation")
 
         if self.arena3:
-            self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
+            self.spot_translation.setSFVec3f([7.0, 14.5, 0.5])
+            self.spot_rotation.setSFRotation([0, 0, -1, 1.57]) 
             viewpoint = self.__robot.getFromDef("Viewpoint")
             viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
             viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])

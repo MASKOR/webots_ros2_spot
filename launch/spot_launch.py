@@ -90,7 +90,7 @@ def get_ros2_nodes(*args):
 
 def generate_launch_description():
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, "worlds", "spot.wbt"])
+        world=PathJoinSubstitution([package_dir,"worlds", "spot_dex.wbt"])
     )
     ros2_supervisor = Ros2SupervisorLauncher()
 
