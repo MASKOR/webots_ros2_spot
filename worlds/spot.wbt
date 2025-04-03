@@ -769,3 +769,392 @@ DEF BLUE_3 SolidBox {
   physics Physics {
   }
 }
+Solid {
+  translation -1.79 -1.1 0.68
+  rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
+  children [
+    Solid {
+      translation 0.17 0.0400012 0.04
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe"
+    }
+    Solid {
+      translation 0.268787 0.0400012 0.0187867
+      rotation -0.8628565621288802 -0.35740681862788 0.3574058186283875 -1.7177753071795863
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(4)"
+    }
+    Solid {
+      translation 0.16 0.155001 0.0140191
+      rotation -1 0 0 -1.0472053071795866
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(3)"
+    }
+    Solid {
+      translation 0.16 -0.0799988 0.04
+      rotation 1 0 0 2.0944
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(2)"
+    }
+    Solid {
+      translation 0.0470711 0.0400012 0.0187867
+      rotation 0.8628565621288802 -0.35740681862788 0.3574058186283875 1.71777
+      children [
+        Shape {
+          appearance PBRAppearance {
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "50mm_pipe v1.stl"
+            ]
+          }
+        }
+      ]
+      name "pipe(1)"
+    }
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.803922 0.670588 0.560784
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "Omniboard.stl"
+        ]
+        name "omniboard"
+      }
+    }
+  ]
+  name "omni_pipes"
+}
+Solid {
+  translation -4.59 -3.8 0.78
+  rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.803922 0.670588 0.560784
+        roughness 1
+        metalness 0
+      }
+      geometry Mesh {
+        url [
+          "Omniboard.stl"
+        ]
+      }
+    }
+    Solid {
+      translation 0.16 0.0400012 0.04
+      rotation 1 0 0 1.5708
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop"
+    }
+    Solid {
+      translation 0.16 -0.0699988 0.0117153
+      rotation 1 0 0 2.3562
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(4)"
+    }
+    Solid {
+      translation 0.27 0.0400012 -0.00242654
+      rotation -0.8628565621288802 -0.35740681862788 0.3574058186283875 -1.7177753071795863
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(3)"
+    }
+    Solid {
+      translation 0.16 0.131717 0.0117156
+      rotation -1 0 0 -0.7854053071795866
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(2)"
+    }
+    Solid {
+      translation 0.0538927 0.0400012 0.000502356
+      rotation 0.8628563066501258 -0.3574071270187627 0.35740612701840735 1.71777
+      children [
+        Solid {
+          translation 0 0.07 -0.000820156
+          rotation 1 0 0 -1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.01
+                radius 0.03
+              }
+            }
+          ]
+          name "solid(1)"
+        }
+        Solid {
+          translation 0 0.06 6.11792e-08
+          rotation 1 0 0 -1.5707953071795862
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.647059 0.113725 0.176471
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.025
+                radius 0.025
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.964706 0.827451 0.176471
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.07 0.1 0.07
+          }
+        }
+      ]
+      name "estop(1)"
+    }
+  ]
+  name "omni_estop"
+}
