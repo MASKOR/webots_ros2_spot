@@ -3,6 +3,7 @@
     <webots>
         <plugin type="webots_spot.spot_driver.SpotDriver" >
             <arena2>false</arena2>
+            <arena3>false</arena3>
         </plugin>
 
         <plugin type="webots_ros2_driver::Ros2IMU">
