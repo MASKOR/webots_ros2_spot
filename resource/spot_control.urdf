@@ -2,7 +2,7 @@
 <robot name="Spot">
     <webots>
         <plugin type="webots_spot.spot_driver.SpotDriver" >
-            <arena3>false</arena3>
+            <arena2>false</arena2>
         </plugin>
 
         <plugin type="webots_ros2_driver::Ros2IMU">
