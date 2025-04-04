@@ -73,8 +73,8 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 # OR ros2 run spot_teleop spot_teleop_keyboard for body_pose control as well
 ```
 
-## To switch to Arena 3
+## To switch Arenas
 
 1) Change false to true in https://github.com/MASKOR/webots_ros2_spot/blob/main/resource/spot_control.urdf#L5
 
-2) Change map.yaml to map_arena3.yaml https://github.com/MASKOR/webots_ros2_spot/blob/main/launch/nav_launch.py#L15
+2) Change map.yaml to map_arena3.yaml https://github.com/MASKOR/webots_ros2_spot/blob/main/launch/nav_launch.py#L15 (map of arena 2 not created)

@@ -129,6 +129,7 @@ class SpotDriver:
         self.__node.get_logger().info("Init SpotDriver")
 
         # Parameters
+        self.arena2 = properties["arena2"] == "true"
         self.arena3 = properties["arena3"] == "true"
 
         self.__robot = webots_node.robot
@@ -136,7 +137,14 @@ class SpotDriver:
 
         self.spot_translation = self.spot_node.getField("translation")
 
-        if self.arena3:
+        if self.arena2:
+            self.spot_translation.setSFVec3f([7.0, 14.5, 0.5])
+            self.spot_rotation.setSFRotation([0, 0, -1, 1.57]) 
+            viewpoint = self.__robot.getFromDef("Viewpoint")
+            viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
+            viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])
+
+        elif self.arena3:
             self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
             viewpoint = self.__robot.getFromDef("Viewpoint")
             viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
@@ -439,7 +447,7 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
-        if not self.arena3:
+        if not self.arena2 or not self.arena3:
             transforms_to_publish = [
                 "Spot",
                 "A",
