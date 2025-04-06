@@ -9,7 +9,6 @@ import numpy as np
 class DetectPipe(Node):
     def __init__(self):
         super().__init__("detect_pipe")
-
         self.color_subscription = self.create_subscription(
             Image, "/kinova_color", self.image_callback, 10
         )
@@ -23,7 +22,6 @@ class DetectPipe(Node):
         self.latest_depth_frame = None
         self.circles = None
 
-        # Color detection parameters
         self.color_hough_dp = 1.0
         self.color_hough_min_dist = 20
         self.color_hough_param1 = 80
@@ -31,7 +29,7 @@ class DetectPipe(Node):
         self.color_min_radius = 20
         self.color_max_radius = 50
 
-        # Based on topic echo
+        # Scaling factors (based on topic echo)
         self.depth_width = 480
         self.depth_height = 270
         self.color_width = 640
@@ -39,8 +37,8 @@ class DetectPipe(Node):
         self.scale_x = self.depth_width / self.color_width
         self.scale_y = self.depth_height / self.color_height
 
-        # Offset adjustments (tune these manually)
-        self.offset_x = -20  # Adjust based on  shift
+        # Offset(tune these manually)
+        self.offset_x = -20  # Adjust based on observed shift
         self.offset_y = 0  # Adjust if vertical shift is noticed
 
         self.get_logger().info("DetectPipe node has been started.")
@@ -56,6 +54,7 @@ class DetectPipe(Node):
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
+            # Detect circles
             self.circles = cv2.HoughCircles(
                 gray,
                 cv2.HOUGH_GRADIENT,
@@ -80,7 +79,7 @@ class DetectPipe(Node):
                     # Scale to depth coordinates
                     x_scaled = int(x * self.scale_x) + self.offset_x
                     y_scaled = int(y * self.scale_y) + self.offset_y
-                    r_scaled = int(r * self.scale_x)  # Scale radius
+                    r_scaled = int(r * self.scale_x)
 
                     # Check depth if available
                     if self.latest_depth_frame is not None:
@@ -88,11 +87,35 @@ class DetectPipe(Node):
                             0 <= y_scaled < self.depth_height
                             and 0 <= x_scaled < self.depth_width
                         ):
-                            depth_value = self.latest_depth_frame[y_scaled, x_scaled]
-                            self.get_logger().info(
-                                f"Circle at ({x}, {y}) [scaled: ({x_scaled}, {y_scaled})], "
-                                f"radius {r} [scaled: {r_scaled}], depth: {depth_value}"
-                            )
+                            # Extract depth ROI around the circle
+                            y_min = max(0, y_scaled - r_scaled)
+                            y_max = min(self.depth_height, y_scaled + r_scaled)
+                            x_min = max(0, x_scaled - r_scaled)
+                            x_max = min(self.depth_width, x_scaled + r_scaled)
+                            depth_roi = self.latest_depth_frame[
+                                y_min:y_max, x_min:x_max
+                            ]
+
+                            if depth_roi.size > 0:
+                                valid_depths = depth_roi[depth_roi > 0]
+                                if valid_depths.size > 0:
+                                    avg_depth = np.mean(valid_depths)
+                                    distance_meters = (
+                                        avg_depth / 1000.0
+                                    )  # (assuming depth is in mm)
+                                    self.get_logger().info(
+                                        f"Circle at ({x}, {y}) [scaled: ({x_scaled}, {y_scaled})], "
+                                        f"radius {r} [scaled: {r_scaled}], "
+                                        f"avg distance: {distance_meters:.2f} meters"
+                                    )
+                                else:
+                                    self.get_logger().warn(
+                                        f"No valid depth values in ROI at ({x_scaled}, {y_scaled})"
+                                    )
+                            else:
+                                self.get_logger().warn(
+                                    f"Empty depth ROI at ({x_scaled}, {y_scaled})"
+                                )
                         else:
                             self.get_logger().warn(
                                 f"Scaled circle at ({x_scaled}, {y_scaled}) with radius {r_scaled} "
