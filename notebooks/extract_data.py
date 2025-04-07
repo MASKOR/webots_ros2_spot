@@ -1,31 +1,30 @@
 from rosbags.rosbag2 import Reader
-from rosbags.serde import deserialize_cdr
+from rosbags.typesys import Stores, get_typestore
 from cv_bridge import CvBridge
 import cv2
 import os
 import numpy as np
 
 bridge = CvBridge()
-bag_path = "/home/guts/rosbags_dexterity/rosbag2_2025_04_05-13_38_10/"
+bag_path = "/path/to_your/rosbag2_file"  # Don't forget
 output_dir = "./dataset"
 os.makedirs(f"{output_dir}/color", exist_ok=True)
 os.makedirs(f"{output_dir}/depth", exist_ok=True)
 
-# Lists to store synchronized data
+typestore = get_typestore(Stores.ROS2_HUMBLE)
+
 color_images = []
 depth_images = []
 twist_commands = []
 timestamps = []
 
-# Open the ROS bag
 with Reader(bag_path) as reader:
     color_msgs = []
     depth_msgs = []
     twist_msgs = []
 
-    # Collect all messages
     for connection, timestamp, rawdata in reader.messages():
-        msg = deserialize_cdr(rawdata, connection.msgtype)
+        msg = typestore.deserialize_cdr(rawdata, connection.msgtype)
         if connection.topic == "/kinova_color":
             color_msgs.append((timestamp, msg))
         elif connection.topic == "/kinova_depth":
@@ -44,13 +43,11 @@ with Reader(bag_path) as reader:
             and closest_twist
             and abs(closest_depth[0] - t_color) < 1e9
             and abs(closest_twist[0] - t_color) < 1e9
-        ):  # 1 sec tolerance
-            # Convert messages
+        ):  # Check if the closest messages are within a reasonable time window
             color_img = bridge.imgmsg_to_cv2(color_msg, "bgr8")
             depth_img = bridge.imgmsg_to_cv2(closest_depth[1], "passthrough")
-            twist = closest_twist[1]  # Assuming geometry_msgs/Twist
+            twist = closest_twist[1]
 
-            # Save data
             color_path = f"{output_dir}/color/color_{t_color}.png"
             depth_path = f"{output_dir}/depth/depth_{t_color}.npy"
             cv2.imwrite(color_path, color_img)
@@ -70,6 +67,8 @@ with Reader(bag_path) as reader:
             )
             timestamps.append(t_color)
 
-# Save twist commands to a file
 np.save(f"{output_dir}/twist_commands.npy", np.array(twist_commands))
-print(f"Extracted {len(timestamps)} synchronized samples.")
+np.save(f"{output_dir}/timestamps.npy", np.array(timestamps))
+print(
+    f"Extracted {len(color_images)} color images, {len(depth_images)} depth images, and {len(twist_commands)} twist commands."
+)
