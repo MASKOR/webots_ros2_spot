@@ -4,3 +4,4 @@ worlds/.*.wbproj
 .vscode
 .trunk
 dataset
+worlds/*.jpg
