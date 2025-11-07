@@ -190,7 +190,7 @@ class SpotDriver:
         self.__node.create_subscription(
             GaitInput, "/Spot/inverse_gait_input", self.__gait_cb, 1
         )
-        self.__node.create_subscription(TwistStamped, "/cmd_vel", self.__cmd_vel, 1)
+        self.__node.create_subscription(Twist, "/cmd_vel", self.__cmd_vel, 1)
         self.joint_state_pub = self.__node.create_publisher(
             JointState, "/joint_states", 1
         )
@@ -336,18 +336,18 @@ class SpotDriver:
             self.pitchd = 0.0
             self.yawd = 0.0
 
-            self.StepLength = StepLength * msg.twist.linear.x
+            self.StepLength = StepLength * msg.linear.x
             if self.StepLength == 0.0:
-                self.StepLength = StepLength * abs(msg.twist.linear.y)
+                self.StepLength = StepLength * abs(msg.linear.y)
 
             # Rotation along vertical axis
-            self.YawRate = msg.twist.angular.z
+            self.YawRate = msg.angular.z
             if self.YawRate != 0 and self.StepLength == 0:
                 self.StepLength = StepLength * 0.1
 
             # Lateral motion
-            self.LateralFraction = np.arctan2(msg.twist.linear.y, abs(msg.twist.linear.x))
-            if msg.twist.linear.x < 0:
+            self.LateralFraction = np.arctan2(msg.linear.y, abs(msg.linear.x))
+            if msg.linear.x < 0:
                 self.LateralFraction *= -1
 
             if 0.001 < self.StepLength < 0.05:
