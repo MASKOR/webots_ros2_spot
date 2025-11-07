@@ -49,7 +49,7 @@ def generate_launch_description():
         package="mbf_octo_nav",
         executable="mbf_octo_nav",
         remappings=[
-            ("/move_base_flex/cmd_vel", "/cmd_vel"),
+            ("/move_base_flex/cmd_vel", "/cmd_vel_stamped"),
         ],
         parameters=[
             mbf_octo_nav_config,

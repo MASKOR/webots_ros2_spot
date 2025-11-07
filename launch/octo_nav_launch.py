@@ -36,6 +36,18 @@ def generate_launch_description():
             )
         ),
     )
+        # Rviz2 send_goal Node
+    delayed_exe_path = Node(
+        package="bring_up_alert_nav",
+        executable="exe_path_node",
+        name="exe_path",
+        output="screen")
+
+    stamped_conversion = Node(
+        package="alert_utils",
+        executable="stamped_twist_converter",
+        name="stamped_twist_converter",
+        output="screen")
 
     # Start rviz, if desired
     # rviz = Node(
@@ -63,5 +75,7 @@ def generate_launch_description():
         [
             map_odom,
             move_base_flex,
+            stamped_conversion,
+            delayed_exe_path,
         ]
     )
