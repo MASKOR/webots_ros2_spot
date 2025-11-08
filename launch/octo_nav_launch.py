@@ -63,19 +63,29 @@ def generate_launch_description():
     #     condition=IfCondition(start_rviz),
     # )
 
-    map_odom = Node(
+    ### Helper tf2 static publisher map -> vision to visualize path in rviz
+    ### only for webots
+    map_vision = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
         output="screen",
-        arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
+        arguments=["0", "0", "0", "0", "0", "0", "map", "vision"],
+    )
+
+    pcl_mapfilter = Node(
+        package="alert_utils",
+        executable="pcl_mapfilter",
+        name="pcl_mapfilter",
+        output="screen"
     )
 
     return LaunchDescription(
 
         [
-            map_odom,
+            map_vision,
             move_base_flex,
             stamped_conversion,
             delayed_exe_path,
+            pcl_mapfilter,
         ]
     )
