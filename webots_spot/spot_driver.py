@@ -292,8 +292,11 @@ class SpotDriver:
         self.paw_time = 0.0
         self.previous_cmd = False
 
+        self.transforms_to_publish = self.__build_transform_def_list(properties)
+        self._missing_transform_warned = set()
+
         # Initialise arena modifier
-        ArenaModifier(self.__node, self.__robot)
+        #ArenaModifier(self.__node, self.__robot)
 
     def __model_cb(self):
         spot_rot = self.spot_node.getField("rotation")
@@ -386,6 +389,46 @@ class SpotDriver:
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
 
+    def __build_transform_def_list(self, properties):
+        transforms = ["Spot"]
+
+        if not (self.arena2 or self.arena3):
+            transforms.extend(
+                [
+                    "A",
+                    "B",
+                    "C",
+                    "T1",
+                    "T2",
+                    "T3",
+                    "P",
+                    "Image1",
+                    "Image2",
+                    "Image3",
+                    "PlaceBox",
+                ]
+            )
+        else:
+            for i, color in enumerate(["Red", "Green", "Blue"]):
+                transforms.append(f"DropBox{i+1}")
+                for idx in range(3):
+                    transforms.append(f"{color.upper()}_{idx+1}")
+            for idx in range(3):
+                transforms.append(f"YellowDropBox_{idx+1}")
+
+        extra_spec = (
+            properties.get("extra_transforms")
+            or properties.get("transforms")
+            or properties.get("custom_transforms")
+        )
+        if extra_spec:
+            normalized = str(extra_spec).replace(";", ",")
+            for name in [candidate.strip() for candidate in normalized.split(",")]:
+                if name and name not in transforms:
+                    transforms.append(name)
+
+        return transforms
+
     def spot_inverse_control(self):
         pos = np.array([self.xd, self.yd, self.zd])
         orn = np.array([self.rolld, self.pitchd, self.yawd])
@@ -447,29 +490,7 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
-        if not self.arena2 or not self.arena3:
-            transforms_to_publish = [
-                "Spot",
-                "A",
-                "B",
-                "C",
-                "T1",
-                "T2",
-                "T3",
-                "P",
-                "Image1",
-                "Image2",
-                "Image3",
-                "PlaceBox",
-            ]
-        else:
-            transforms_to_publish = ["Spot"]
-            for i, color in enumerate(["Red", "Green", "Blue"]):
-                transforms_to_publish.append(f"DropBox{i+1}")
-                for idx in range(3):
-                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
-            for idx in range(3):
-                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
+        transforms_to_publish = self.transforms_to_publish
 
         ## Odom to following:
         tfs = []
@@ -479,7 +500,14 @@ class SpotDriver:
             tf.header.frame_id = "odom"
             tf._child_frame_id = x if x != "Spot" else "base_link"
 
-            part = self.__robot.getFromDef(x)
+            part = self.spot_node if x == "Spot" else self.__robot.getFromDef(x)
+            if part is None:
+                if x not in self._missing_transform_warned:
+                    self._missing_transform_warned.add(x)
+                    self.__node.get_logger().warn(
+                        f"Skipping transform for DEF '{x}' because it was not found."
+                    )
+                continue
             di = part.getField("translation").getSFVec3f()
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
@@ -507,6 +535,12 @@ class SpotDriver:
         self.tfb_.sendTransform(tfs)
 
         ## /Spot/odometry
+        if not tfs:
+            self.__node.get_logger().error(
+                "No transforms were published; ensure the Spot node exists in the world."
+            )
+            return
+
         tf_odom_base_link = tfs[0].transform
         translation = [
             tf_odom_base_link.translation.x,
