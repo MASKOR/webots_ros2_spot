@@ -20,7 +20,7 @@ move_base_flex:
     octo_controller:
       type: 'octo_controller/OctoController'
       ang_vel_factor: 0.25
-      lin_vel_factor: 0.5
+      lin_vel_factor: 0.35
 
     controller_patience: 2.0
     controller_max_retries: 4
