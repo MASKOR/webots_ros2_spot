@@ -82,10 +82,10 @@ def generate_launch_description():
     return LaunchDescription(
 
         [
-            map_vision,
+            #map_vision,
             move_base_flex,
             stamped_conversion,
             delayed_exe_path,
-            pcl_mapfilter,
+            #pcl_mapfilter,
         ]
     )
