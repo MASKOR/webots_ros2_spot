@@ -1,0 +1,249 @@
+# Blender 5.0.0 MTL File: 'palettes.blend'
+# www.blender.org
+
+newmtl 07___Default.012
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.013
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd k9rGB.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.014
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.015
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.016
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.017
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.018
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.019
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.020
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.021
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd k9rGB.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.022
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd k9rGB.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.023
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.024
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.025
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd k9rGB.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.026
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.027
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd sddefault.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl 07___Default.028
+Ns 10.000005
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd k9rGB.jpg
+map_Ks /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_SPC.tif
+map_Bump /home/max/Documents/obj/E:/MODELING_3D/3DsMAX/EuroPalette/sceneassets/images/EuroPalette_NRM.tif
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
+
+newmtl Material.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
+
+newmtl Material.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
+
+newmtl Material.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
+
+newmtl Material.005
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
+
+newmtl Material.006
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
