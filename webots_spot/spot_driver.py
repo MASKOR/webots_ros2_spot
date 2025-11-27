@@ -292,7 +292,7 @@ class SpotDriver:
         self.paw_time = 0.0
         self.previous_cmd = False
 
-        self.transforms_to_publish = self.__build_transform_def_list(properties)
+        self.transforms_to_publish = self.__build_transform_def_list()
         self._missing_transform_warned = set()
 
         # Initialise arena modifier
@@ -389,44 +389,8 @@ class SpotDriver:
         for idx, motor in enumerate(self.motors):
             motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
 
-    def __build_transform_def_list(self, properties):
-        transforms = ["Spot"]
-
-        if not (self.arena2 or self.arena3):
-            transforms.extend(
-                [
-                    "A",
-                    "B",
-                    "C",
-                    "T1",
-                    "T2",
-                    "T3",
-                    "P",
-                    "Image1",
-                    "Image2",
-                    "Image3",
-                    "PlaceBox",
-                ]
-            )
-        else:
-            for i, color in enumerate(["Red", "Green", "Blue"]):
-                transforms.append(f"DropBox{i+1}")
-                for idx in range(3):
-                    transforms.append(f"{color.upper()}_{idx+1}")
-            for idx in range(3):
-                transforms.append(f"YellowDropBox_{idx+1}")
-
-        extra_spec = (
-            properties.get("extra_transforms")
-            or properties.get("transforms")
-            or properties.get("custom_transforms")
-        )
-        if extra_spec:
-            normalized = str(extra_spec).replace(";", ",")
-            for name in [candidate.strip() for candidate in normalized.split(",")]:
-                if name and name not in transforms:
-                    transforms.append(name)
-
+    def __build_transform_def_list(self):
+        transforms = ["Spot","Linear_Inspect_KRail","Omni_Inspect_KRail","Omni_Estop_KRail"]
         return transforms
 
     def spot_inverse_control(self):
@@ -497,7 +461,7 @@ class SpotDriver:
         for x in transforms_to_publish:
             tf = TransformStamped()
             tf.header.stamp = time_stamp
-            tf.header.frame_id = "odom"
+            tf.header.frame_id = "map" if x != "Spot" else "odom"
             tf._child_frame_id = x if x != "Spot" else "base_link"
 
             part = self.spot_node if x == "Spot" else self.__robot.getFromDef(x)
