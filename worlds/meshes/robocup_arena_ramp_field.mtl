@@ -1,32 +1,3 @@
-# Blender 5.0.0 MTL File: 'robocup_arena_ramp_field.blend'
-# www.blender.org
-
-newmtl Material.001
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 2
-map_Kd particleboard-001_osb-100x100cm-color1_d.jpg
-
-newmtl Material.002
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800007 0.021796 0.016822
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 2
-
-newmtl Material.003
-Ns 250.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.342705 0.089858 0.022586
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 2
+version https://git-lfs.github.com/spec/v1
+oid sha256:34c97b8a2f4ef3db4622b7332ac51b7d85b9176062af4a2dbc8c741b6c884a36
+size 657
