@@ -14,8 +14,8 @@ WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.3847462187143829 -0.0562612762221051 0.9213061467193434 3.627744144329675
-  position 17.85739238175864 8.49477568907473 18.798835583443406
+  orientation -0.25764207984586157 0.4552825581876276 0.852254862645458 1.4403781973641776
+  position -11.111530399507044 -28.40298849532454 26.724525385829587
 }
 TexturedBackground {
   texture "factory"
@@ -218,11 +218,11 @@ DEF KRail_Start DirectionPanel {
   ]
 }
 DEF KRail_End DirectionPanel {
-  translation -4.05 3.26 1.09
-  rotation 0 0 1 1.5708
+  translation -5.06 3.26 1.09
+  rotation 1.87158e-06 9.58981e-09 -1 1.57079
   name "direction panel(1)"
-  frontTextTexture [
+  frontTextTexture []
+  backTextTexture [
     "tags/end.png"
   ]
-  backTextTexture []
 }
