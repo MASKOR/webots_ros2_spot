@@ -8,13 +8,14 @@ EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/SpotArm.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/traffic/protos/DirectionPanel.proto"
 
 WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.34820920125012034 -0.7206614787571836 0.5994976106710206 5.490581720763957
-  position -13.991772826213772 8.50376473291659 12.296236796962496
+  orientation -0.3847462187143829 -0.0562612762221051 0.9213061467193434 3.627744144329675
+  position 17.85739238175864 8.49477568907473 18.798835583443406
 }
 TexturedBackground {
   texture "factory"
@@ -207,4 +208,21 @@ DEF Linear_Inspect_KRail Solid {
       "meshes/linear_board_inspect.obj"
     ]
   }
+}
+DEF KRail_Start DirectionPanel {
+  translation -1.37 -4.65 1.09
+  rotation 0 0 1 1.5708
+  frontTextTexture []
+  backTextTexture [
+    "tags/start.png"
+  ]
+}
+DEF KRail_End DirectionPanel {
+  translation -4.05 3.26 1.09
+  rotation 0 0 1 1.5708
+  name "direction panel(1)"
+  frontTextTexture [
+    "tags/end.png"
+  ]
+  backTextTexture []
 }
