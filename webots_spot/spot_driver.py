@@ -390,7 +390,7 @@ class SpotDriver:
             motor.setPosition(motor_offsets[idx % 3] + motors_target_pos[idx])
 
     def __build_transform_def_list(self):
-        transforms = ["Spot","Linear_Inspect_KRail","Omni_Inspect_KRail","Omni_Estop_KRail","KRail_Start","KRail_End"]
+        transforms = ["Spot","Linear_Inspect_KRail","Omni_Inspect_KRail","Omni_Estop_KRail","KRail_Start","KRail_End", "Omni_Estop_Incline"]
         return transforms
 
     def spot_inverse_control(self):

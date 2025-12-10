@@ -14,8 +14,8 @@ WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.25764207984586157 0.4552825581876276 0.852254862645458 1.4403781973641776
-  position -11.111530399507044 -28.40298849532454 26.724525385829587
+  orientation 0.15457251653554824 0.04956794332684735 -0.9867372274958588 3.0257627042379402
+  position 9.434729915056108 9.454126017264434 6.226077589464552
 }
 TexturedBackground {
   texture "factory"
@@ -109,7 +109,7 @@ Solid {
   }
 }
 Solid {
-  translation 7.36 7.59 -0.01
+  translation 7.36001 8.09 -0.01
   rotation 0 0 1 3.14159
   children [
     CadShape {
@@ -122,6 +122,23 @@ Solid {
   boundingObject Mesh {
     url [
       "meshes/robocup_arena_stepfield.obj"
+    ]
+  }
+}
+Solid {
+  translation 6.43003 -1.35 0.12
+  rotation 0 0 1 3.14159
+  children [
+    CadShape {
+      url [
+        "meshes/stairs.obj"
+      ]
+    }
+  ]
+  name "Stairs"
+  boundingObject Mesh {
+    url [
+      "meshes/stairs.obj"
     ]
   }
 }
@@ -169,6 +186,23 @@ DEF Omni_Estop_KRail Solid {
       ]
     }
   ]
+  boundingObject Mesh {
+    url [
+      "meshes/omniboard_estop.obj"
+    ]
+  }
+}
+DEF Omni_Estop_Incline Solid {
+  translation -4.69007 8.58 1.31998
+  rotation 0.43948183323227746 -0.35818586408120595 -0.8237466874174344 -5.307179586466759e-06
+  children [
+    CadShape {
+      url [
+        "meshes/omniboard_estop.obj"
+      ]
+    }
+  ]
+  name "solid(3)"
   boundingObject Mesh {
     url [
       "meshes/omniboard_estop.obj"
