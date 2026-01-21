@@ -48,7 +48,6 @@ jobs:
             echo "Error: Failed to determine ROS apt source version from GitHub API." >&2
             exit 1
           fi
-          export ROS_APT_SOURCE_VERSION
           UBUNTU_CODENAME_DEB=$(. /etc/os-release && echo "${UBUNTU_CODENAME:-${VERSION_CODENAME}}")
           ROS_APT_SOURCE_DEB_URL="https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${UBUNTU_CODENAME_DEB}_all.deb"
           curl -L -o /tmp/ros2-apt-source.deb "${ROS_APT_SOURCE_DEB_URL}"
