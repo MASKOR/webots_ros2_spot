@@ -38,24 +38,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install ROS2 Humble
-        run: >
+        run: |
           sudo apt update
-
           sudo apt install -y software-properties-common
-
           sudo add-apt-repository universe
-
-          curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc
-          | sudo apt-key add -
-
-          sudo sh -c 'echo "deb [arch=amd64,arm64]
-          http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" >
-          /etc/apt/sources.list.d/ros2-latest.list'
-
+          sudo apt install -y curl
+          ROS_APT_SOURCE_VERSION=$(curl -fsSL https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+          if [ -z "$ROS_APT_SOURCE_VERSION" ]; then
+            echo "Error: Failed to determine ROS apt source version from GitHub API." >&2
+            exit 1
+          fi
+          UBUNTU_CODENAME_DEB=$(. /etc/os-release && echo "${UBUNTU_CODENAME:-${VERSION_CODENAME}}")
+          ROS_APT_SOURCE_DEB_URL="https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${UBUNTU_CODENAME_DEB}_all.deb"
+          curl -fL -o /tmp/ros2-apt-source.deb "${ROS_APT_SOURCE_DEB_URL}"
+          sudo dpkg -i /tmp/ros2-apt-source.deb
           sudo apt update
-
-          sudo apt install -y ros-humble-ros-base
-          python3-colcon-common-extensions ros-dev-tools
+          sudo apt install -y ros-humble-ros-base \
+            python3-ament-package \
+            python3-colcon-common-extensions ros-dev-tools
       - name: Install Webots 2025a
         run: |
           sudo apt update
