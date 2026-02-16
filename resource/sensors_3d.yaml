@@ -1,0 +1,19 @@
+sensors: ["sensor1", "sensor2"]
+sensor1:
+  sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+  point_cloud_topic: /Spot/left_head_depth/point_cloud
+  max_range: 3.0
+  point_subsample: 1
+  padding_offset: 0.1
+  padding_scale: 1.0
+  max_update_rate: 1.0
+  filtered_cloud_topic: sensor1/filtered_points
+sensor2:
+  sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+  point_cloud_topic: /Spot/right_head_depth/point_cloud
+  max_range: 3.0
+  point_subsample: 1
+  padding_offset: 0.1
+  padding_scale: 1.0
+  max_update_rate: 1.0
+  filtered_cloud_topic: sensor2/filtered_points

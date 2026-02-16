@@ -161,11 +161,11 @@ class MinimalClientAsync:
         ]
 
         self.sequence = [
-            "omni_front",
-            "top_right",
-            "top_left",
-            "bottom_right",
-            "bottom_left",
+            "linear_board",
+            # "front_right",
+            # "front_left",
+            # "angled_right",
+            # "angled_left",
         ]
 
     def on_timer(self):
@@ -173,7 +173,7 @@ class MinimalClientAsync:
 
         try:
             t = self.tf_buffer.lookup_transform(
-                "base_link", "omni_front", rclpy.time.Time()
+                "base_link", "linear_board", rclpy.time.Time()
             )
             tf_base_link_pipe = [
                 t.transform.translation.x,
@@ -187,7 +187,7 @@ class MinimalClientAsync:
 
             self.tf_base_link_pipe = tf_base_link_pipe
             self.logger.info(
-                f"base_link to linear_front transform:\n"
+                f"base_link to linear_board transform:\n"
                 f"x: {tf_base_link_pipe[0]:.3f}\n"
                 f"y: {tf_base_link_pipe[1]:.3f}\n"
                 f"z: {tf_base_link_pipe[2]:.3f}\n"
@@ -197,7 +197,7 @@ class MinimalClientAsync:
                 f"rw: {tf_base_link_pipe[6]:.3f}"
             )
         except TransformException as ex:
-            self.logger.info(f"Could not transform base_link to can: {ex}")
+            self.logger.info(f"Could not transform base_link to linear_board: {ex}")
             return
 
     def joint_states_cb(self, joint_state):
@@ -214,7 +214,7 @@ class MinimalClientAsync:
         self.req.ik_request.pose_stamped.header.stamp = self.clock.now().to_msg()
         self.req.ik_request.pose_stamped.header.frame_id = "base_link"
 
-        self.req.ik_request.pose_stamped.pose.position.x = tf_base_link_pipe[0] - 0.3
+        self.req.ik_request.pose_stamped.pose.position.x = tf_base_link_pipe[0]
         self.req.ik_request.pose_stamped.pose.position.y = tf_base_link_pipe[1]
         self.req.ik_request.pose_stamped.pose.position.z = tf_base_link_pipe[2]
         self.req.ik_request.pose_stamped.pose.orientation.x = tf_base_link_pipe[3]
@@ -311,6 +311,7 @@ def main():
 
         response = minimal_client.send_request(approach=1)
         target_angles = list(response.solution.joint_state.position)[:6]
+        print(f"IK solution for {frame}: {target_angles}")
         if not len(target_angles):
             minimal_client.logger.info(f"No IK solution for {frame}")
             continue

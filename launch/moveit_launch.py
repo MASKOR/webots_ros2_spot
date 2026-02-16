@@ -63,6 +63,7 @@ def generate_launch_description():
         description_joint_limits = {
             "robot_description_planning": load_yaml("moveit_joint_limits.yaml")
         }
+        sensors_3d = load_yaml("sensors_3d.yaml")
 
         sim_time = {"use_sim_time": True}
         planning_scene = {
@@ -92,6 +93,7 @@ def generate_launch_description():
                     description_joint_limits,
                     sim_time,
                     planning_scene,
+                    sensors_3d,
                 ],
                 condition=IfCondition(use_rviz),
             )
@@ -118,24 +120,25 @@ def generate_launch_description():
                     movegroup,
                     sim_time,
                     planning_scene,
+                    sensors_3d,
                 ],
             )
         )
-        Node(
-            package="gen3_moveit",
-            executable="gen3_moveit",
-            output="screen",
-            parameters=[
-                description,
-                description_semantic,
-                description_kinematics,
-                description_joint_limits,
-                moveit_controllers,
-                movegroup,
-                sim_time,
-                planning_scene,
-            ],
-        )
+        # Node(
+        #     package="gen3_moveit",
+        #     executable="gen3_moveit",
+        #     output="screen",
+        #     parameters=[
+        #         description,
+        #         description_semantic,
+        #         description_kinematics,
+        #         description_joint_limits,
+        #         moveit_controllers,
+        #         movegroup,
+        #         sim_time,
+        #         planning_scene,
+        #     ],
+        # )
 
     else:
         launch_description_nodes.append(
