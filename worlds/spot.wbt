@@ -1,4 +1,4 @@
-#VRML_SIM R2023b utf8
+#VRML_SIM R2025a utf8
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
@@ -20,8 +20,8 @@ WorldInfo {
   basicTimeStep 16
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.22215181989066202 0.15748419217153245 0.9622095915835317 1.7106611458880443
-  position 8.688699333089648 -5.946749947221553 3.5316700535527237
+  orientation -0.22726801429981083 -0.09799442681853336 0.9688892310211359 3.9330667337224137
+  position 19.69059411662516 14.6381188052367 12.97497361843362
 }
 TexturedBackground {
   texture "factory"
@@ -42,7 +42,7 @@ RectangleArena {
     }
   }
 }
-Solid {
+DEF linear_board Solid {
   translation 3.65 0.77 0.51
   children [
     Solid {
@@ -1040,7 +1040,7 @@ DEF BLUE_3 SolidBox {
   physics Physics {
   }
 }
-Solid {
+DEF omni_board Solid {
   translation -1.79 -1.1 0.68
   rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
   children [
@@ -1255,7 +1255,7 @@ Solid {
   ]
   name "omni_pipes"
 }
-Solid {
+DEF estop Solid {
   translation -4.59 -3.8 0.78
   rotation 0.35740681862788 -0.8628565621288802 0.3574058186283875 -1.7177753071795863
   children [
@@ -1532,5 +1532,5 @@ Solid {
       name "estop(1)"
     }
   ]
-  name "omni_estop"
+  name "estop"
 }

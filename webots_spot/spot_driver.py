@@ -461,6 +461,9 @@ class SpotDriver:
                 "Image2",
                 "Image3",
                 "PlaceBox",
+                "linear_board",
+                "omni_board",
+                "estop",
             ]
         else:
             transforms_to_publish = ["Spot"]
