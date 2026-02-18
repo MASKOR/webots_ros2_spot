@@ -12,7 +12,6 @@ from webots_ros2_driver.wait_for_controller_connection import (
     WaitForControllerConnection,
 )
 
-
 package_dir = get_package_share_directory("webots_spot")
 
 
@@ -168,6 +167,12 @@ def generate_launch_description():
         name="pointcloud_to_laserscan",
     )
 
+    dexboard_launch = launch.actions.IncludeLaunchDescription(
+        launch.launch_description_sources.PythonLaunchDescriptionSource(
+            os.path.join(package_dir, "launch", "dexboard_launch.py")
+        )
+    )
+
     return LaunchDescription(
         [
             webots,
@@ -178,6 +183,7 @@ def generate_launch_description():
             webots_event_handler,
             reset_handler,
             pointcloud_to_laserscan_node,
+            dexboard_launch,
         ]
         + get_ros2_nodes()
     )
