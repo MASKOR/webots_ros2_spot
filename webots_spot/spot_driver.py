@@ -449,7 +449,7 @@ class SpotDriver:
 
         if not self.arena2 or not self.arena3:
             transforms_to_publish = [
-                "Spot",
+                # "Spot",
                 "A",
                 "B",
                 "C",
@@ -463,7 +463,8 @@ class SpotDriver:
                 "PlaceBox",
             ]
         else:
-            transforms_to_publish = ["Spot"]
+            # transforms_to_publish = ["Spot"]
+            transforms_to_publish = []
             for i, color in enumerate(["Red", "Green", "Blue"]):
                 transforms_to_publish.append(f"DropBox{i+1}")
                 for idx in range(3):
