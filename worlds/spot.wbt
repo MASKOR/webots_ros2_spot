@@ -20,8 +20,8 @@ WorldInfo {
   basicTimeStep 16
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.22726801429981083 -0.09799442681853336 0.9688892310211359 3.9330667337224137
-  position 19.69059411662516 14.6381188052367 12.97497361843362
+  orientation -0.5247210406084233 -0.21770936060557347 0.8229644365630423 3.4974072653654953
+  position 16.20165417681024 3.88377379526004 27.225137874449512
 }
 TexturedBackground {
   texture "factory"
@@ -245,7 +245,7 @@ DEF linear_board Solid {
         }
         Shape {
           appearance PBRAppearance {
-            baseColor 0.14902 0.635294 0.411765
+            baseColor 0.803922 0.670588 0.560784
             roughness 1
             metalness 0
           }
@@ -1241,7 +1241,7 @@ DEF omni_board Solid {
     }
     Shape {
       appearance PBRAppearance {
-        baseColor 0.109804 0.443137 0.847059
+        baseColor 0.803922 0.670588 0.560784
         roughness 1
         metalness 0
       }
