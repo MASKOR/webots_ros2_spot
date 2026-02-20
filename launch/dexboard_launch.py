@@ -9,6 +9,12 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
+                arguments=["0", "0", "0", "3.14", "0", "0", "linear_inspection", "linear_board"],
+            ),
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                output="screen",
                 arguments=["0.45", "0", "-0.05", "1.5708", "0", "1.5708", "linear_board", "linear_front"],
             ),
             
