@@ -11,6 +11,8 @@ from webots_ros2_driver.webots_controller import WebotsController
 from webots_ros2_driver.wait_for_controller_connection import (
     WaitForControllerConnection,
 )
+from launch_ros.actions import ComposableNodeContainer
+from launch_ros.descriptions import ComposableNode
 
 package_dir = get_package_share_directory("webots_spot")
 
@@ -122,6 +124,31 @@ def generate_launch_description():
         ],
     )
 
+    kinect_depth_image_proc = ComposableNodeContainer(
+        name="registered_depth_images",
+        namespace="Spot/kinect",
+        package="rclcpp_components",
+        executable="component_container",
+        composable_node_descriptions=[
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::RegisterNode",
+                name="register_node",
+                namespace="Spot/kinect",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/kinect_color/camera_info"),
+                    ("depth/camera_info", "/Spot/kinect_range/camera_info"),
+                    ("depth/image_rect", "/Spot/kinect_range/image"),
+                ],
+                parameters=[
+                    {"fill_upsampling_holes": True, "use_sim_time": True}
+                ],
+            ),
+        ],
+        output="both",
+        parameters=[{"use_sim_time": True}],
+    )
+
     # spot_pointcloud2 = Node(
     #     package='webots_spot',
     #     executable='spot_pointcloud2',
@@ -167,12 +194,6 @@ def generate_launch_description():
         name="pointcloud_to_laserscan",
     )
 
-    dexboard_launch = launch.actions.IncludeLaunchDescription(
-        launch.launch_description_sources.PythonLaunchDescriptionSource(
-            os.path.join(package_dir, "launch", "dexboard_launch.py")
-        )
-    )
-
     return LaunchDescription(
         [
             webots,
@@ -183,7 +204,7 @@ def generate_launch_description():
             webots_event_handler,
             reset_handler,
             pointcloud_to_laserscan_node,
-            dexboard_launch,
+            kinect_depth_image_proc,
         ]
         + get_ros2_nodes()
     )

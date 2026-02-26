@@ -60,7 +60,7 @@ DEF linear_board Solid {
                   appearance PBRAppearance {
                     baseColorMap ImageTexture {
                       url [
-                        "landolt.png"
+                        "placard-1.1-explosives.png"
                       ]
                     }
                     roughness 1
@@ -99,7 +99,7 @@ DEF linear_board Solid {
                   appearance PBRAppearance {
                     baseColorMap ImageTexture {
                       url [
-                        "landolt.png"
+                        "placard-2-oxygen.png"
                       ]
                     }
                     roughness 1
@@ -138,7 +138,7 @@ DEF linear_board Solid {
                   appearance PBRAppearance {
                     baseColorMap ImageTexture {
                       url [
-                        "landolt.png"
+                        "placard-5.1-oxidizer.png"
                       ]
                     }
                     roughness 1
@@ -177,7 +177,7 @@ DEF linear_board Solid {
                   appearance PBRAppearance {
                     baseColorMap ImageTexture {
                       url [
-                        "landolt.png"
+                        "placard-2-oxygen.png"
                       ]
                     }
                     roughness 1
@@ -216,7 +216,7 @@ DEF linear_board Solid {
                   appearance PBRAppearance {
                     baseColorMap ImageTexture {
                       url [
-                        "landolt.png"
+                        "placard-6-poison.png"
                       ]
                     }
                     roughness 1

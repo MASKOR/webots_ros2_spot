@@ -5,17 +5,17 @@ def generate_launch_description():
     return LaunchDescription(
         [
             # Linear Center (Reference)
+            # Node(
+            #     package="tf2_ros",
+            #     executable="static_transform_publisher",
+            #     output="screen",
+            #     arguments=["0", "0", "0", "3.14", "0", "0", "linear_inspection", "linear_board"],
+            # ),
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["0", "0", "0", "3.14", "0", "0", "linear_inspection", "linear_board"],
-            ),
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                output="screen",
-                arguments=["0.45", "0", "-0.05", "1.5708", "0", "1.5708", "linear_board", "linear_front"],
+                arguments=["-0.45", "0", "0.0", "1.5707963", "0", "1.5707963", "linear_board", "linear_front"],
             ),
             
             # Linear Far Left (Flat, -8cm height)
@@ -23,7 +23,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["0.3", "0", "-0.08", "0", "0", "0", "linear_front", "front_left"],
+                arguments=["0.3", "0", "0.08", "0", "0", "0", "linear_front", "front_left"],
             ),
             
             # Linear Far Right (Flat, -8cm height)
@@ -31,7 +31,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["-0.3", "0", "-0.08", "0", "0", "0", "linear_front", "front_right"],
+                arguments=["-0.3", "0", "0.08", "0", "0", "0", "linear_front", "front_right"],
             ),
             
             # Linear Angled Left (Mid-point, -5cm height, Rolled -30 deg inward)
@@ -39,7 +39,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=[ "0.3", "0", "-0.08", "0", "0.436", "0", "linear_front", "angled_left"],
+                arguments=[ "0.3", "0", "0.08", "0", "-0.436", "0", "linear_front", "angled_left"],
             ),
             
             # Linear Angled Right (Mid-point, -5cm height, Rolled +30 deg inward)
@@ -47,7 +47,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["-0.3", "0", "-0.08", "0", "-0.436", "0", "linear_front", "angled_right"],
+                arguments=["-0.3", "0", "0.08", "0", "0.436", "0", "linear_front", "angled_right"],
             ),
 
             # Omni Center (Reference) WIP
@@ -55,7 +55,14 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["0.15", "0", "0.3", "0.7854", "0", "0", "omni_board", "omni_front"],
+                arguments=["-0.3", "0", "0.0", "1.5707963", "0", "1.5707963", "omni_board", "omni_base"],
+            ),
+
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                output="screen",
+                arguments=["0.0", "0", "0.05", "0.0", "0", "0", "omni_base", "omni_front"],
             ),
             
             # Yaw 45 deg, Pitch 45 deg
@@ -63,7 +70,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["0.25", "0.25", "-0.05", "0.785", "0.785", "0", "omni_front", "top_left"],
+                arguments=["0.3", "0.2", "0.10", "0.785", "-0.85", "0", "omni_base", "top_left"],
             ),
             
             #  Yaw -45 deg, Pitch 45 deg
@@ -71,7 +78,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["0.25", "-0.25", "-0.05", "-0.785", "0.785", "0", "omni_front", "top_right"],
+                arguments=["-0.3", "0.2", "0.10", "-0.785", "0.85", "0", "omni_base", "top_right"],
             ),
             
             # Yaw 135 deg, Pitch 45 deg
@@ -79,7 +86,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["-0.25", "0.25", "-0.05", "2.356", "0.785", "0", "omni_front", "bottom_left"],
+                arguments=["0.33", "-0.2", "-0.07", "-3.4", "0.7", "0.3", "omni_base", "bottom_left"],
             ),
             
             # Yaw -135 deg, Pitch 45 deg
@@ -87,7 +94,7 @@ def generate_launch_description():
                 package="tf2_ros",
                 executable="static_transform_publisher",
                 output="screen",
-                arguments=["-0.25", "-0.25", "-0.05", "-2.356", "0.785", "0", "omni_front", "bottom_right"],
+                arguments=["-0.33", "-0.2", "-0.07", "3.4", "-0.7", "0.3", "omni_base", "bottom_right"],
             ),
         ]
     )

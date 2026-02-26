@@ -230,11 +230,11 @@
     <child link="solid"/>
     <origin xyz="0.496831 0.000001 0.104801" rpy="0 0 0"/>
   </joint>
-  <link name="kinect range">
+  <link name="kinect_range">
   </link>
   <joint name="solid_kinect range_joint" type="fixed">
     <parent link="solid"/>
-    <child link="kinect range"/>
+    <child link="kinect_range"/>
     <origin xyz="0 0 -0.0127" rpy="0 0 0"/>
   </joint>
   <link name="kinect color">
@@ -459,17 +459,17 @@
     <parent link="end_effector_link" />
     <child link="camera_link" />
   </joint>
-  <link name="camera_depth_frame" />
+  <link name="kinova_depth" />
   <joint name="depth_module" type="fixed">
-    <origin xyz="0.0275 0.066 -0.00305" rpy="3.14159265358979 3.14159265358979 0" />
+    <origin xyz="0.0275 0.066 -0.00305" rpy="-1.56 -1.56 0" />
     <parent link="end_effector_link" />
-    <child link="camera_depth_frame" />
+    <child link="kinova_depth" />
   </joint>
-  <link name="camera_color_frame" />
+  <link name="kinova_color" />
   <joint name="color_module" type="fixed">
-    <origin xyz="0 0.05639 -0.00305" rpy="3.14159265358979 3.14159265358979 0" />
+    <origin xyz="0 0.05639 -0.00305" rpy="-1.56 -1.56 0" />
     <parent link="end_effector_link" />
-    <child link="camera_color_frame" />
+    <child link="kinova_color" />
   </joint>
 
   <!-- Connecting Joint: Attach Gripper to Arm -->

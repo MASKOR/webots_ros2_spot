@@ -223,17 +223,17 @@
 		<parent link="end_effector_link"/>
 		<child link="camera_link"/>
 	</joint>
-	<link name="camera_depth_frame"/>
+	<link name="kinova_depth" />
 	<joint name="depth_module" type="fixed">
-		<origin rpy="3.14159265358979 3.14159265358979 0" xyz="0.0275 0.066 -0.00305"/>
-		<parent link="end_effector_link"/>
-		<child link="camera_depth_frame"/>
+		<origin xyz="0.0275 0.066 -0.00305" rpy="-1.56 -1.56 0" />
+		<parent link="end_effector_link" />
+		<child link="kinova_depth" />
 	</joint>
-	<link name="camera_color_frame"/>
+	<link name="kinova_color" />
 	<joint name="color_module" type="fixed">
-		<origin rpy="3.14159265358979 3.14159265358979 0" xyz="0 0.05639 -0.00305"/>
-		<parent link="end_effector_link"/>
-		<child link="camera_color_frame"/>
+		<origin xyz="0 0.05639 -0.00305" rpy="-1.56 -1.56 0" />
+		<parent link="end_effector_link" />
+		<child link="kinova_color" />
 	</joint>
 	<!-- </xacro:if> -->
 	<!-- this is a temporary link to rotate the 2f-140 gripper to match the 2f-85 -->

@@ -1,7 +1,7 @@
 sensors: ["sensor1", "sensor2"]
 sensor1:
   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
-  point_cloud_topic: /Spot/left_head_depth/point_cloud
+  point_cloud_topic: /Spot/kinect_range/point_cloud
   max_range: 3.0
   point_subsample: 1
   padding_offset: 0.1
@@ -10,8 +10,8 @@ sensor1:
   filtered_cloud_topic: sensor1/filtered_points
 sensor2:
   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
-  point_cloud_topic: /Spot/right_head_depth/point_cloud
-  max_range: 3.0
+  point_cloud_topic: /Gen3/kinova_depth/point_cloud
+  max_range: 2.0
   point_subsample: 1
   padding_offset: 0.1
   padding_scale: 1.0
