@@ -1,0 +1,42 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 500 
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    kinova_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    robotiq_gripper_controller:
+      type: position_controllers/GripperActionController
+
+kinova_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - joint_1
+      - joint_2
+      - joint_3
+      - joint_4
+      - joint_5
+      - joint_6
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    goal:
+      joint_1: 0.0
+      joint_2: 0.0
+      joint_3: 0.0
+      joint_4: 0.0
+      joint_5: 0.0
+      joint_6: 0.0
+    allow_nonzero_velocity_at_trajectory_end: false
+    joint_limit_margin: 0.1
+
+robotiq_gripper_controller:
+  ros__parameters:
+    default: true  
+    joint: finger_joint
+    allow_stalling: true

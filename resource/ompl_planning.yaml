@@ -1,0 +1,59 @@
+# Configuration for OMPL planning plugin in MoveIt (ROS 2 Humble)
+# Note: For non-Humble distributions (e.g., Rolling), convert request_adapters to a list:
+# request_adapters:
+#   - default_planner_request_adapters/AddTimeOptimalParameterization
+#   - default_planner_request_adapters/ResolveConstraintFrames
+#   - default_planner_request_adapters/FixWorkspaceBounds
+#   - default_planner_request_adapters/FixStartStateBounds
+#   - default_planner_request_adapters/FixStartStateCollision
+#   - default_planner_request_adapters/FixStartStatePathConstraints
+
+planning_plugin: ompl_interface/OMPLPlanner
+request_adapters: >-
+  default_planner_request_adapters/AddTimeOptimalParameterization
+  default_planner_request_adapters/ResolveConstraintFrames
+  default_planner_request_adapters/FixWorkspaceBounds
+  default_planner_request_adapters/FixStartStateBounds
+  default_planner_request_adapters/FixStartStateCollision
+  default_planner_request_adapters/FixStartStatePathConstraints
+start_state_max_bounds_error: 0.1
+
+planner_configs:
+  RRTConnectkConfigDefault:
+    type: geometric::RRTConnect
+    range: 0.0  # Max motion added, auto-set if 0.0
+  RRTstarkConfigDefault:
+    type: geometric::RRTstar
+    range: 0.0
+    goal_bias: 0.05
+    delay_collision_checking: 1
+  PRMstarkConfigDefault:
+    type: geometric::PRMstar
+    max_nearest_neighbors: 10
+  LBKPIECEkConfigDefault:
+    type: geometric::LBKPIECE
+    range: 0.0
+    border_fraction: 0.9
+    min_valid_path_fraction: 0.5
+  TrajOptDefault:
+    type: geometric::TrajOpt
+
+manipulator:
+  planner_configs:
+    - RRTstarkConfigDefault
+    - PRMstarkConfigDefault
+    - LBKPIECEkConfigDefault
+    - TrajOptDefault
+  default_planner_config: RRTstarkConfigDefault  # Set the default planner here
+  projection_evaluator: joints(joint_1,joint_2,joint_3,joint_4,joint_5,joint_6)  # Adjust for manipulator joints
+  longest_valid_segment_fraction: 0.05
+
+gripper:
+  planner_configs:
+    - RRTstarkConfigDefault
+    - PRMstarkConfigDefault
+    - RRTConnectkConfigDefault
+    - LBKPIECEkConfigDefault
+    - TrajOptDefault
+  projection_evaluator: joints(left_outer_knuckle_joint)  # Adjust for gripper joint
+  longest_valid_segment_fraction: 0.05

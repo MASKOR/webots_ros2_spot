@@ -1,10 +1,23 @@
-planning_plugin: ompl_interface/OMPLPlanner
-start_state_max_bounds_error: 0.1
-jiggle_fraction: 0.05
+planning_plugin: pilz_industrial_motion_planner/CommandPlanner
+planning_pipelines:
+- pilz_industrial_motion_planner
+default_planning_pipeline: pilz_industrial_motion_planner
+default_planner_config: PTP
 request_adapters: >-
-    default_planner_request_adapters/AddTimeOptimalParameterization
-    default_planner_request_adapters/ResolveConstraintFrames
-    default_planner_request_adapters/FixWorkspaceBounds
-    default_planner_request_adapters/FixStartStateBounds
-    default_planner_request_adapters/FixStartStateCollision
-    default_planner_request_adapters/FixStartStatePathConstraints
+  default_planner_request_adapters/FixWorkspaceBounds
+  default_planner_request_adapters/FixStartStateBounds
+  default_planner_request_adapters/FixStartStateCollision
+  default_planner_request_adapters/FixStartStatePathConstraints
+start_state_max_bounds_error: 0.1
+
+robot_description_planning:
+  cartesian_limits:
+    max_trans_vel: 1
+    max_trans_acc: 2.25
+    max_trans_dec: -5
+    max_rot_vel: 1.57
+    max_rot_acc: 3.14
+    max_cartesian_velocity: 1
+    max_radius: 2.0
+    max_center_distance: 2.0
+    max_arc_angle: 6.28

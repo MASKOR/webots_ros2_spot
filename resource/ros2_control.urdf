@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot name="Gen3" xmlns:xacro="http://ros.org/wiki/xacro">
+  <webots>
+    <plugin type="webots_ros2_control::Ros2Control"/>
+  </webots>
+  <ros2_control name="WebotsControl" type="system">
+    <hardware>
+      <plugin>webots_ros2_control::Ros2ControlSystem</plugin>
+    </hardware>
+
+    <!-- Gen3 Arm Joints -->
+    <joint name="joint_1">
+      <command_interface name="position">
+        <param name="min">-6.2832</param> <!-- -2*pi -->
+        <param name="max">6.2832</param>  <!-- 2*pi -->
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_2">
+      <command_interface name="position">
+        <param name="min">-2.41</param>
+        <param name="max">2.41</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_3">
+      <command_interface name="position">
+        <param name="min">-2.66</param>
+        <param name="max">2.66</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_4">
+      <command_interface name="position">
+        <param name="min">-6.2832</param> <!-- -2*pi -->
+        <param name="max">6.2832</param>  <!-- 2*pi -->
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_5">
+      <command_interface name="position">
+        <param name="min">-2.23</param>
+        <param name="max">2.23</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="joint_6">
+      <command_interface name="position">
+        <param name="min">-6.2832</param> <!-- -2*pi -->
+        <param name="max">6.2832</param>  <!-- 2*pi -->
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <!-- ROBOTIQ Gripper Joints -->
+    <joint name="finger_joint">
+      <command_interface name="position">
+        <param name="min">0.0</param>
+        <param name="max">0.8</param> <!-- Example limits for gripper -->
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+</robot>

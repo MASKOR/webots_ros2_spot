@@ -5,7 +5,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/ThreadMetalPlate.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Roughcast.proto"
 EXTERNPROTO "../protos/Spot.proto"
-EXTERNPROTO "../protos/SpotArm.proto"
+EXTERNPROTO "../protos/Gen36dofWithRobotiq2f140.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/traffic/protos/DirectionPanel.proto"
@@ -47,16 +47,27 @@ DEF Spot Spot {
   controller "<extern>"
   supervisor TRUE
   frontExtension [
-    SpotArm {
-      translation 0 0 -0.094
-      rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
+    Gen36dofWithRobotiq2f140 {
+      rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "Gen3"
       controller "<extern>"
-      gripperCam [
+      supervisor TRUE
+      vision [
+        RangeFinder {
+          translation 0.03 2.20392e-07 0.06
+          rotation 0 0 1 1.5708
+          name "kinova_depth"
+          width 640
+          height 480
+          minRange 0.001
+          maxRange 10
+        }
         Camera {
-          translation 0.19 0 0
-          name "gripper camera"
-          width 1280
-          height 720
+          translation -0.0199998 0.01 0.07
+          rotation -7.192349999979703e-09 2.375719999993296e-06 -0.999999999997178 -1.5707953071795862
+          name "kinova_color"
+          width 640
+          height 480
         }
       ]
     }
