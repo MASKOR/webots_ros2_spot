@@ -204,6 +204,46 @@
       </geometry>
     </collision>
   </link>
+  <link name="Kinect">
+    <visual>
+      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
+      <geometry>
+        <box size="0.084 0.027 0.068"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.013" rpy="1.570741 0.000118 -1.570741"/>
+      <geometry>
+        <box size="0.084 0.027 0.068"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_link_Kinect_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="Kinect"/>
+    <origin xyz="0.496831 0.000001 0.104801" rpy="1.2208 -0.00001 -1.570793"/>
+  </joint>
+  <!-- <link name="solid">
+  </link>
+  <joint name="base_link_solid_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="solid"/>
+    <origin xyz="0.496831 0.000001 0.104801" rpy="1.2208 -0.00001 -1.570793"/>
+  </joint> -->
+  <link name="kinect_range">
+  </link>
+  <joint name="kinect_range_joint" type="fixed">
+    <parent link="Kinect"/>
+    <child link="kinect_range"/>
+    <origin xyz="0 0 0" rpy="3.14 0 0"/>
+  </joint>
+  <link name="kinect_color">
+  </link>
+  <joint name="kinect_color_joint" type="fixed">
+    <parent link="Kinect"/>
+    <child link="kinect_color"/>
+    <origin xyz="0 0 0" rpy="3.14 0 0"/>
+  </joint>
   <link name="Velodyne_Puck">
     <visual>
       <origin xyz="0 -0.00165 0" rpy="0 0 0"/>
@@ -223,7 +263,7 @@
     <child link="Velodyne_Puck"/>
     <origin xyz="-0.063 0 0.1518" rpy="-0.000008 -0.000008 0.000001"/>
   </joint>
-  <link name="solid">
+  <!-- <link name="solid">
   </link>
   <joint name="base_link_solid_joint" type="fixed">
     <parent link="base_link"/>
@@ -237,13 +277,13 @@
     <child link="kinect_range"/>
     <origin xyz="0 0 -0.0127" rpy="0 0 0"/>
   </joint>
-  <link name="kinect color">
+  <link name="kinect_color">
   </link>
   <joint name="solid_kinect color_joint" type="fixed">
     <parent link="solid"/>
-    <child link="kinect color"/>
+    <child link="kinect_color"/>
     <origin xyz="0 0 -0.0127" rpy="0 0 0"/>
-  </joint>
+  </joint> -->
   <link name="gen3_base_link">
     <inertial>
       <origin xyz="-0.000648 -0.000166 0.084487" rpy="0 0 0" />
@@ -3020,74 +3060,74 @@
   </joint>
   <link name="solid_3">
   </link>
-  <link name="rear depth">
+  <link name="rear_depth">
   </link>
   <joint name="base_link_rear depth_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="rear depth"/>
-    <origin xyz="-0.448136 -0.018115 0.012558" rpy="0.000015 0.474984 -3.141579"/>
+    <child link="rear_depth"/>
+    <origin xyz="-0.448136 -0.018115 0.012558" rpy="-2.03 0 1.56"/>
   </joint>
-  <link name="rear camera">
+  <link name="rear_camera">
   </link>
   <joint name="base_link_rear camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="rear camera"/>
-    <origin xyz="-0.448136 -0.018115 0.012558" rpy="-1.570781 0.474984 -4.712375"/>
+    <child link="rear_camera"/>
+    <origin xyz="-0.448136 -0.018115 0.012558" rpy="-2.03 0 1.56"/>
   </joint>
-  <link name="left flank depth">
+  <link name="left_flank_depth">
   </link>
   <joint name="base_link_left flank depth_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="left flank depth"/>
-    <origin xyz="-0.13568 0.110127 0.065528" rpy="-0.000003 0.403191 1.570802"/>
+    <child link="left_flank_depth"/>
+    <origin xyz="-0.13568 0.110127 0.065528" rpy="-2 0 0"/>
   </joint>
-  <link name="left flank camera">
+  <link name="left_flank_camera">
   </link>
   <joint name="base_link_left flank camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="left flank camera"/>
-    <origin xyz="-0.13568 0.110127 0.065528" rpy="-1.570799 0.403191 0.000005"/>
+    <child link="left_flank_camera"/>
+    <origin xyz="-0.13568 0.110127 0.065528" rpy="-2 0 0"/>
   </joint>
-  <link name="right flank depth">
+  <link name="right_flank_depth">
   </link>
   <joint name="base_link_right flank depth_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="right flank depth"/>
-    <origin xyz="-0.135678 -0.110163 0.06561" rpy="0.000005 0.413171 -1.570794"/>
+    <child link="right_flank_depth"/>
+    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-2 0 3.14"/>
   </joint>
-  <link name="right flank camera">
+  <link name="right_flank_camera">
   </link>
   <joint name="base_link_right flank camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="right flank camera"/>
-    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-1.570791 0.413171 -3.141591"/>
+    <child link="right_flank_camera"/>
+    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-2 0 3.14"/>
   </joint>
-  <link name="left head depth">
+  <link name="left_head_depth">
   </link>
   <joint name="base_link_left head depth_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="left head depth"/>
-    <origin xyz="0.46325 0.045111 0.029551" rpy="-0.158862 0.433786 -0.408004"/>
+    <child link="left_head_depth"/>
+    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-1.729658 0.433786 -1.9788"/>
   </joint>
-  <link name="left head camera">
+  <link name="left_head_camera">
   </link>
   <joint name="base_link_left head camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="left head camera"/>
+    <child link="left_head_camera"/>
     <origin xyz="0.46325 0.045111 0.029551" rpy="-1.729658 0.433786 -1.9788"/>
   </joint>
-  <link name="right head depth">
+  <link name="right_head_depth">
   </link>
   <joint name="base_link_right head depth_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="right head depth"/>
+    <child link="right_head_depth"/>
     <origin xyz="0.462603 -0.044896 0.027972" rpy="0.193959 0.3931 0.409605"/>
   </joint>
-  <link name="right head camera">
+  <link name="right_head_camera">
   </link>
   <joint name="base_link_right head camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="right head camera"/>
+    <child link="right_head_camera"/>
     <origin xyz="0.462603 -0.044896 0.027972" rpy="-1.376837 0.3931 -1.161192"/>
   </joint>
   <link name="left bottom led">

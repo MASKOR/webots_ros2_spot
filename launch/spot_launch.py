@@ -194,6 +194,183 @@ def generate_launch_description():
         name="pointcloud_to_laserscan",
     )
 
+    # Static transforms for each color-depth pair
+    static_tf_left_flank = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="static_tf_left_flank",
+        parameters=[{"use_sim_time": True}],
+        arguments=[
+            "0", "0", "0", "0", "0", "0", "1", "left_flank_camera", "left_flank_depth"
+        ],
+    )
+    static_tf_right_flank = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="static_tf_right_flank",
+        parameters=[{"use_sim_time": True}],
+        arguments=[
+            "0", "0", "0", "0", "0", "0", "1", "right_flank_camera", "right_flank_depth"
+        ],
+    )
+
+    # KINECT
+    kinect_depth_image_proc = ComposableNodeContainer(
+        name="registered_depth_images",
+        namespace="Spot/kinect",
+        package="rclcpp_components",
+        executable="component_container",
+        composable_node_descriptions=[
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::RegisterNode",
+                name="register_node",
+                namespace="Spot/kinect",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/kinect_color/camera_info"),
+                    ("depth/camera_info", "/Spot/kinect_range/camera_info"),
+                    ("depth/image_rect", "/Spot/kinect_range/image"),
+                ],
+                parameters=[
+                    {"fill_upsampling_holes": True, "use_sim_time": True}
+                ],
+            ),
+
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_kinect",
+                namespace="Spot/kinect",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/kinect_color/camera_info"),
+                    ("depth/camera_info", "/Spot/kinect/depth_registered/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/kinect_color/image_color"),
+                    ("depth/image_rect", "/Spot/kinect/depth_registered/image_rect"),
+                    ("points", "/color/points_kinect"),
+                ],
+                parameters=[{"use_sim_time": True}],
+            ),
+        ],
+        output="both",
+        parameters=[{"use_sim_time": True}],
+    )
+
+
+    # Add use_sim_time to composable nodes
+    depth_image_proc = ComposableNodeContainer(
+        name="registered_depth_images",
+        namespace="Spot",
+        package="rclcpp_components",
+        executable="component_container",
+        composable_node_descriptions=[
+            # LEFT FLANK
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::RegisterNode",
+                name="register_node_left_flank",
+                namespace="Spot/left_flank",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/left_flank_depth/camera_info"),
+                    ("depth/image_rect", "/Spot/left_flank_depth/image"),
+                ],
+                parameters=[
+                    {"fill_upsampling_holes": True, "use_sim_time": True}
+                ],
+            ),
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_left_flank",
+                namespace="Spot/left_flank",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
+                    ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
+                    ("points", "/color/points_left_flank"),
+                ],
+                parameters=[{"use_sim_time": True}],
+            ),
+            # RIGHT FLANK
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::RegisterNode",
+                name="register_node_right_flank",
+                namespace="Spot/right_flank",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/right_flank_depth/camera_info"),
+                    ("depth/image_rect", "/Spot/right_flank_depth/image"),
+                ],
+                parameters=[
+                    {"fill_upsampling_holes": True, "use_sim_time": True}
+                ],
+            ),
+
+            # REAR 
+
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::RegisterNode",
+                name="register_node_rear",
+                namespace="Spot/rear",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/rear_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/rear_depth/camera_info"),
+                    ("depth/image_rect", "/Spot/rear_depth/image"),
+                ],
+                parameters=[
+                    {"fill_upsampling_holes": True, "use_sim_time": True}
+                ],
+            ),
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_right_flank",
+                namespace="Spot/right_flank",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/right_flank/depth_registered/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/right_flank_camera/image_color"),
+                    ("depth/image_rect", "/Spot/right_flank/depth_registered/image_rect"),
+                    ("points", "/color/points_right_flank"),
+                ],
+                parameters=[{"use_sim_time": True}],
+            ),
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_right_flank",
+                namespace="Spot/left_flank",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
+                    ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
+                    ("points", "/color/points_left_flank"),
+                ],
+                parameters=[{"use_sim_time": True}],
+            ),
+            ComposableNode(
+                package="depth_image_proc",
+                plugin="depth_image_proc::PointCloudXyzrgbNode",
+                name="point_cloud_xyzrgb_rear",
+                namespace="Spot/rear",
+                remappings=[
+                    ("rgb/camera_info", "/Spot/rear_camera/camera_info"),
+                    ("depth/camera_info", "/Spot/rear/depth_registered/camera_info"),
+                    ("rgb/image_rect_color", "/Spot/rear_camera/image_color"),
+                    ("depth/image_rect", "/Spot/rear/depth_registered/image_rect"),
+                    ("points", "/color/points_rear"),
+                ],
+                parameters=[{"use_sim_time": True}],
+            ),
+        ],
+        output="both",
+        parameters=[{"use_sim_time": True}],
+    )
+
     return LaunchDescription(
         [
             webots,
@@ -205,6 +382,7 @@ def generate_launch_description():
             reset_handler,
             pointcloud_to_laserscan_node,
             kinect_depth_image_proc,
+            depth_image_proc,
         ]
         + get_ros2_nodes()
     )
