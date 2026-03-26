@@ -8,6 +8,8 @@ from geometry_msgs.msg import Twist, TransformStamped
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 from tf2_ros.transform_broadcaster import TransformBroadcaster
+from tf2_ros import Buffer, TransformListener
+from std_srvs.srv import SetBool
 
 import numpy as np
 import copy
@@ -125,6 +127,8 @@ class SpotDriver:
         self.__node = Node("spot_driver")
 
         self.tfb_ = TransformBroadcaster(self.__node)
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self.__node)
 
         self.__node.get_logger().info("Init SpotDriver")
 
@@ -211,6 +215,35 @@ class SpotDriver:
             SpotMotion, "/Spot/blocksworld_pose", self.blocksworld_pose
         )
 
+        self.float_mode = False
+        self.previous_cmd_vel = Twist()
+        self.__node.create_service(SetBool, "/Spot/float_mode", self.float_mode_cb)
+        self.BASE_Z = 0.55
+        self.STEP_Z = 0.05
+        self.foot_z = {"fl": 0.0, "fr": 0.0, "rl": 0.0, "rr": 0.0}
+        self.prev_fl = self.prev_fr = self.prev_rl = self.prev_rr = False
+        self.pitch = 0.0
+        self.roll = 0.0
+
+        # --- Distance Sensors ---
+        self.front_left_dist = self.__robot.getDevice("front_left_dist")
+        self.front_right_dist = self.__robot.getDevice("front_right_dist")
+        self.rear_left_dist = self.__robot.getDevice("rear_left_dist")
+        self.rear_right_dist = self.__robot.getDevice("rear_right_dist")
+
+        # Enable them
+        self.front_left_dist.enable(self.__robot.timestep)
+        self.front_right_dist.enable(self.__robot.timestep)
+        self.rear_left_dist.enable(self.__robot.timestep)
+        self.rear_right_dist.enable(self.__robot.timestep)
+
+        # --- Float motion state (PD controller + LPF) ---
+        self.avg_dist_filtered = 0.54  # match TARGET_DIST
+        self.prev_z_error = 0.0
+        self.dz_error_filtered = 0.0
+        self.pitch_filtered = 0.0
+        self.roll_filtered = 0.0
+
         ## Webots Touch Sensors
         self.touch_fl = self.__robot.getDevice("front left touch sensor")
         self.touch_fr = self.__robot.getDevice("front right touch sensor")
@@ -296,9 +329,18 @@ class SpotDriver:
         ArenaModifier(self.__node, self.__robot)
 
     def __model_cb(self):
-        spot_rot = self.spot_node.getField("rotation")
-        spot_rot_val = spot_rot.getSFRotation()
-        self.yaw_inst = spot_rot_val[2]
+        # Do nothing in float mode
+        if self.float_mode:
+            return
+
+        rot = self.spot_node.getField("rotation").getSFRotation()
+        axis = np.array(rot[:3])
+        angle = rot[3]
+
+        q = quat_from_angle_axis([axis[0], axis[1], axis[2], angle])
+        _, _, yaw = quaternion_to_euler(q)
+
+        self.yaw_inst = yaw
 
     def yaw_control(self):
         """Yaw body controller"""
@@ -317,7 +359,7 @@ class SpotDriver:
         return yawrate_d
 
     def __cmd_vel(self, msg):
-        # Override motion command
+        self.previous_cmd_vel = copy.deepcopy(msg)
         self.fixed_motion = False
 
         if not self.__node.count_publishers("/Spot/inverse_gait_input"):
@@ -331,7 +373,6 @@ class SpotDriver:
 
             self.xd = 0.0
             self.yd = 0.0
-            # self.zd = 0.
             self.rolld = 0.0
             self.pitchd = 0.0
             self.yawd = 0.0
@@ -340,12 +381,10 @@ class SpotDriver:
             if self.StepLength == 0.0:
                 self.StepLength = StepLength * abs(msg.linear.y)
 
-            # Rotation along vertical axis
             self.YawRate = msg.angular.z
             if self.YawRate != 0 and self.StepLength == 0:
                 self.StepLength = StepLength * 0.1
 
-            # Lateral motion
             self.LateralFraction = np.arctan2(msg.linear.y, abs(msg.linear.x))
             if msg.linear.x < 0:
                 self.LateralFraction *= -1
@@ -362,7 +401,6 @@ class SpotDriver:
             self.YawControlOn = YawControlOn
 
     def __gait_cb(self, msg):
-        # Override motion command
         self.fixed_motion = False
 
         self.xd = msg.x
@@ -390,13 +428,11 @@ class SpotDriver:
         pos = np.array([self.xd, self.yd, self.zd])
         orn = np.array([self.rolld, self.pitchd, self.yawd])
 
-        # yaw controller
         if self.YawControlOn == 1.0:
             YawRate_desired = self.yaw_control()
         else:
             YawRate_desired = self.YawRate
 
-        # Update Swing Period
         self.bzg.Tswing = self.SwingPeriod
         contacts = [
             self.front_left_lower_leg_contact,
@@ -405,7 +441,6 @@ class SpotDriver:
             self.rear_right_lower_leg_contact,
         ]
 
-        # Get Desired Foot Poses
         T_bf = self.bzg.GenerateTrajectory(
             self.StepLength,
             self.LateralFraction,
@@ -471,7 +506,6 @@ class SpotDriver:
             for idx in range(3):
                 transforms_to_publish.append(f"YellowDropBox_{idx+1}")
 
-        ## Odom to following:
         tfs = []
         for x in transforms_to_publish:
             tf = TransformStamped()
@@ -484,7 +518,7 @@ class SpotDriver:
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
             tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            tf.transform.translation.z += HEIGHT + 0.095  # BASE_LINK To Ground at Rest
+            tf.transform.translation.z += HEIGHT + 0.095
 
             r = diff_quat(
                 quat_from_angle_axis(part.getField("rotation").getSFRotation()),
@@ -496,7 +530,6 @@ class SpotDriver:
             tf.transform.rotation.w = r[3]
             tfs.append(tf)
 
-        ## base_footprint
         tf = TransformStamped()
         tf.header.stamp = time_stamp
         tf.header.frame_id = "base_link"
@@ -506,7 +539,6 @@ class SpotDriver:
 
         self.tfb_.sendTransform(tfs)
 
-        ## /Spot/odometry
         tf_odom_base_link = tfs[0].transform
         translation = [
             tf_odom_base_link.translation.x,
@@ -575,15 +607,12 @@ class SpotDriver:
         joint_state.position = []
         joint_state.position.extend(self.motors_pos)
         joint_state.position.extend([0.0 for _ in unactuated_joints])
-        qty = +len(self.motor_names) + len(unactuated_joints)
+        qty = len(self.motor_names) + len(unactuated_joints)
         joint_state.velocity = [0.0 for _ in range(qty)]
         joint_state.effort = [0.0 for _ in range(qty)]
         self.joint_state_pub.publish(joint_state)
 
     def movement_decomposition(self, target, duration):
-        """
-        Decompose big motion into smaller motions
-        """
         self.previous_cmd = True
 
         self.n_steps_to_achieve_target = duration * 1000 / self.__robot.timestep
@@ -648,7 +677,6 @@ class SpotDriver:
             response.answer = "performing previous command, override with bool argument"
             return response
 
-        # Start handshake motion
         self.movement_decomposition(
             [
                 -0.20,
@@ -671,20 +699,19 @@ class SpotDriver:
         return response
 
     def defined_motions(self):
-        self.handle_transforms_and_odometry()  # Let the sensor values get updated
+        self.handle_transforms_and_odometry()
         if self.n_steps_to_achieve_target > 0:
             if not self.m_target:
                 self.m_target = [
                     self.step_difference[i] + self.motors_pos[i]
                     for i in range(NUMBER_OF_JOINTS)
                 ]
-            else:  # if compared to current motors_positions, the final motion is smaller
+            else:
                 self.m_target = [
                     self.step_difference[i] + self.m_target[i]
                     for i in range(NUMBER_OF_JOINTS)
                 ]
 
-            # Increment motor positions by step_difference
             for idx, motor in enumerate(self.motors):
                 motor.setPosition(self.m_target[idx])
 
@@ -693,7 +720,7 @@ class SpotDriver:
             if self.paw:
                 self.paw_time = self.__robot.getTime() + 4
                 self.paw = False
-                self.paw2 = True  # Do the shakehands motion
+                self.paw2 = True
             else:
                 self.previous_cmd = False
 
@@ -707,7 +734,7 @@ class SpotDriver:
                 )
                 self.motors[5].setPosition(0.4 * np.sin(2 * self.__robot.getTime()))
             else:
-                self.paw2 = False  # Sit back again
+                self.paw2 = False
                 self.movement_decomposition(
                     [
                         -0.20,
@@ -733,6 +760,178 @@ class SpotDriver:
         self.zd = -request.height
         return response
 
+    def float_mode_cb(self, request, response):
+        self.float_mode = request.data
+        response.success = True
+        response.message = f"Float mode set to {self.float_mode}"
+        return response
+
+    def float_motion(self):
+        for motor in self.motors:
+            motor.setPosition(float(0))
+
+        spot = self.spot_node
+        pos_field = spot.getField("translation")
+        rot_field = spot.getField("rotation")
+
+        dt = self.__robot.getBasicTimeStep() / 1000.0
+
+        vx = self.previous_cmd_vel.linear.x
+        vy = self.previous_cmd_vel.linear.y
+        wz = self.previous_cmd_vel.angular.z
+
+        # --- 1. Read distances ---
+        d_fl = self.front_left_dist.getValue()
+        d_fr = self.front_right_dist.getValue()
+        d_rl = self.rear_left_dist.getValue()
+        d_rr = self.rear_right_dist.getValue()
+
+        # --- 2. Current state ---
+        current_pos = np.array(pos_field.getSFVec3f())
+        rot = rot_field.getSFRotation()
+        axis, angle = np.array(rot[:3]), rot[3]
+
+        c, s = np.cos(angle), np.sin(angle)
+        C = 1 - c
+        x, y, z = axis / (np.linalg.norm(axis) + 1e-9)
+        R_current = np.array(
+            [
+                [c + x * x * C, x * y * C - z * s, x * z * C + y * s],
+                [y * x * C + z * s, c + y * y * C, y * z * C - x * s],
+                [z * x * C - y * s, z * y * C + x * s, c + z * z * C],
+            ]
+        )
+
+        # --- 3. XY translation ---
+        local_displacement = np.array([vx * dt, vy * dt, 0.0])
+        world_displacement = R_current @ local_displacement
+        target_pos = current_pos + world_displacement
+
+        # --- 4. Z control: PD controller on average sensor distance ---
+        TARGET_DIST = 0.54  # desired distance from sensors to ground (m)
+        Z_GAIN_P = 0.2  # proportional gain — increase for faster height correction
+        Z_GAIN_D = 0.2  # derivative gain  — increase to reduce overshoot/oscillation
+        MAX_Z_STEP = 0.05  # max Z correction per timestep (m)
+        LPF_ALPHA = 0.15  # low-pass filter strength: 0=frozen, 1=no filter
+
+        avg_dist_raw = (d_fl + d_fr + d_rl + d_rr) / 4.0
+
+        # Low-pass filter the average distance to smooth sensor noise
+        self.avg_dist_filtered = (
+            LPF_ALPHA * avg_dist_raw + (1.0 - LPF_ALPHA) * self.avg_dist_filtered
+        )
+
+        z_error = self.avg_dist_filtered - TARGET_DIST
+        dz_error_raw = (z_error - self.prev_z_error) / dt
+        self.prev_z_error = z_error
+
+        # Filter the derivative to prevent D-kick shaking
+        self.dz_error_filtered = (
+            LPF_ALPHA * dz_error_raw + (1.0 - LPF_ALPHA) * self.dz_error_filtered
+        )
+
+        z_correction = np.clip(
+            -(z_error * Z_GAIN_P + self.dz_error_filtered * Z_GAIN_D),
+            -MAX_Z_STEP,
+            MAX_Z_STEP,
+        )
+        target_pos[2] = current_pos[2] + z_correction
+
+        # --- 5. Tilt: pitch and roll from filtered differential readings ---
+        FOOT_X = 0.38  # half body length (m) — tune to match your Spot PROTO
+        FOOT_Y = 0.19  # half body width  (m) — tune to match your Spot PROTO
+
+        d_front = (d_fl + d_fr) / 2.0
+        d_rear = (d_rl + d_rr) / 2.0
+        d_left = (d_fl + d_rl) / 2.0
+        d_right = (d_fr + d_rr) / 2.0
+
+        pitch_raw = np.arctan2(d_front - d_rear, 2.0 * FOOT_X)
+        roll_raw = np.arctan2(d_right - d_left, 2.0 * FOOT_Y)
+
+        self.pitch_filtered = (
+            LPF_ALPHA * pitch_raw + (1.0 - LPF_ALPHA) * self.pitch_filtered
+        )
+        self.roll_filtered = (
+            LPF_ALPHA * roll_raw + (1.0 - LPF_ALPHA) * self.roll_filtered
+        )
+
+        pitch = self.pitch_filtered
+        roll = self.roll_filtered
+
+        R_pitch = np.array(
+            [
+                [np.cos(pitch), 0.0, np.sin(pitch)],
+                [0.0, 1.0, 0.0],
+                [-np.sin(pitch), 0.0, np.cos(pitch)],
+            ]
+        )
+        R_roll = np.array(
+            [
+                [1.0, 0.0, 0.0],
+                [0.0, np.cos(roll), -np.sin(roll)],
+                [0.0, np.sin(roll), np.cos(roll)],
+            ]
+        )
+
+        # --- 6. Yaw ---
+        f_current = R_current[:, 0]
+        current_yaw = np.arctan2(f_current[1], f_current[0])
+        new_yaw = (current_yaw + wz * dt + np.pi) % (2.0 * np.pi) - np.pi
+
+        R_yaw = np.array(
+            [
+                [np.cos(new_yaw), -np.sin(new_yaw), 0.0],
+                [np.sin(new_yaw), np.cos(new_yaw), 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
+
+        # Compose: yaw in world frame, then pitch and roll in body frame
+        R_final = R_yaw @ R_pitch @ R_roll
+
+        # --- 7. R_final → axis-angle for Webots ---
+        angle_f = np.arccos(np.clip((np.trace(R_final) - 1.0) / 2.0, -1.0, 1.0))
+        if abs(angle_f) < 1e-6:
+            axis_f = [0.0, 0.0, 1.0]
+            angle_f = 0.0
+        else:
+            denom = 2.0 * np.sin(angle_f)
+            axis_f = [
+                (R_final[2, 1] - R_final[1, 2]) / denom,
+                (R_final[0, 2] - R_final[2, 0]) / denom,
+                (R_final[1, 0] - R_final[0, 1]) / denom,
+            ]
+
+        # --- 8. Apply position + rotation ---
+        pos_field.setSFVec3f(
+            [float(target_pos[0]), float(target_pos[1]), float(target_pos[2])]
+        )
+        rot_field.setSFRotation(
+            [float(axis_f[0]), float(axis_f[1]), float(axis_f[2]), float(angle_f)]
+        )
+
+        # --- 9. Freeze physics on root and all child solids ---
+        zero_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        spot.resetPhysics()
+        spot.setVelocity(zero_vel)
+
+        def freeze_children(node):
+            children_field = node.getField("children")
+            if children_field is None:
+                return
+            for i in range(children_field.getCount()):
+                child = children_field.getMFNode(i)
+                if child is not None:
+                    try:
+                        child.setVelocity(zero_vel)
+                        child.resetPhysics()
+                    except Exception:
+                        pass
+                    freeze_children(child)
+
+        freeze_children(spot)
+
     def step(self):
         rclpy.spin_once(self.__node, timeout_sec=0)
 
@@ -741,7 +940,9 @@ class SpotDriver:
         self.rear_left_lower_leg_contact = self.touch_rl.getValue()
         self.rear_right_lower_leg_contact = self.touch_rr.getValue()
 
-        if self.fixed_motion:
+        if self.float_mode:
+            self.float_motion()
+        elif self.fixed_motion:
             self.defined_motions()
         else:
             self.spot_inverse_control()

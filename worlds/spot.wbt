@@ -376,6 +376,30 @@ DEF Spot Spot {
     }
   ]
   middleExtension [
+    DistanceSensor {
+      translation -0.05 -0.21 -0.3
+      rotation -0.7071 0.7071 0 3.14159
+      name "front_left_dist"
+      lookupTable [ 0 0 0, 1000 1000 0 ]
+    }
+    DistanceSensor {
+      translation 0.05 -0.21 -0.3
+      rotation -0.7071 0.7071 0 3.14159
+      name "front_right_dist"
+      lookupTable [ 0 0 0, 1000 1000 0 ]
+    }
+    DistanceSensor {
+      translation -0.05 -0.21 0.3
+      rotation 0 0 1 -1.57079
+      name "rear_left_dist"
+      lookupTable [ 0 0 0, 1000 1000 0 ]
+    }
+    DistanceSensor {
+      translation 0.05 -0.21 0.3
+      rotation 0 0 1 -1.57079
+      name "rear_right_dist"
+      lookupTable [ 0 0 0, 1000 1000 0 ]
+    }
     VelodynePuck {
       translation 0 0.04 0.09
       rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
