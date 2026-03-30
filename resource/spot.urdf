@@ -3218,6 +3218,6 @@
   <joint name="base_link_to_gen3_base_link" type="fixed">
     <parent link="base_link"/>
     <child link="gen3_base_link"/>
-    <origin xyz="0.256 0 0.1118" rpy="0.0 0.0 0.0"/>
+    <origin xyz="0.3 0 0.08" rpy="0.0 0.0 0.0"/>
   </joint>
 </robot>

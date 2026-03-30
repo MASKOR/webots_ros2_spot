@@ -489,30 +489,9 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
-        if not self.arena2 or not self.arena3:
-            transforms_to_publish = [
-                "Spot",
-                "A",
-                "B",
-                "C",
-                "T1",
-                "T2",
-                "T3",
-                "P",
-                "Image1",
-                "Image2",
-                "Image3",
-                "PlaceBox",
-            ]
-        else:
-            transforms_to_publish = ["Spot"]
-            for i, color in enumerate(["Red", "Green", "Blue"]):
-                transforms_to_publish.append(f"DropBox{i+1}")
-                for idx in range(3):
-                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
-            for idx in range(3):
-                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
+        transforms_to_publish = self.transforms_to_publish
 
+        ## Odom to following:
         tfs = []
         for x in transforms_to_publish:
             tf = TransformStamped()
@@ -532,7 +511,7 @@ class SpotDriver:
             tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
             tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
             tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            tf.transform.translation.z += HEIGHT + 0.095
+            tf.transform.translation.z += HEIGHT + 0.095  # BASE_LINK To Ground at Rest
 
             r = diff_quat(
                 quat_from_angle_axis(part.getField("rotation").getSFRotation()),
@@ -544,6 +523,7 @@ class SpotDriver:
             tf.transform.rotation.w = r[3]
             tfs.append(tf)
 
+        ## base_footprint
         tf = TransformStamped()
         tf.header.stamp = time_stamp
         tf.header.frame_id = "base_link"
@@ -552,6 +532,13 @@ class SpotDriver:
         tfs.append(tf)
 
         self.tfb_.sendTransform(tfs)
+
+        ## /Spot/odometry
+        if not tfs:
+            self.__node.get_logger().error(
+                "No transforms were published; ensure the Spot node exists in the world."
+            )
+            return
 
         tf_odom_base_link = tfs[0].transform
         translation = [
@@ -621,7 +608,7 @@ class SpotDriver:
         joint_state.position = []
         joint_state.position.extend(self.motors_pos)
         joint_state.position.extend([0.0 for _ in unactuated_joints])
-        qty = len(self.motor_names) + len(unactuated_joints)
+        qty = +len(self.motor_names) + len(unactuated_joints)
         joint_state.velocity = [0.0 for _ in range(qty)]
         joint_state.effort = [0.0 for _ in range(qty)]
         self.joint_state_pub.publish(joint_state)

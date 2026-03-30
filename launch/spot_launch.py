@@ -263,50 +263,50 @@ def generate_launch_description():
         package="rclcpp_components",
         executable="component_container",
         composable_node_descriptions=[
-            # LEFT FLANK
-            ComposableNode(
-                package="depth_image_proc",
-                plugin="depth_image_proc::RegisterNode",
-                name="register_node_left_flank",
-                namespace="Spot/left_flank",
-                remappings=[
-                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
-                    ("depth/camera_info", "/Spot/left_flank_depth/camera_info"),
-                    ("depth/image_rect", "/Spot/left_flank_depth/image"),
-                ],
-                parameters=[
-                    {"fill_upsampling_holes": True, "use_sim_time": True}
-                ],
-            ),
-            ComposableNode(
-                package="depth_image_proc",
-                plugin="depth_image_proc::PointCloudXyzrgbNode",
-                name="point_cloud_xyzrgb_left_flank",
-                namespace="Spot/left_flank",
-                remappings=[
-                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
-                    ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
-                    ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
-                    ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
-                    ("points", "/color/points_left_flank"),
-                ],
-                parameters=[{"use_sim_time": True}],
-            ),
-            # RIGHT FLANK
-            ComposableNode(
-                package="depth_image_proc",
-                plugin="depth_image_proc::RegisterNode",
-                name="register_node_right_flank",
-                namespace="Spot/right_flank",
-                remappings=[
-                    ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
-                    ("depth/camera_info", "/Spot/right_flank_depth/camera_info"),
-                    ("depth/image_rect", "/Spot/right_flank_depth/image"),
-                ],
-                parameters=[
-                    {"fill_upsampling_holes": True, "use_sim_time": True}
-                ],
-            ),
+            # # LEFT FLANK
+            # ComposableNode(
+            #     package="depth_image_proc",
+            #     plugin="depth_image_proc::RegisterNode",
+            #     name="register_node_left_flank",
+            #     namespace="Spot/left_flank",
+            #     remappings=[
+            #         ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+            #         ("depth/camera_info", "/Spot/left_flank_depth/camera_info"),
+            #         ("depth/image_rect", "/Spot/left_flank_depth/image"),
+            #     ],
+            #     parameters=[
+            #         {"fill_upsampling_holes": True, "use_sim_time": True}
+            #     ],
+            # ),
+            # ComposableNode(
+            #     package="depth_image_proc",
+            #     plugin="depth_image_proc::PointCloudXyzrgbNode",
+            #     name="point_cloud_xyzrgb_left_flank",
+            #     namespace="Spot/left_flank",
+            #     remappings=[
+            #         ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+            #         ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
+            #         ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
+            #         ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
+            #         ("points", "/color/points_left_flank"),
+            #     ],
+            #     parameters=[{"use_sim_time": True}],
+            # ),
+            # # RIGHT FLANK
+            # ComposableNode(
+            #     package="depth_image_proc",
+            #     plugin="depth_image_proc::RegisterNode",
+            #     name="register_node_right_flank",
+            #     namespace="Spot/right_flank",
+            #     remappings=[
+            #         ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
+            #         ("depth/camera_info", "/Spot/right_flank_depth/camera_info"),
+            #         ("depth/image_rect", "/Spot/right_flank_depth/image"),
+            #     ],
+            #     parameters=[
+            #         {"fill_upsampling_holes": True, "use_sim_time": True}
+            #     ],
+            # ),
 
             # REAR 
 
@@ -324,34 +324,34 @@ def generate_launch_description():
                     {"fill_upsampling_holes": True, "use_sim_time": True}
                 ],
             ),
-            ComposableNode(
-                package="depth_image_proc",
-                plugin="depth_image_proc::PointCloudXyzrgbNode",
-                name="point_cloud_xyzrgb_right_flank",
-                namespace="Spot/right_flank",
-                remappings=[
-                    ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
-                    ("depth/camera_info", "/Spot/right_flank/depth_registered/camera_info"),
-                    ("rgb/image_rect_color", "/Spot/right_flank_camera/image_color"),
-                    ("depth/image_rect", "/Spot/right_flank/depth_registered/image_rect"),
-                    ("points", "/color/points_right_flank"),
-                ],
-                parameters=[{"use_sim_time": True}],
-            ),
-            ComposableNode(
-                package="depth_image_proc",
-                plugin="depth_image_proc::PointCloudXyzrgbNode",
-                name="point_cloud_xyzrgb_right_flank",
-                namespace="Spot/left_flank",
-                remappings=[
-                    ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
-                    ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
-                    ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
-                    ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
-                    ("points", "/color/points_left_flank"),
-                ],
-                parameters=[{"use_sim_time": True}],
-            ),
+            # ComposableNode(
+            #     package="depth_image_proc",
+            #     plugin="depth_image_proc::PointCloudXyzrgbNode",
+            #     name="point_cloud_xyzrgb_right_flank",
+            #     namespace="Spot/right_flank",
+            #     remappings=[
+            #         ("rgb/camera_info", "/Spot/right_flank_camera/camera_info"),
+            #         ("depth/camera_info", "/Spot/right_flank/depth_registered/camera_info"),
+            #         ("rgb/image_rect_color", "/Spot/right_flank_camera/image_color"),
+            #         ("depth/image_rect", "/Spot/right_flank/depth_registered/image_rect"),
+            #         ("points", "/color/points_right_flank"),
+            #     ],
+            #     parameters=[{"use_sim_time": True}],
+            # ),
+            # ComposableNode(
+            #     package="depth_image_proc",
+            #     plugin="depth_image_proc::PointCloudXyzrgbNode",
+            #     name="point_cloud_xyzrgb_right_flank",
+            #     namespace="Spot/left_flank",
+            #     remappings=[
+            #         ("rgb/camera_info", "/Spot/left_flank_camera/camera_info"),
+            #         ("depth/camera_info", "/Spot/left_flank/depth_registered/camera_info"),
+            #         ("rgb/image_rect_color", "/Spot/left_flank_camera/image_color"),
+            #         ("depth/image_rect", "/Spot/left_flank/depth_registered/image_rect"),
+            #         ("points", "/color/points_left_flank"),
+            #     ],
+            #     parameters=[{"use_sim_time": True}],
+            # ),
             ComposableNode(
                 package="depth_image_proc",
                 plugin="depth_image_proc::PointCloudXyzrgbNode",
@@ -381,8 +381,8 @@ def generate_launch_description():
             webots_event_handler,
             reset_handler,
             pointcloud_to_laserscan_node,
-            kinect_depth_image_proc,
-            depth_image_proc,
+            # kinect_depth_image_proc,
+            # depth_image_proc,
         ]
         + get_ros2_nodes()
     )

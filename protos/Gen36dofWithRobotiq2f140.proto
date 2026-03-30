@@ -13,7 +13,7 @@ PROTO Gen36dofWithRobotiq2f140 [
   field  SFString    customData      ""                          # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE                       # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE                        # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   TRUE                       # Is `Robot.selfCollision`.
+  field  SFBool      selfCollision   FALSE                       # Is `Robot.selfCollision`.
   field  MFNode      vision          [] #Camera Node
 ]
 {
@@ -593,7 +593,12 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                   }
                                                 ]
                                                 name "robotiq_2f_base_link"
-                                                boundingObject USE robotiq_2f_140_base_link
+                                                boundingObject Transform {
+                                                  translation 0 0 0.04
+                                                  children [
+                                                    Box { size 0.08 0.1 0.08 }
+                                                  ]
+                                                }
                                                 physics Physics {
                                                   density -1
                                                   mass 0.226520
@@ -608,7 +613,7 @@ PROTO Gen36dofWithRobotiq2f140 [
                                             name "end_effector_link"
                                             physics Physics {
                                               density -1
-                                              mass 0.000000
+                                              mass 0.001
                                             }
                                           }
                                           Transform {
@@ -618,7 +623,12 @@ PROTO Gen36dofWithRobotiq2f140 [
                                           }
                                         ]
                                         name "bracelet_link"
-                                        boundingObject USE bracelet_with_vision_link
+                                        boundingObject Transform {
+                                          translation 0 0 -0.03
+                                          children [
+                                            Cylinder { height 0.06 radius 0.04 }
+                                          ]
+                                        }
                                         physics Physics {
                                           density -1
                                           mass 0.500000
@@ -632,7 +642,7 @@ PROTO Gen36dofWithRobotiq2f140 [
                                     }
                                   ]
                                   name "spherical_wrist_2_link"
-                                  boundingObject USE spherical_wrist_2_link
+                                 boundingObject Sphere { radius 0.05 }
                                   physics Physics {
                                     density -1
                                     mass 0.678000
@@ -646,7 +656,7 @@ PROTO Gen36dofWithRobotiq2f140 [
                               }
                             ]
                             name "spherical_wrist_1_link"
-                            boundingObject USE spherical_wrist_1_link
+                            boundingObject Sphere { radius 0.05 }
                             physics Physics {
                               density -1
                               mass 0.678100
@@ -660,8 +670,13 @@ PROTO Gen36dofWithRobotiq2f140 [
                         }
                       ]
                       name "forearm_link"
-                      boundingObject USE forearm_link
-                      physics Physics {
+                      boundingObject Transform {
+                        translation 0 0.1 0
+                        rotation 1 0 0 1.5708
+                        children [
+                          Capsule { height 0.18 radius 0.05 }
+                        ]
+                      }                      physics Physics {
                         density -1
                         mass 0.930000
                         centerOfMass [ 0.000018 0.076168 -0.013970 ]
@@ -674,7 +689,13 @@ PROTO Gen36dofWithRobotiq2f140 [
                   }
                 ]
                 name "bicep_link"
-                boundingObject USE bicep_link
+                boundingObject Transform {
+                  translation 0 -0.2 0  # Centered along the length
+                  rotation 1 0 0 1.5708
+                  children [
+                    Capsule { height 0.35 radius 0.06 }
+                  ]
+                }
                 physics Physics {
                   density -1
                   mass 1.262000
@@ -688,7 +709,12 @@ PROTO Gen36dofWithRobotiq2f140 [
             }
           ]
           name "shoulder_link"
-          boundingObject USE shoulder_link
+          boundingObject Transform {
+            translation 0 0 0.02
+            children [
+              Sphere { radius 0.07 }
+            ]
+          }
           physics Physics {
             density -1
             mass 1.377000
@@ -702,7 +728,12 @@ PROTO Gen36dofWithRobotiq2f140 [
       }
     ]
     name IS name
-    boundingObject USE base_link
+    boundingObject Transform {
+      translation 0 0 0.07
+      children [
+        Cylinder { height 0.14 radius 0.08 }
+      ]
+    }
     physics Physics {
       density -1
       mass 1.697000
