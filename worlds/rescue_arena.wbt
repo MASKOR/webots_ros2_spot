@@ -13,11 +13,10 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
   title "Spot_Maze"
   basicTimeStep 16
-  optimalThreadCount 1
 }
 DEF Viewpoint Viewpoint {
-  orientation 0.4228913065728392 0.5780071648631969 -0.6979044778420079 1.7926502702205445
-  position -2.536579610782945 15.593515715589135 33.9578997011574
+  orientation 0.411292046260429 0.1685357175546585 -0.8957871201302492 2.6262290358936875
+  position 15.336714484258676 8.312470958089209 19.25563998476252
 }
 TexturedBackground {
   texture "factory"
@@ -142,18 +141,18 @@ Solid {
 }
 Solid {
   translation -2.14 -0.67 0.55
-  rotation 0 0 1 -1.5707953071795862
+  rotation 0 0 1 1.01503e-06
   children [
     CadShape {
       url [
-        "meshes/krail_shading.obj"
+        "meshes/KRail.obj"
       ]
     }
   ]
   name "KRail"
   boundingObject Mesh {
     url [
-      "meshes/krail_shading.obj"
+      "meshes/KRail.obj"
     ]
   }
 }
