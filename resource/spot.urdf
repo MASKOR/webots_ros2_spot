@@ -3107,7 +3107,7 @@
   <joint name="base_link_left head depth_joint" type="fixed">
     <parent link="base_link"/>
     <child link="left_head_depth"/>
-    <origin xyz="-0.135678 -0.110163 0.06561" rpy="-1.729658 0.433786 -1.9788"/>
+    <origin xyz="0.46325 0.045111 0.029551" rpy="-0.158862 0.433786 -0.408004"/>
   </joint>
   <link name="left_head_camera">
   </link>
