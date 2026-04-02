@@ -5,13 +5,14 @@
 This is a ROS 2 package to simulate the Boston Dynamics spot in [webots](https://cyberbotics.com/). Spot is able to walk around, to sit, standup and lie down. We also attached some sensors on spot, like a kinect and a 3D laser.
 The world contains apriltags, a red line to test lane follower and objects for manipulation tasks.
 
-![Spot](https://github.com/MASKOR/webots_ros2_spot/blob/main/spot.jpg)
+![Spot](https://github.com/MASKOR/webots_ros2_spot/blob/rescue_arena/worlds/.rescue_arena.jpg)
 
 ## Prerequisites
 
     - Ubuntu 22.04
     - ROS2 Humble https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
     - Webots 2025a https://github.com/cyberbotics/webots/releases/tag/R2025a
+    - git lfs
 
 ## Install
 
@@ -73,8 +74,15 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 # OR ros2 run spot_teleop spot_teleop_keyboard for body_pose control as well
 ```
 
-## To switch Arenas
+## Switch to Float Mode
 
-1) Change false to true in https://github.com/MASKOR/webots_ros2_spot/blob/main/resource/spot_control.urdf#L5
+Call the service `float_mode` with true:
 
-2) Change map.yaml to map_arena3.yaml https://github.com/MASKOR/webots_ros2_spot/blob/main/launch/nav_launch.py#L15 (map of arena 2 not created)
+```
+$ ros2 service call /Spot/float_mode std_srvs/srv/SetBool "data: true"
+```
+
+## ALeRT 3DNav
+Real-time 3D Navigation based on `OctoMaps`:
+
+https://github.com/RRL-ALeRT/octo_navigation
