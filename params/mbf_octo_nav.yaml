@@ -13,6 +13,7 @@ move_base_flex:
       type: 'astar_octo_planner/AstarOctoPlanner'
       cost_limit: 0.8
       publish_vector_field: true
+      octomap_topic: '/octomap_binary_local'
     planner_patience: 10.0
     planner_max_retries: 2
 
