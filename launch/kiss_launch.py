@@ -64,7 +64,7 @@ def generate_launch_description():
 
     # KISS-ICP node
     kiss_icp_node = Node(
-        package=PACKAGE_NAME,
+        package="kiss_icp",
         executable="kiss_icp_node",
         name="kiss_icp_node",
         output="screen",
@@ -93,7 +93,7 @@ def generate_launch_description():
         output="screen",
         arguments=[
             "-d",
-            PathJoinSubstitution([FindPackageShare(PACKAGE_NAME), "rviz", "kiss_icp.rviz"]),
+            PathJoinSubstitution([FindPackageShare("kiss_icp"), "rviz", "kiss_icp.rviz"]),
         ],
         condition=IfCondition(visualize),
     )
