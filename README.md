@@ -1,4 +1,4 @@
-# Webots ROS2 Spot
+@# Webots ROS2 Spot
 
 [![ROS2 Humble](https://github.com/MASKOR/webots_ros2_spot/actions/workflows/test_ros2_humble.yml/badge.svg?branch=main)](https://github.com/MASKOR/webots_ros2_spot/actions/workflows/test_ros2_humble.yml)
 
@@ -48,7 +48,20 @@ The world contains apriltags, a red line to test lane follower and objects for m
     chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
     ```
 
-5. Build packages and source the workspace
+5. Install additional dependencies:
+    ```
+    sudo apt install ros-humble-kortex-description ros-humble-robotiq-description ros-humble-gripper-controllers
+    ```
+
+6. Add missing Meshes (yes, even though you installed it above)
+
+    Copy the `2f_140` folder from the robotiq_description meshes into the workspace:
+    ```
+    cp -r /opt/ros/humble/share/robotiq_description/meshes/visual/2f_140 src/webots_ros2_spot/meshes/visual/
+    cp -r /opt/ros/humble/share/robotiq_description/meshes/collision/2f_140 src/webots_ros2_spot/meshes/collision/
+    ```
+
+7. Build packages and source the workspace
     ```
     colcon build --symlink-install
     source install/setup.bash
