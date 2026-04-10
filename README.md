@@ -16,7 +16,13 @@ The world contains apriltags, a red line to test lane follower and objects for m
 
 ## Install
 
-1. Install ROS2 Development tools and initialise and update rosdep:
+1. Install Git LFS and initialise it:
+    ```
+    sudo apt install -y git-lfs
+    git lfs install
+    ```
+
+2. Install ROS2 Development tools and initialise and update rosdep:
     ```
     sudo apt install -y ros-dev-tools
     ```
@@ -26,22 +32,36 @@ The world contains apriltags, a red line to test lane follower and objects for m
     rosdep update
     ```
 
-2. Create a new ROS2 workspace:
+3. Create a new ROS2 workspace:
     ```
     export COLCON_WS=~/ros2_ws
     mkdir -p $COLCON_WS/src
     ```
 
-3. Pull relevant packages, install dependencies, compile, and source the workspace by using:
+4. Pull relevant packages, install dependencies, compile, and source the workspace by using:
     ```
     cd $COLCON_WS
-    git clone https://github.com/MASKOR/webots_ros2_spot src/webots_ros2_spot
+    git clone https://github.com/MASKOR/webots_ros2_spot -b rescue_arena src/webots_ros2_spot
+    cd src/webots_ros2_spot && git lfs pull && cd $COLCON_WS
     rosdep install --ignore-src --from-paths src -y -r
     vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
     chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
     ```
 
-4. Build packages and source the workspace
+5. Install additional dependencies:
+    ```
+    sudo apt install ros-humble-kortex-description ros-humble-robotiq-description ros-humble-gripper-controllers
+    ```
+
+6. Add missing Meshes (yes, even though you installed it above)
+
+    Copy the `2f_140` folder from the robotiq_description meshes into the workspace:
+    ```
+    cp -r /opt/ros/humble/share/robotiq_description/meshes/visual/2f_140 src/webots_ros2_spot/meshes/visual/
+    cp -r /opt/ros/humble/share/robotiq_description/meshes/collision/2f_140 src/webots_ros2_spot/meshes/collision/
+    ```
+
+7. Build packages and source the workspace
     ```
     colcon build --symlink-install
     source install/setup.bash
