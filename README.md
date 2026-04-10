@@ -1,4 +1,4 @@
-@# Webots ROS2 Spot
+# Webots ROS2 Spot
 
 [![ROS2 Humble](https://github.com/MASKOR/webots_ros2_spot/actions/workflows/test_ros2_humble.yml/badge.svg?branch=main)](https://github.com/MASKOR/webots_ros2_spot/actions/workflows/test_ros2_humble.yml)
 
