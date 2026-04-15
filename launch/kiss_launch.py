@@ -107,7 +107,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             kiss_icp_node,
-            # rviz_node,
+            rviz_node,
             # bagfile_play,
         ]
     )
