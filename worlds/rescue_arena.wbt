@@ -9,14 +9,15 @@ EXTERNPROTO "../protos/Gen36dofWithRobotiq2f140.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/traffic/protos/DirectionPanel.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
 
 WorldInfo {
   title "Spot_Maze"
   basicTimeStep 16
 }
 DEF Viewpoint Viewpoint {
-  orientation 0.3718795540602741 0.1624303619640507 -0.9139595039082197 2.4529848601736273
-  position 22.364973406631634 23.986260322585643 29.531766192416775
+  orientation -0.22010839250301611 -0.19331301611961102 0.9561288476708969 3.939057208100638
+  position 5.269519840952631 26.225495046394613 8.282041162310968
 }
 TexturedBackground {
   texture "factory"
@@ -36,6 +37,234 @@ RectangleArena {
       scale 5 1.75
     }
   }
+}
+Solid {
+  translation 0 13.11 0
+  children [
+    Wall {
+      translation 1.73 0.49 0
+      size 0.2 6 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -8.05 2.12 0
+      name "wall(3)"
+      size 0.2 9 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -3.16 -2.68 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(1)"
+      size 0.2 10 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -1.95 6.74 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(6)"
+      size 0.2 12 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -4.04 -0.42 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(2)"
+      size 0.2 6 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -2 1.58 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(4)"
+      size 0.2 5 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -2.1 4.31 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(11)"
+      size 0.2 4 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -7.07 1.67 0
+      rotation 0 0 1 -1.5707953071795862
+      name "wall(8)"
+      size 0.2 2 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -1.06 -0.489999 0
+      rotation 0 0 1 3.14159
+      name "wall(5)"
+      size 0.2 4 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -0.11 5 0
+      rotation 0 0 1 3.14159
+      name "wall(9)"
+      size 0.2 3 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation 3.7 5 0
+      rotation 0 0 1 3.14159
+      name "wall(14)"
+      size 0.2 3 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -0.15 -0.98 0
+      rotation 0 0 -1 -1.5707953071795862
+      name "wall(10)"
+      size 0.2 2 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -4.49 1.89 0
+      rotation 0 0 1 3.14159
+      name "wall(12)"
+      size 0.2 2 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation 2.89 3.36 0
+      rotation 0 0 -1 -1.5707953071795862
+      name "wall(13)"
+      size 0.2 2 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+    Wall {
+      translation -6.08 4.99001 0
+      rotation 0 0 1 3.14159
+      name "wall(7)"
+      size 0.2 3 2.4
+      appearance PBRAppearance {
+        baseColorMap ImageTexture {
+          url [
+            "meshes/particleboard-001_osb-100x100cm-color1_d.jpg"
+          ]
+        }
+        roughness 1
+        metalness 0
+      }
+    }
+  ]
+  name "Labrynth"
 }
 Robot {
   name "Ros2Supervisor"
