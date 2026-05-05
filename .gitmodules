@@ -1,0 +1,3 @@
+[submodule "worlds"]
+	path = worlds
+	url = git@github.com:RRL-ALeRT/worlds.git
