@@ -7,7 +7,3 @@ repositories:
     type: git
     url: https://github.com/MASKOR/webots_spot_teleop.git
     version: main
-  webots_ros2:
-    type: git
-    url: https://github.com/cyberbotics/webots_ros2.git
-    version: master

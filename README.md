@@ -38,10 +38,14 @@ The world contains apriltags, a red line to test lane follower and objects for m
     git clone https://github.com/MASKOR/webots_ros2_spot src/webots_ros2_spot
     rosdep install --ignore-src --from-paths src -y -r
     vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
-    chmod +x src/webots_ros2/webots_ros2_driver/webots_ros2_driver/ros2_supervisor.py
     ```
+4. Install Kortex description and robotiq description and gripper controller
+    ```
+    sudo apt install ros-humble-kortex-description ros-humble-robotiq-description ros-humble-gripper-controllers
+    ```
+5. Copy the 2f_140 folder in ```opt/ros/humble/share/robotiq_description/meshes/visual``` and ```opt/ros/humble/share/robotiq_description/meshes/collision```
 
-4. Build packages and source the workspace
+6. Build packages and source the workspace
     ```
     colcon build --symlink-install
     source install/setup.bash
@@ -82,7 +86,19 @@ Call the service `float_mode` with true:
 $ ros2 service call /Spot/float_mode std_srvs/srv/SetBool "data: true"
 ```
 
-## ALeRT 3DNav
-Real-time 3D Navigation based on `OctoMaps`:
+# Realtime servoing 
+```
+ros2 launch webots_spot servo_launch.py
 
-https://github.com/RRL-ALeRT/octo_navigation
+ros2 service call /servo_node/start_servo std_srvs/srv/Trigger {}
+```
+Note: The commands can be published on topics ```sevo_node/delta_twist_cmds``` and ```sevo_node/delta_joint_cmds```. Play around with the `moveit_servo_config.yaml` if servo launch throws errors
+
+For servoing using keyboard(teleop) (acting a bit weird, but works)
+```
+ros2 run webots_spot teleop_servo 
+```
+
+## ALeRT 3DNav
+
+Sorry! It's private 
