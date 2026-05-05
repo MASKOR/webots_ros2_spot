@@ -17,28 +17,39 @@ The world contains apriltags, a red line to test lane follower and objects for m
 ## Install
 
 1. Install ROS2 Development tools and initialise and update rosdep:
-    ```
+    ```bash
     sudo apt install -y ros-dev-tools
     ```
-    ```
+    ```bash
     source /opt/ros/humble/setup.bash
     sudo rosdep init
     rosdep update
     ```
 
 2. Create a new ROS2 workspace:
-    ```
+    ```bash
     export COLCON_WS=~/ros2_ws
     mkdir -p $COLCON_WS/src
     ```
 
-3. Pull relevant packages, install dependencies, compile, and source the workspace by using:
-    ```
+3. Pull the repository, initialize submodules, install dependencies, and build the workspace:
+
+    ```bash
     cd $COLCON_WS
-    git clone https://github.com/MASKOR/webots_ros2_spot src/webots_ros2_spot
+
+    # Clone main repository with submodules
+    git clone --recurse-submodules git@github.com:MASKOR/webots_ros2_spot.git src/webots_ros2_spot
+
+    # If already cloned without submodules
+    # git submodule update --init --recursive
+
+    # Install dependencies
     rosdep install --ignore-src --from-paths src -y -r
+
+    # Import additional dependencies (if required by .repos file)
     vcs import --recursive src --skip-existing --input src/webots_ros2_spot/webots_ros2_spot.repos
     ```
+
 4. Install Kortex description and robotiq description and gripper controller
     ```
     sudo apt install ros-humble-kortex-description ros-humble-robotiq-description ros-humble-gripper-controllers
