@@ -55,6 +55,7 @@ setup(
             "gpp_stacker = " + package_name + ".gpp_stacker:main",
             "retract_manipulator = " + package_name + ".retract_manipulator:main",
             "arena_modifier = " + package_name + ".arena_modifier:main",
+            "teleop_kinova = " + package_name + ".teleop_kinova:main"
         ],
     },
 )

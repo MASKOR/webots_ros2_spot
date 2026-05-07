@@ -24,6 +24,8 @@ from launch.actions import LogInfo, DeclareLaunchArgument
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import (
     get_package_share_directory,
     get_packages_with_prefixes,
@@ -51,6 +53,15 @@ def generate_launch_description():
             description="Flag to enable or disable RViz",
         )
     )
+
+    launch_description_nodes.append(
+        DeclareLaunchArgument(
+            "launch_servo",
+            default_value="false",
+            description="Flag to enable or disable servoing",
+        )
+    )
+
 
     # Check if moveit is installed
     if "moveit" in get_packages_with_prefixes():
@@ -93,11 +104,12 @@ def generate_launch_description():
                     description_joint_limits,
                     sim_time,
                     planning_scene,
-                    sensors_3d,
+                    # sensors_3d,
                 ],
                 condition=IfCondition(use_rviz),
             )
         )
+
 
         # MoveIt2 node
         movegroup = {"move_group": load_yaml("moveit_movegroup.yaml")}
@@ -120,8 +132,19 @@ def generate_launch_description():
                     movegroup,
                     sim_time,
                     planning_scene,
-                    sensors_3d,
+                    # sensors_3d,
                 ],
+            )
+        )
+        
+        launch_servo = LaunchConfiguration("launch_servo")
+        pkg_dir = get_package_share_directory('webots_spot')
+
+        include_launch_path = os.path.join(pkg_dir, 'launch', 'servo_launch.py')
+        launch_description_nodes.append(
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(include_launch_path),
+                condition=IfCondition(launch_servo)
             )
         )
         # Node(
