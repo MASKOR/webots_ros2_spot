@@ -8,11 +8,17 @@ move_base_flex:
     force_stop_at_goal: true
     force_stop_on_cancel: true
 
+    octo_mapping_server:
+      penalty_spread_factor: 0.9
+      penalty_spread_radius: 0.9
+
     planners: ['octo_planner']
     octo_planner:
       type: 'astar_octo_planner/AstarOctoPlanner'
       cost_limit: 0.8
       publish_vector_field: true
+      robot_radius: 0.3
+      robot_height: 0.9
       octomap_topic: '/octomap_binary_local'
     planner_patience: 10.0
     planner_max_retries: 2
