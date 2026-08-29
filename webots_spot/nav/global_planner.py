@@ -30,8 +30,8 @@ from rclpy.qos import (
 from rclpy.time import Time
 from tf2_ros import Buffer, TransformException, TransformListener
 
-from webots_spot.nav import astar, bfs, dfs, dijkstra
 from webots_spot.nav.grid_map import GridMap
+from webots_spot.nav.planner_algorithms import astar, bfs, dfs, dijkstra
 
 PLANNERS = {
     "astar": astar.plan,
