@@ -17,8 +17,6 @@ import copy
 from webots_spot.SpotKinematics import SpotModel
 from webots_spot.Bezier import BezierGait
 
-from webots_spot.arena_modifier import ArenaModifier
-
 NUMBER_OF_JOINTS = 12
 HEIGHT = 0.52  # From spot kinematics
 
@@ -132,27 +130,10 @@ class SpotDriver:
 
         self.__node.get_logger().info("Init SpotDriver")
 
-        # Parameters
-        self.arena2 = properties["arena2"] == "true"
-        self.arena3 = properties["arena3"] == "true"
-
         self.__robot = webots_node.robot
         self.spot_node = self.__robot.getFromDef("Spot")
 
         self.spot_translation = self.spot_node.getField("translation")
-
-        if self.arena2:
-            self.spot_translation.setSFVec3f([7.0, 14.5, 0.5])
-            self.spot_rotation.setSFRotation([0, 0, -1, 1.57])
-            viewpoint = self.__robot.getFromDef("Viewpoint")
-            viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
-            viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])
-
-        elif self.arena3:
-            self.spot_translation.setSFVec3f([8.0, 18.0, 0.5])
-            viewpoint = self.__robot.getFromDef("Viewpoint")
-            viewpoint.getField("position").setSFVec3f([11.8, 19.5, 9])
-            viewpoint.getField("orientation").setSFRotation([-0.52, 0, 0.85, 3.1])
 
         self.spot_translation_initial = self.spot_translation.getSFVec3f()
         self.spot_rotation = self.spot_node.getField("rotation")
@@ -325,9 +306,6 @@ class SpotDriver:
         self.paw_time = 0.0
         self.previous_cmd = False
 
-        # Initialise arena modifier
-        ArenaModifier(self.__node, self.__robot)
-
     def __model_cb(self):
         # Do nothing in float mode
         if self.float_mode:
@@ -482,53 +460,28 @@ class SpotDriver:
 
         base_link_from_ground = HEIGHT - self.zd
 
-        if not self.arena2 or not self.arena3:
-            transforms_to_publish = [
-                "Spot",
-                "A",
-                "B",
-                "C",
-                "T1",
-                "T2",
-                "T3",
-                "P",
-                "Image1",
-                "Image2",
-                "Image3",
-                "PlaceBox",
-            ]
-        else:
-            transforms_to_publish = ["Spot"]
-            for i, color in enumerate(["Red", "Green", "Blue"]):
-                transforms_to_publish.append(f"DropBox{i+1}")
-                for idx in range(3):
-                    transforms_to_publish.append(f"{color.upper()}_{idx+1}")
-            for idx in range(3):
-                transforms_to_publish.append(f"YellowDropBox_{idx+1}")
-
         tfs = []
-        for x in transforms_to_publish:
-            tf = TransformStamped()
-            tf.header.stamp = time_stamp
-            tf.header.frame_id = "odom"
-            tf._child_frame_id = x if x != "Spot" else "base_link"
 
-            part = self.__robot.getFromDef(x)
-            di = part.getField("translation").getSFVec3f()
-            tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
-            tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
-            tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
-            tf.transform.translation.z += HEIGHT + 0.095
+        tf = TransformStamped()
+        tf.header.stamp = time_stamp
+        tf.header.frame_id = "odom"
+        tf._child_frame_id = "base_link"
 
-            r = diff_quat(
-                quat_from_angle_axis(part.getField("rotation").getSFRotation()),
-                quat_from_angle_axis(self.spot_rotation_initial),
-            )
-            tf.transform.rotation.x = -r[0]
-            tf.transform.rotation.y = -r[1]
-            tf.transform.rotation.z = r[2]
-            tf.transform.rotation.w = r[3]
-            tfs.append(tf)
+        di = self.spot_node.getField("translation").getSFVec3f()
+        tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
+        tf.transform.translation.y = -(di[1] - self.spot_translation_initial[1])
+        tf.transform.translation.z = di[2] - self.spot_translation_initial[2]
+        tf.transform.translation.z += HEIGHT + 0.095
+
+        r = diff_quat(
+            quat_from_angle_axis(self.spot_node.getField("rotation").getSFRotation()),
+            quat_from_angle_axis(self.spot_rotation_initial),
+        )
+        tf.transform.rotation.x = -r[0]
+        tf.transform.rotation.y = -r[1]
+        tf.transform.rotation.z = r[2]
+        tf.transform.rotation.w = r[3]
+        tfs.append(tf)
 
         tf = TransformStamped()
         tf.header.stamp = time_stamp
