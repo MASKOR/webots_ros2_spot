@@ -89,18 +89,25 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     git checkout maze-world
     ```
 
-2. Open a terminal (<kbd>Ctrl</kbd>+<kbd>T</kbd> for a new tab, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> for a new window) and make sure `~/.bashrc` sources both ROS2 and this workspace:
+2. Switching branches changes the package's files, so rebuild it and source the workspace again from the root of your ROS2 workspace:
+    ```
+    cd $COLCON_WS
+    colcon build --packages-select webots_spot
+    source install/setup.bash
+    ```
+
+3. Open a terminal (<kbd>Ctrl</kbd>+<kbd>T</kbd> for a new tab, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> for a new window) and make sure `~/.bashrc` sources both ROS2 and this workspace:
     ```
     source /opt/ros/humble/setup.bash
     source $COLCON_WS/install/setup.bash
     ```
 
-3. Launch the simulation:
+4. Launch the simulation:
     ```
     ros2 launch webots_spot spot_launch.py
     ```
 
-4. In a new terminal, start RViz2 and configure it:
+5. In a new terminal, start RViz2 and configure it:
     ```
     rviz2
     ```
@@ -110,7 +117,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     - **Add** → `Map`, set its **Topic** to `/map` (`nav_msgs/OccupancyGrid`).
     - Add the **2D Goal Pose** tool button (the arrow icon) to the toolbar if it isn't already there.
 
-5. In two more terminals, start the map server and the global planner:
+6. In two more terminals, start the map server and the global planner:
     ```
     ros2 run webots_spot mapping_server
     ```
@@ -118,16 +125,16 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
     ros2 run webots_spot global_planner
     ```
 
-6. In RViz2, click **2D Goal Pose** and click-drag on the map to send a goal. With the default `algorithm` (`astar`) unimplemented, check the `global_planner` terminal for the `NotImplementedError` it logs — that's the algorithm you're about to implement.
+7. In RViz2, click **2D Goal Pose** and click-drag on the map to send a goal. With the default `algorithm` (`astar`) unimplemented, check the `global_planner` terminal for the `NotImplementedError` it logs — that's the algorithm you're about to implement.
 
-7. Open the workspace in VS Code and implement the search in [webots_spot/nav/planner_algorithms/bfs.py](webots_spot/nav/planner_algorithms/bfs.py) (each `STEP` comment maps to a line of the pseudocode in the module docstring). `dfs.py`, `dijkstra.py` and `astar.py` follow the same pattern. Rebuild after editing, from the root of your ROS2 workspace (not this package's directory):
+8. Open the workspace in VS Code and implement the search in [webots_spot/nav/planner_algorithms/bfs.py](webots_spot/nav/planner_algorithms/bfs.py) (each `STEP` comment maps to a line of the pseudocode in the module docstring). `dfs.py`, `dijkstra.py` and `astar.py` follow the same pattern. Rebuild after editing, from the root of your ROS2 workspace (not this package's directory):
     ```
     cd $COLCON_WS
     colcon build --packages-select webots_spot
     source install/setup.bash
     ```
 
-8. In a new terminal, start `rqt` and open **Plugins → Configuration → Dynamic Reconfigure** to switch `/global_planner`'s `algorithm` parameter between `bfs`, `dfs`, `dijkstra` and `astar` at runtime, then send another **2D Goal Pose** to compare them:
+9. In a new terminal, start `rqt` and open **Plugins → Configuration → Dynamic Reconfigure** to switch `/global_planner`'s `algorithm` parameter between `bfs`, `dfs`, `dijkstra` and `astar` at runtime, then send another **2D Goal Pose** to compare them:
     ```
     rqt
     ```
