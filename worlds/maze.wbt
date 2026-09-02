@@ -11,8 +11,8 @@ WorldInfo {
   title "Spot_Maze"
 }
 DEF Viewpoint Viewpoint {
-  orientation -0.4686763871946312 -0.10984900419100643 0.8765133429471751 3.5468372087800195
-  position 26.62544632094221 11.303169866982635 36.41694702404617
+  orientation -0.23829107265437452 -0.05837000320689661 0.9694381400681811 3.607900383073861
+  position 28.88173327719898 14.741563197391589 14.60400996828023
 }
 TexturedBackground {
   texture "factory"
@@ -23,13 +23,86 @@ Robot {
   controller "<extern>"
   supervisor TRUE
 }
-DEF Spot Spot {
+DEF Spot1 Spot {
   translation 8.39 -0.94 0.6
   rotation 0 0 1 -3.14159
+  name "Spot1"
   controller "<extern>"
   supervisor TRUE
   frontExtension [
     SpotArm {
+      name "SpotArm1"
+      translation 0 0 -0.094
+      rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
+      controller "<extern>"
+      gripperCam [
+        Camera {
+          translation 0.19 0 0
+          name "gripper camera"
+          width 1280
+          height 720
+        }
+      ]
+    }
+    Kinect {
+      translation 0 -0.007 -0.240831
+      rotation 1 0 0 -0.35
+      foot FALSE
+    }
+  ]
+  middleExtension [
+    DistanceSensor {
+      translation -0.05 -0.21 -0.3
+      rotation -0.7071067811865476 0.7071067811865476 0 3.14159
+      name "front_left_dist"
+      lookupTable [
+        0 0 0
+        1000 1000 0
+      ]
+    }
+    DistanceSensor {
+      translation 0.05 -0.21 -0.3
+      rotation -0.7071067811865476 0.7071067811865476 0 3.14159
+      name "front_right_dist"
+      lookupTable [
+        0 0 0
+        1000 1000 0
+      ]
+    }
+    DistanceSensor {
+      translation -0.05 -0.21 0.3
+      rotation 0 0 1 -1.57079
+      name "rear_left_dist"
+      lookupTable [
+        0 0 0
+        1000 1000 0
+      ]
+    }
+    DistanceSensor {
+      translation 0.05 -0.21 0.3
+      rotation 0 0 1 -1.57079
+      name "rear_right_dist"
+      lookupTable [
+        0 0 0
+        1000 1000 0
+      ]
+    }
+    VelodynePuck {
+      translation 0 0.04 0.09
+      rotation -0.577349935856137 0.577349935856137 0.5773509358560258 2.09439
+      name "Velodyne_Puck"
+    }
+  ]
+}
+DEF Spot2 Spot {
+  translation -10.77 -1.3 0.7
+  rotation 0 0 1 2.64402e-06
+  name "Spot2"
+  controller "<extern>"
+  supervisor TRUE
+  frontExtension [
+    SpotArm {
+      name "SpotArm2"
       translation 0 0 -0.094
       rotation -0.5773509358537164 0.5773479358540498 0.5773519358536053 2.0944
       controller "<extern>"

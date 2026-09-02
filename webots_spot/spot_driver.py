@@ -131,7 +131,9 @@ class SpotDriver:
         self.__node.get_logger().info("Init SpotDriver")
 
         self.__robot = webots_node.robot
-        self.spot_node = self.__robot.getFromDef("Spot")
+        robot_name = self.__robot.getName()
+        self.robot_name = robot_name
+        self.spot_node = self.__robot.getFromDef(robot_name)
 
         self.spot_translation = self.spot_node.getField("translation")
 
@@ -173,32 +175,32 @@ class SpotDriver:
 
         ## Topics
         self.__node.create_subscription(
-            GaitInput, "/Spot/inverse_gait_input", self.__gait_cb, 1
+            GaitInput, "/"+robot_name+"/inverse_gait_input", self.__gait_cb, 1
         )
-        self.__node.create_subscription(Twist, "/cmd_vel", self.__cmd_vel, 1)
+        self.__node.create_subscription(Twist, "/"+robot_name+"/cmd_vel", self.__cmd_vel, 1)
         self.joint_state_pub = self.__node.create_publisher(
-            JointState, "/joint_states", 1
+            JointState, "/"+robot_name+"/joint_states", 1
         )
-        self.odom_pub = self.__node.create_publisher(Odometry, "/Spot/odometry", 1)
+        self.odom_pub = self.__node.create_publisher(Odometry, "/"+robot_name+"/odometry", 1)
 
         ## Services
-        self.__node.create_service(SpotMotion, "/Spot/stand_up", self.__stand_motion_cb)
-        self.__node.create_service(SpotMotion, "/Spot/sit_down", self.__sit_motion_cb)
-        self.__node.create_service(SpotMotion, "/Spot/lie_down", self.__lie_motion_cb)
+        self.__node.create_service(SpotMotion, "/"+robot_name+"/stand_up", self.__stand_motion_cb)
+        self.__node.create_service(SpotMotion, "/"+robot_name+"/sit_down", self.__sit_motion_cb)
+        self.__node.create_service(SpotMotion, "/"+robot_name+"/lie_down", self.__lie_motion_cb)
         self.__node.create_service(
-            SpotMotion, "/Spot/shake_hand", self.__shakehand_motion_cb
+            SpotMotion, "/"+robot_name+"/shake_hand", self.__shakehand_motion_cb
         )
         self.__node.create_service(
-            SpotHeight, "/Spot/set_height", self.__spot_height_cb
+            SpotHeight, "/"+robot_name+"/set_height", self.__spot_height_cb
         )
 
         self.__node.create_service(
-            SpotMotion, "/Spot/blocksworld_pose", self.blocksworld_pose
+            SpotMotion, "/"+robot_name+"/blocksworld_pose", self.blocksworld_pose
         )
 
         self.float_mode = False
         self.previous_cmd_vel = Twist()
-        self.__node.create_service(SetBool, "/Spot/float_mode", self.float_mode_cb)
+        self.__node.create_service(SetBool, "/"+robot_name+"/float_mode", self.float_mode_cb)
         self.BASE_Z = 0.55
         self.STEP_Z = 0.05
         self.foot_z = {"fl": 0.0, "fr": 0.0, "rl": 0.0, "rr": 0.0}
@@ -340,7 +342,7 @@ class SpotDriver:
         self.previous_cmd_vel = copy.deepcopy(msg)
         self.fixed_motion = False
 
-        if not self.__node.count_publishers("/Spot/inverse_gait_input"):
+        if not self.__node.count_publishers("/"+self.robot_name+"/inverse_gait_input"):
             StepLength = 0.15
             ClearanceHeight = 0.015
             PenetrationDepth = 0.003
@@ -464,8 +466,8 @@ class SpotDriver:
 
         tf = TransformStamped()
         tf.header.stamp = time_stamp
-        tf.header.frame_id = "odom"
-        tf._child_frame_id = "base_link"
+        tf.header.frame_id = f"{self.robot_name}/odom"
+        tf._child_frame_id = f"{self.robot_name}/base_link"
 
         di = self.spot_node.getField("translation").getSFVec3f()
         tf.transform.translation.x = -(di[0] - self.spot_translation_initial[0])
@@ -485,8 +487,8 @@ class SpotDriver:
 
         tf = TransformStamped()
         tf.header.stamp = time_stamp
-        tf.header.frame_id = "base_link"
-        tf._child_frame_id = "base_footprint"
+        tf.header.frame_id = f"{self.robot_name}/base_link"
+        tf._child_frame_id = f"{self.robot_name}/base_footprint"
         tf.transform.translation.z = -base_link_from_ground
         tfs.append(tf)
 
@@ -526,9 +528,9 @@ class SpotDriver:
             self.previous_translation = translation
 
             odom = Odometry()
-            odom.header.frame_id = "odom"
+            odom.header.frame_id = f"{self.robot_name}/odom"
             odom.header.stamp = time_stamp
-            odom.child_frame_id = "base_link"
+            odom.child_frame_id = f"{self.robot_name}/base_link"
             odom.pose.pose.position.x = translation[0]
             odom.pose.pose.position.y = translation[1]
             odom.pose.pose.position.z = translation[2]

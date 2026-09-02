@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import os
+import tempfile
+import xacro
 import launch
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
@@ -11,84 +13,172 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 from webots_ros2_driver.webots_launcher import WebotsLauncher, Ros2SupervisorLauncher
 from webots_ros2_driver.webots_controller import WebotsController
-from webots_ros2_driver.wait_for_controller_connection import (
-    WaitForControllerConnection,
-)
-
+from webots_ros2_driver.wait_for_controller_connection import WaitForControllerConnection
 
 package_dir = get_package_share_directory("webots_spot")
 
 
-# Define all the ROS 2 nodes that need to be restart on simulation reset here
-def get_ros2_nodes(*args):
-    # SpotArm Driver node
+def _base_driver_urdf(prefix):
+    """Render spot_control.urdf.xacro for one robot and drop it in a temp .urdf.
+
+    The webots driver reads a file path; passing a raw string is deprecated. The
+    xacro just stamps `prefix` (= ns) into every sensor frameName / the IMU topic.
+    """
+    xacro_path = os.path.join(package_dir, "resource", "spot_control.urdf.xacro")
+    content = xacro.process_file(xacro_path, mappings={"prefix": prefix}).toxml()
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w", suffix=f"_{prefix}_control.urdf", delete=False
+    )
+    tmp.write(content)
+    tmp.close()
+    return tmp.name
+
+
+def get_robot_pipeline(ns, base_robot, arm_robot):
+    """All ROS 2 nodes for a single Spot instance.
+
+    ns         -- ROS namespace / frame prefix for this robot, e.g. "Spot1"
+    base_robot -- Webots <name> of the quadruped Robot node, e.g. "Spot1"
+    arm_robot  -- Webots <name> of the *nested* SpotArm Robot node, e.g. "SpotArm1"
+
+    The arm motors (spotarm_*_joint, Slider11, gripper_*_finger_joint) belong to
+    the nested SpotArm robot, so the ros2_control driver must connect to
+    `arm_robot`, NOT to `base_robot`.
+    """
     spotarm_ros2_control_params = os.path.join(
         package_dir, "resource", "spotarm_ros2_controllers.yaml"
     )
-    spotarm_driver = WebotsController(
-        robot_name="SpotArm",
+
+    # --- Base quadruped driver (SpotDriver plugin + IMU) -> connects to Spot* ---
+    # No `namespace=`: the driver already publishes device topics under the
+    # Webots robot name ("Spot1"/"Spot2"), so adding a ROS namespace would
+    # double it (/Spot1/Spot1/...). The xacro prefix gives each sensor a
+    # "<ns>/"-prefixed frame_id instead.
+    base_driver = WebotsController(
+        robot_name=base_robot,
         parameters=[
-            {
-                "robot_description": os.path.join(
-                    package_dir, "resource", "spotarm_control.urdf"
-                )
-            },
+            {"robot_description": _base_driver_urdf(ns)},
+            {"use_sim_time": True},
+            {"set_robot_state_publisher": False},
+        ],
+        respawn=True,
+    )
+
+    # --- Arm driver (ros2_control) -> connects to the nested SpotArm* robot ---
+    arm_driver = WebotsController(
+        robot_name=arm_robot,
+        namespace=ns,
+        parameters=[
+            {"robot_description": os.path.join(package_dir, "resource", "spotarm_control.urdf")},
             {"use_sim_time": True},
             {"set_robot_state_publisher": False},
             spotarm_ros2_control_params,
         ],
     )
 
-    # ROS2 control spawners for SpotArm
+    # --- Namespaced ros2_control spawners ---
     controller_manager_timeout = ["--controller-manager-timeout", "500"]
     controller_manager_prefix = "python.exe" if os.name == "nt" else ""
-    trajectory_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        output="screen",
-        prefix=controller_manager_prefix,
-        arguments=["spotarm_joint_trajectory_controller", "-c", "/controller_manager"]
-        + controller_manager_timeout,
-    )
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        output="screen",
-        prefix=controller_manager_prefix,
-        arguments=["spotarm_joint_state_broadcaster", "-c", "/controller_manager"]
-        + controller_manager_timeout,
-    )
-    tiago_gripper_joint_trajectory_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        output="screen",
-        prefix=controller_manager_prefix,
-        arguments=[
-            "tiago_gripper_joint_trajectory_controller",
-            "-c",
-            "/controller_manager",
-        ]
-        + controller_manager_timeout,
-    )
+    target_cm = f"/{ns}/controller_manager"
+
+    def spawner(controller):
+        return Node(
+            package="controller_manager",
+            executable="spawner",
+            output="screen",
+            prefix=controller_manager_prefix,
+            arguments=[controller, "-c", target_cm] + controller_manager_timeout,
+        )
 
     ros2_control_spawners = [
-        trajectory_controller_spawner,
-        joint_state_broadcaster_spawner,
-        tiago_gripper_joint_trajectory_controller_spawner,
+        spawner("spotarm_joint_trajectory_controller"),
+        spawner("spotarm_joint_state_broadcaster"),
+        spawner("tiago_gripper_joint_trajectory_controller"),
     ]
 
-    # Wait for the simulation to be ready to start RViz, the navigation and spawners
     waiting_nodes = WaitForControllerConnection(
-        target_driver=spotarm_driver, nodes_to_start=ros2_control_spawners
+        target_driver=arm_driver, nodes_to_start=ros2_control_spawners
     )
 
+    # retract_manipulator uses absolute /<controller>/follow_joint_trajectory
+    # topics; remap them into this robot's namespace.
     initial_manipulator_positioning = Node(
         package="webots_spot",
         executable="retract_manipulator",
         output="screen",
+        namespace=ns,
+        remappings=[
+            (
+                "/spotarm_joint_trajectory_controller/follow_joint_trajectory",
+                f"/{ns}/spotarm_joint_trajectory_controller/follow_joint_trajectory",
+            ),
+            (
+                "/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory",
+                f"/{ns}/tiago_gripper_joint_trajectory_controller/follow_joint_trajectory",
+            ),
+        ],
     )
 
-    return [spotarm_driver, waiting_nodes, initial_manipulator_positioning]
+    # Full kinematic TF tree (base_link -> legs / arm / sensor links) for this
+    # robot. The driver xacro has NO links; the model is spot.urdf, published
+    # here with a per-robot frame_prefix so frames match spot_driver's
+    # "<ns>/base_link" broadcast. Fed by /<ns>/joint_states (legs from
+    # spot_driver + arm from the joint_state_broadcaster).
+    with open(os.path.join(package_dir, "resource", "spot.urdf")) as f:
+        spot_description = f.read()
+
+    robot_state_publisher = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        namespace=ns,
+        parameters=[{
+            "robot_description": spot_description,
+            "use_sim_time": True,
+            "frame_prefix": f"{ns}/",
+        }],
+    )
+
+    pointcloud_to_laserscan_node = Node(
+        package="pointcloud_to_laserscan",
+        executable="pointcloud_to_laserscan_node",
+        name="pointcloud_to_laserscan",
+        namespace=ns,
+        remappings=[
+            ("cloud_in", f"/{ns}/Velodyne_Puck/point_cloud"),
+            ("scan", f"/{ns}/scan"),
+        ],
+        parameters=[{
+            "transform_tolerance": 0.01,
+            "min_height": 0.0,
+            "max_height": 1.0,
+            "angle_min": -3.14,
+            "angle_max": 3.14,
+            "angle_increment": 0.00872,
+            "scan_time": 0.1,
+            "range_min": 0.9,
+            "range_max": 100.0,
+            "use_inf": True,
+            "inf_epsilon": 1.0,
+        }],
+    )
+
+    return [
+        base_driver,
+        arm_driver,
+        waiting_nodes,
+        robot_state_publisher,
+        initial_manipulator_positioning,
+        pointcloud_to_laserscan_node,
+    ]
+
+
+def get_ros2_nodes(*args):
+    """Runtime nodes for both instances; re-created on simulation reset."""
+    return (
+        get_robot_pipeline("Spot1", "Spot1", "SpotArm1")
+        + get_robot_pipeline("Spot2", "Spot2", "SpotArm2")
+    )
 
 
 def generate_launch_description():
@@ -98,78 +188,35 @@ def generate_launch_description():
         description="World file to load, relative to the package 'worlds' directory",
     )
 
-    # spot_driver publishes 'odom' spawn-relative and rotated 180deg about Z, so
-    # 'map' == Webots world frame is recovered with a static map->odom equal to
-    # the robot's spawn pose. Defaults match the Spot node in maze.wbt.
-    # Disable (publish_map_odom:=false) when running nav2/AMCL, which owns map->odom.
-    publish_map_odom_arg = DeclareLaunchArgument(
-        "publish_map_odom", default_value="true"
-    )
-    spawn_x_arg = DeclareLaunchArgument("spawn_x", default_value="8.39")
-    spawn_y_arg = DeclareLaunchArgument("spawn_y", default_value="-0.94")
-    spawn_yaw_arg = DeclareLaunchArgument("spawn_yaw", default_value="3.14159")
+    publish_map_odom_arg = DeclareLaunchArgument("publish_map_odom", default_value="true")
 
-    map_to_odom_tf = Node(
+    map_to_odom_spot1 = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
-        name="map_to_odom_static",
+        name="map_to_odom_spot1",
         output="screen",
-        arguments=[
-            "--x", LaunchConfiguration("spawn_x"),
-            "--y", LaunchConfiguration("spawn_y"),
-            "--z", "0",
-            "--yaw", LaunchConfiguration("spawn_yaw"),
-            "--frame-id", "map",
-            "--child-frame-id", "odom",
-        ],
+        arguments=["--x", "8.39", "--y", "-0.94", "--z", "0", "--yaw", "3.14159",
+                   "--frame-id", "map", "--child-frame-id", "Spot1/odom"],
+        parameters=[{"use_sim_time": True}],
+        condition=IfCondition(LaunchConfiguration("publish_map_odom")),
+    )
+
+    map_to_odom_spot2 = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="map_to_odom_spot2",
+        output="screen",
+        arguments=["--x", "-10.77", "--y", "-1.3", "--z", "0", "--yaw", "0",
+                   "--frame-id", "map", "--child-frame-id", "Spot2/odom"],
         parameters=[{"use_sim_time": True}],
         condition=IfCondition(LaunchConfiguration("publish_map_odom")),
     )
 
     webots = WebotsLauncher(
-        world=PathJoinSubstitution(
-            [package_dir, "worlds", LaunchConfiguration("world")]
-        )
+        world=PathJoinSubstitution([package_dir, "worlds", LaunchConfiguration("world")])
     )
     ros2_supervisor = Ros2SupervisorLauncher()
 
-    spot_driver = WebotsController(
-        robot_name="Spot",
-        parameters=[
-            {
-                "robot_description": os.path.join(
-                    package_dir, "resource", "spot_control.urdf"
-                ),
-                "use_sim_time": True,
-                "set_robot_state_publisher": False,  # foot positions are wrong with webot's urdf
-            }
-        ],
-        respawn=True,
-    )
-
-    with open(os.path.join(package_dir, "resource", "spot.urdf")) as f:
-        robot_desc = f.read()
-
-    robot_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="screen",
-        parameters=[
-            {
-                "robot_description": robot_desc,
-                "use_sim_time": True,
-            }
-        ],
-    )
-
-    # spot_pointcloud2 = Node(
-    #     package='webots_spot',
-    #     executable='spot_pointcloud2',
-    #     output='screen',
-    # )
-
-    # The following line is important!
-    # This event handler respawns the ROS 2 nodes on simulation reset (supervisor process ends).
     reset_handler = launch.actions.RegisterEventHandler(
         event_handler=launch.event_handlers.OnProcessExit(
             target_action=ros2_supervisor,
@@ -184,46 +231,16 @@ def generate_launch_description():
         )
     )
 
-    pointcloud_to_laserscan_node = Node(
-        package="pointcloud_to_laserscan",
-        executable="pointcloud_to_laserscan_node",
-        remappings=[
-            ("cloud_in", "/Spot/Velodyne_Puck/point_cloud"),
-        ],
-        parameters=[
-            {
-                "transform_tolerance": 0.01,
-                "min_height": 0.0,
-                "max_height": 1.0,
-                "angle_min": -3.14,
-                "angle_max": 3.14,
-                "angle_increment": 0.00872,
-                "scan_time": 0.1,
-                "range_min": 0.9,
-                "range_max": 100.0,
-                "use_inf": True,
-                "inf_epsilon": 1.0,
-            }
-        ],
-        name="pointcloud_to_laserscan",
-    )
-
     return LaunchDescription(
         [
             world_arg,
             publish_map_odom_arg,
-            spawn_x_arg,
-            spawn_y_arg,
-            spawn_yaw_arg,
-            map_to_odom_tf,
+            map_to_odom_spot1,
+            map_to_odom_spot2,
             webots,
             ros2_supervisor,
-            spot_driver,
-            robot_state_publisher,
-            # spot_pointcloud2,
             webots_event_handler,
             reset_handler,
-            pointcloud_to_laserscan_node,
         ]
         + get_ros2_nodes()
     )

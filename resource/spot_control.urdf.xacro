@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<!-- webots_ros2_driver plugin config for one Spot quadruped.
+     `prefix` (e.g. "Spot1") is prepended to every sensor frame_id / the IMU
+     topic so two Spots never publish on identical TF frames. The frame names
+     match the link names in spot.urdf, which robot_state_publisher re-publishes
+     with frame_prefix "<prefix>/". Processed per robot in spot_launch.py. -->
+<robot name="spot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="prefix" default="Spot1"/>
+
+    <webots>
+        <plugin type="webots_spot.spot_driver.SpotDriver" />
+
+        <plugin type="webots_ros2_driver::Ros2IMU">
+            <enabled>true</enabled>
+            <topicName>/$(arg prefix)/imu</topicName>
+            <alwaysOn>true</alwaysOn>
+            <frameName>$(arg prefix)/base_link</frameName>
+            <inertialUnitName>inertial unit</inertialUnitName>
+            <gyroName>gyro</gyroName>
+            <accelerometerName>accelerometer</accelerometerName>
+        </plugin>
+
+        <device reference="left head depth">
+            <ros><frameName>$(arg prefix)/left head depth</frameName></ros>
+        </device>
+        <device reference="right head depth">
+            <ros><frameName>$(arg prefix)/right head depth</frameName></ros>
+        </device>
+        <device reference="rear depth">
+            <ros><frameName>$(arg prefix)/rear depth</frameName></ros>
+        </device>
+        <device reference="left flank depth">
+            <ros><frameName>$(arg prefix)/left flank depth</frameName></ros>
+        </device>
+        <device reference="right flank depth">
+            <ros><frameName>$(arg prefix)/right flank depth</frameName></ros>
+        </device>
+        <device reference="Velodyne_Puck">
+            <ros><frameName>$(arg prefix)/Velodyne_Puck</frameName></ros>
+        </device>
+    </webots>
+</robot>
