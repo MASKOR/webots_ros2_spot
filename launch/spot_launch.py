@@ -3,6 +3,9 @@
 import os
 import launch
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
+from launch.substitutions import LaunchConfiguration
 from launch.substitutions.path_join_substitution import PathJoinSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
@@ -89,8 +92,44 @@ def get_ros2_nodes(*args):
 
 
 def generate_launch_description():
+    world_arg = DeclareLaunchArgument(
+        "world",
+        default_value="maze.wbt",
+        description="World file to load, relative to the package 'worlds' directory",
+    )
+
+    # spot_driver publishes 'odom' spawn-relative and rotated 180deg about Z, so
+    # 'map' == Webots world frame is recovered with a static map->odom equal to
+    # the robot's spawn pose. Defaults match the Spot node in maze.wbt.
+    # Disable (publish_map_odom:=false) when running nav2/AMCL, which owns map->odom.
+    publish_map_odom_arg = DeclareLaunchArgument(
+        "publish_map_odom", default_value="true"
+    )
+    spawn_x_arg = DeclareLaunchArgument("spawn_x", default_value="8.39")
+    spawn_y_arg = DeclareLaunchArgument("spawn_y", default_value="-0.94")
+    spawn_yaw_arg = DeclareLaunchArgument("spawn_yaw", default_value="3.14159")
+
+    map_to_odom_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="map_to_odom_static",
+        output="screen",
+        arguments=[
+            "--x", LaunchConfiguration("spawn_x"),
+            "--y", LaunchConfiguration("spawn_y"),
+            "--z", "0",
+            "--yaw", LaunchConfiguration("spawn_yaw"),
+            "--frame-id", "map",
+            "--child-frame-id", "odom",
+        ],
+        parameters=[{"use_sim_time": True}],
+        condition=IfCondition(LaunchConfiguration("publish_map_odom")),
+    )
+
     webots = WebotsLauncher(
-        world=PathJoinSubstitution([package_dir, "worlds", "spot.wbt"])
+        world=PathJoinSubstitution(
+            [package_dir, "worlds", LaunchConfiguration("world")]
+        )
     )
     ros2_supervisor = Ros2SupervisorLauncher()
 
@@ -171,6 +210,12 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            world_arg,
+            publish_map_odom_arg,
+            spawn_x_arg,
+            spawn_y_arg,
+            spawn_yaw_arg,
+            map_to_odom_tf,
             webots,
             ros2_supervisor,
             spot_driver,

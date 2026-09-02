@@ -6,7 +6,11 @@ package_name = "webots_spot"
 setup(
     name=package_name,
     version="0.0.0",
-    packages=[package_name],
+    packages=[
+        package_name,
+        package_name + ".nav",
+        package_name + ".nav.planner_algorithms",
+    ],
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
@@ -51,7 +55,9 @@ setup(
             "set_initial_pose = " + package_name + ".set_initial_pose:main",
             "gpp_stacker = " + package_name + ".gpp_stacker:main",
             "retract_manipulator = " + package_name + ".retract_manipulator:main",
-            "arena_modifier = " + package_name + ".arena_modifier:main",
+            "mapping_server = " + package_name + ".nav.mapping_server:main",
+            "global_planner = " + package_name + ".nav.global_planner:main",
+            "controller = " + package_name + ".nav.controller:main",
         ],
     },
 )
