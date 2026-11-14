@@ -13,8 +13,9 @@ import threading
 import signal
 
 # Constants
-TWIST_TOPIC = "/servo_node/delta_twist_cmds"
-JOINT_TOPIC = "/servo_node/delta_joint_cmds"
+# TWIST_TOPIC = "/servo_node/delta_twist_cmds"
+TWIST_TOPIC = "/twist_controller/commands"
+# JOINT_TOPIC = "/servo_node/delta_joint_cmds"
 EEF_FRAME_ID = "end_effector_link"
 BASE_FRAME_ID = "gen3_base_link"
 
@@ -48,7 +49,7 @@ class ServoKeyboardInput(Node):
     def __init__(self):
         super().__init__("servo_keyboard_input")
         self.twist_pub = self.create_publisher(TwistStamped, TWIST_TOPIC, 10)
-        self.joint_pub = self.create_publisher(JointJog, JOINT_TOPIC, 10)
+        # self.joint_pub = self.create_publisher(JointJog, JOINT_TOPIC, 10)
 
         self.frame_to_publish = BASE_FRAME_ID
         self.joint_vel_cmd = 1.0
