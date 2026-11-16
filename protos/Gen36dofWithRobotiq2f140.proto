@@ -242,14 +242,14 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                     }
                                                     device [
                                                       RotationalMotor {
-                                                        name "finger_joint"
+                                                        name "finger_joint::finger_joint"
                                                         maxVelocity 2.0
                                                         maxPosition 0.7
                                                         minPosition -0.7
                                                         maxTorque 1000.0
                                                       }
                                                       PositionSensor {
-                                                        name "finger_joint_sensor"
+                                                        name "finger_joint"
                                                       }
                                                     ]
                                                     endPoint Solid {
@@ -281,15 +281,16 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                             }
                                                             HingeJoint {
                                                               jointParameters HingeJointParameters {
-                                                                axis 0 0 1.0
+                                                                axis 1.000000 0.000000 0.000000
                                                                 anchor 0.000000 0.081755 -0.028220
                                                               }
                                                               device [
                                                                 RotationalMotor {
-                                                                  name "left_inner_finger_joint"
+                                                                  name "finger_joint::left_inner_finger_joint"
+                                                                  multiplier 1.0
                                                                   maxVelocity 2.0
-                                                                  minPosition -0.8757
-                                                                  maxPosition 0.8757
+                                                                  minPosition -0.7
+                                                                  maxPosition 0.7
                                                                   maxTorque 1000.0
                                                                 }
                                                                 PositionSensor {
@@ -379,10 +380,11 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                     }
                                                     device [
                                                       RotationalMotor {
-                                                        name "left_inner_knuckle_joint"
+                                                        name "finger_joint::left_inner_knuckle_joint"
+                                                        multiplier -1.0
                                                         maxVelocity 2.0
-                                                        minPosition -0.8757
-                                                        maxPosition 0.8757
+                                                        minPosition -0.7
+                                                        maxPosition 0.7
                                                         maxTorque 1000.0
                                                       }
                                                       PositionSensor {
@@ -424,10 +426,11 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                     }
                                                     device [
                                                       RotationalMotor {
-                                                        name "right_outer_knuckle_joint"
+                                                        name "finger_joint::right_outer_knuckle_joint"
+                                                        multiplier 1.0
                                                         maxVelocity 2.0
                                                         minPosition -0.7
-                                                        maxPosition 0.0
+                                                        maxPosition 0.7
                                                         maxTorque 1000.0
                                                       }
                                                       PositionSensor {
@@ -459,15 +462,16 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                             }
                                                             HingeJoint {
                                                               jointParameters HingeJointParameters {
-                                                                axis 0 0 -1
+                                                                axis 1.000000 0.000000 0.000000
                                                                 anchor 0.000000 0.081755 -0.028220
                                                               }
                                                               device [
                                                                 RotationalMotor {
-                                                                  name "right_inner_finger_joint"
+                                                                  name "finger_joint::right_inner_finger_joint"
+                                                                  multiplier 1.0
                                                                   maxVelocity 2.0
-                                                                  minPosition -0.8757
-                                                                  maxPosition 0.8757
+                                                                  minPosition -0.7
+                                                                  maxPosition 0.7
                                                                   maxTorque 1000.0
                                                                 }
                                                                 PositionSensor {
@@ -555,10 +559,11 @@ PROTO Gen36dofWithRobotiq2f140 [
                                                     }
                                                     device [
                                                       RotationalMotor {
-                                                        name "right_inner_knuckle_joint"
+                                                        name "finger_joint::right_inner_knuckle_joint"
+                                                        multiplier -1.0
                                                         maxVelocity 2.0
-                                                        minPosition -0.8757
-                                                        maxPosition 0.8757
+                                                        minPosition -0.7
+                                                        maxPosition 0.7
                                                         maxTorque 1000.0
                                                       }
                                                       PositionSensor {
