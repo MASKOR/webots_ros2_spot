@@ -1,17 +1,17 @@
 #VRML_SIM R2023b utf8
 
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/ThreadMetalPlate.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Roughcast.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/humans/pedestrian/protos/Pedestrian.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/factory/pipes/protos/PipeSection.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/solids/protos/SolidBox.proto"
+EXTERNPROTO "webots://projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "webots://projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "webots://projects/appearances/protos/ThreadMetalPlate.proto"
+EXTERNPROTO "webots://projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "webots://projects/humans/pedestrian/protos/Pedestrian.proto"
+EXTERNPROTO "webots://projects/objects/factory/pipes/protos/PipeSection.proto"
+EXTERNPROTO "webots://projects/objects/solids/protos/SolidBox.proto"
 EXTERNPROTO "../protos/Spot.proto"
 EXTERNPROTO "../protos/SpotArm.proto"
 EXTERNPROTO "../protos/ImageBox.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/microsoft/protos/Kinect.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/velodyne/protos/VelodynePuck.proto"
+EXTERNPROTO "webots://projects/devices/microsoft/protos/Kinect.proto"
+EXTERNPROTO "webots://projects/devices/velodyne/protos/VelodynePuck.proto"
 
 WorldInfo {
   title "Spot_Maze"
@@ -75,7 +75,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -90,7 +90,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -105,7 +105,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -120,7 +120,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -135,7 +135,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -150,7 +150,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -166,7 +166,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -182,7 +182,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -198,7 +198,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -214,7 +214,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -230,7 +230,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -246,7 +246,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -262,7 +262,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -278,7 +278,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -546,7 +546,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -588,7 +588,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -603,7 +603,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
@@ -618,7 +618,7 @@ SolidBox {
     baseColor 0 0 0
     baseColorMap ImageTexture {
       url [
-        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/tagged_wall.jpg"
+        "webots://projects/default/worlds/textures/tagged_wall.jpg"
       ]
     }
     roughness 0.5
